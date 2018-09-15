@@ -7,16 +7,22 @@ import com.example.joseph.langninja.R;
 public class AndroidResourceManager implements ResourcesManager {
 
     private final Resources resources;
+    private final String packageName;
 
     public AndroidResourceManager(Resources resources) {
         this.resources = resources;
+        packageName = resources.getString(R.string.app_package_name);
     }
 
     @Override
     public String getLanguageName(String languageCode) {
         String resourceName = resources.getString(R.string.language_name_prefix) + languageCode;
-        String packageName = resources.getString(R.string.app_package_name);
         int id = resources.getIdentifier(resourceName, "string", packageName);
         return resources.getString(id);
+    }
+
+    @Override
+    public int getFlagId(String languageCode) {
+        return resources.getIdentifier(languageCode, "drawable", packageName);
     }
 }

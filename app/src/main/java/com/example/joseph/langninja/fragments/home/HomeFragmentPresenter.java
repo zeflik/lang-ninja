@@ -4,7 +4,6 @@ import com.example.joseph.langninja.dao.LanguageDao;
 import com.example.joseph.langninja.fragments.home.components.LanguageItemView;
 import com.example.joseph.langninja.fragments.home.resources.ResourcesManager;
 import com.example.joseph.langninja.model.Language;
-import com.example.joseph.langninja.utils.Utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +27,7 @@ public class HomeFragmentPresenter {
 
     public void onBindLanguageItemViewAtPosition(int position, LanguageItemView itemView) {
         itemView.setLanguageNativeName(languages.get(position).getNativeName());
-        itemView.setLanguageFlag(Utility.getDrawableResId(languages.get(position).getCode().toLowerCase()));
+        itemView.setLanguageFlag(resourcesManager.getFlagId(languages.get(position).getCode().toLowerCase()));
         itemView.setLanguageName(resourcesManager.getLanguageName(languages.get(position).getCode()));
     }
 
