@@ -1,4 +1,4 @@
-package com.example.joseph.langninja.main;
+package com.example.joseph.langninja;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

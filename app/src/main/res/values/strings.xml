@@ -7,30 +7,9 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="level">Etap</string>
     <string name="action_sign_out">Wyloguj</string>
-
-    <string-array name="difficulty_names">
-        <item>Łatwy</item>
-        <item>Normalny</item>
-        <item>Trudny</item>
-    </string-array>
-
-    <string-array name="language_names">
-        <item>Polski</item>
-        <item>Angielski</item>
-        <item>Niemiecki</item>
-    </string-array>
-
-    <string-array name="language_codes">
-        <item>pl_PL</item>
-        <item>en_GB</item>
-        <item>de</item>
-    </string-array>
-
-    <string-array name="language_native_names">
-        <item>Polski</item>
-        <item>English</item>
-        <item>Deutsch</item>
-    </string-array>
+    <string name="language_name_pl_PL">Polski</string>
+    <string name="language_name_en_GB">Angielski</string>
+    <string name="language_name_de">Niemiecki</string>
     <string name="page_count">%1$d/%2$d</string>
     <string name="language_flag_description">Obraz flagi</string>
     <string name="quote">Zdanie</string>
@@ -39,4 +18,8 @@
     <string name="microphone_button">przycisk mikrofonu</string>
     <string name="answer">odpowiedź</string>
     <string name="category">Kategoria</string>
+
+    <!--no not translate-->
+    <string name="language_name_prefix">language_name_</string>
+    <string name="app_package_name">com.example.joseph.langninja</string>
 </resources>
