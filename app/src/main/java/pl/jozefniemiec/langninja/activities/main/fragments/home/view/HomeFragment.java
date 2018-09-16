@@ -1,5 +1,6 @@
 package pl.jozefniemiec.langninja.activities.main.fragments.home.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.activities.language.LanguageCard;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenter;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenterImpl;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.presenter.LanguageItemPresenter;
@@ -28,10 +30,10 @@ import pl.jozefniemiec.langninja.utils.Utility;
 public class HomeFragment extends Fragment implements HomeFragmentView, View.OnClickListener {
 
     private static final String TAG = "HomeFragment";
+    public static final String LANGUAGE_CODE = "Language Code";
 
-    LanguagesViewAdapter adapter;
-    RecyclerView recyclerView;
-    HomeFragmentPresenter presenter;
+    private RecyclerView recyclerView;
+    private HomeFragmentPresenter presenter;
 
     @Nullable
     @Override
@@ -53,13 +55,15 @@ public class HomeFragment extends Fragment implements HomeFragmentView, View.OnC
     public void showLanguages(List<Language> languageList) {
         ResourcesManager resourcesManager = new AndroidResourceManager(getResources());
         LanguageItemPresenter languageItemPresenter = new LanguageItemPresenterImpl(languageList, resourcesManager);
-        adapter = new LanguagesViewAdapter(languageItemPresenter, this);
+        LanguagesViewAdapter adapter = new LanguagesViewAdapter(languageItemPresenter, this);
         recyclerView.setAdapter(adapter);
     }
 
     @Override
     public void showLanguageDetails(String languageCode) {
-        Toast.makeText(getContext(), "creating activity " + languageCode, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getContext(), LanguageCard.class);
+        intent.putExtra(LANGUAGE_CODE, languageCode);
+        startActivity(intent);
     }
 
     @Override
