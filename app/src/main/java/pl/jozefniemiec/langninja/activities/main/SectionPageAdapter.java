@@ -10,7 +10,6 @@ import java.util.List;
 public class SectionPageAdapter extends FragmentPagerAdapter {
 
     private final List<Fragment> mFragmentList = new ArrayList<>();
-
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
     public SectionPageAdapter(FragmentManager fm) {
@@ -36,6 +35,4 @@ public class SectionPageAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return mFragmentList.size();
     }
-
-
 }
