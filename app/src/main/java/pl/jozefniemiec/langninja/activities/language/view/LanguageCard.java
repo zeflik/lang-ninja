@@ -7,14 +7,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.activities.language.presenter.LanguageCardPresenter;
+import pl.jozefniemiec.langninja.activities.language.presenter.LanguageCardPresenterImpl;
 import pl.jozefniemiec.langninja.activities.language.view.pages.view.LanguagePageAdapter;
 
 import static pl.jozefniemiec.langninja.activities.main.fragments.home.view.HomeFragment.LANGUAGE_CODE;
 
-public class LanguageCard extends AppCompatActivity {
+public class LanguageCard extends AppCompatActivity implements LanguageCardView {
 
     private ViewPager mViewPager;
     private LanguagePageAdapter languagePageAdapter;
+    private LanguageCardPresenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +28,12 @@ public class LanguageCard extends AppCompatActivity {
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         supportActionBar.setTitle(getIntent().getStringExtra(LANGUAGE_CODE));
 
+        presenter = new LanguageCardPresenterImpl(this);
+        presenter.loadData();
+    }
+
+    @Override
+    public void showData() {
         languagePageAdapter = new LanguagePageAdapter(getBaseContext());
         mViewPager = findViewById(R.id.language_card_view_pager);
         mViewPager.setAdapter(languagePageAdapter);
