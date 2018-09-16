@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.activities.main.fragments.home.view.components;
+package pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.view;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.activities.main.fragments.home.view.components;
+package pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.view;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,20 +7,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenter;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.presenter.LanguageItemPresenter;
 
 import static android.view.View.OnClickListener;
 
 
 public class LanguagesViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    private final HomeFragmentPresenter presenter;
-    private final RecyclerView recyclerView;
+    private final LanguageItemPresenter presenter;
     private final OnClickListener mOnClickListener;
 
-    public LanguagesViewAdapter(HomeFragmentPresenter presenter, RecyclerView recyclerView, OnClickListener mOnClickListener) {
+    public LanguagesViewAdapter(LanguageItemPresenter presenter, OnClickListener mOnClickListener) {
         this.presenter = presenter;
-        this.recyclerView = recyclerView;
         this.mOnClickListener = mOnClickListener;
     }
 

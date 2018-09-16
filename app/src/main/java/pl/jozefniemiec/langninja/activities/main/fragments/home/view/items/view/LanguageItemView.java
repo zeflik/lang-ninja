@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.activities.main.fragments.home.view.components;
+package pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.view;
 
 public interface LanguageItemView {
 

@@ -15,10 +15,14 @@ import java.util.List;
 
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenter;
-import pl.jozefniemiec.langninja.activities.main.fragments.home.view.components.LanguagesViewAdapter;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenterImpl;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.presenter.LanguageItemPresenter;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.presenter.LanguageItemPresenterImpl;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.view.LanguagesViewAdapter;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
+import pl.jozefniemiec.langninja.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 public class HomeFragment extends Fragment implements HomeFragmentView, View.OnClickListener {
@@ -41,14 +45,15 @@ public class HomeFragment extends Fragment implements HomeFragmentView, View.OnC
         recyclerView = getView().findViewById(R.id.rvNumbers);
         int numberOfColumns = Utility.calculateNoOfColumns(getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
-        AndroidResourceManager androidResourceManager = new AndroidResourceManager(getResources());
-        presenter = new HomeFragmentPresenter(this, new RoomLanguageRepository(getContext()), androidResourceManager);
+        presenter = new HomeFragmentPresenterImpl(this, new RoomLanguageRepository(getContext()));
         presenter.loadLanguages();
     }
 
     @Override
     public void showLanguages(List<Language> languageList) {
-        adapter = new LanguagesViewAdapter(presenter, recyclerView, this);
+        ResourcesManager resourcesManager = new AndroidResourceManager(getResources());
+        LanguageItemPresenter languageItemPresenter = new LanguageItemPresenterImpl(languageList, resourcesManager);
+        adapter = new LanguagesViewAdapter(languageItemPresenter, this);
         recyclerView.setAdapter(adapter);
     }
 
