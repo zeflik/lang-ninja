@@ -21,13 +21,13 @@ import pl.jozefniemiec.langninja.repository.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
 import pl.jozefniemiec.langninja.utils.Utility;
 
-public class HomeFragment extends Fragment implements HomeFragmentView {
+public class HomeFragment extends Fragment implements HomeFragmentView, View.OnClickListener {
 
     private static final String TAG = "HomeFragment";
 
     LanguagesViewAdapter adapter;
     RecyclerView recyclerView;
-    HomeFragmentPresenter homeFragmentPresenter;
+    HomeFragmentPresenter presenter;
 
     @Nullable
     @Override
@@ -42,13 +42,13 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         int numberOfColumns = Utility.calculateNoOfColumns(getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
         AndroidResourceManager androidResourceManager = new AndroidResourceManager(getResources());
-        homeFragmentPresenter = new HomeFragmentPresenter(this, new RoomLanguageRepository(getContext()), androidResourceManager);
-        homeFragmentPresenter.loadLanguages();
+        presenter = new HomeFragmentPresenter(this, new RoomLanguageRepository(getContext()), androidResourceManager);
+        presenter.loadLanguages();
     }
 
     @Override
     public void showLanguages(List<Language> languageList) {
-        adapter = new LanguagesViewAdapter(homeFragmentPresenter, recyclerView);
+        adapter = new LanguagesViewAdapter(presenter, recyclerView, this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -61,4 +61,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public void showError(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
+
+    @Override
+    public void onClick(View view) {
+        presenter.onLanguageItemClicked(recyclerView.getChildLayoutPosition(view));
+    }
 }
+

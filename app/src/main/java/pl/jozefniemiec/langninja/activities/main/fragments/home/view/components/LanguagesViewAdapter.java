@@ -16,16 +16,12 @@ public class LanguagesViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final HomeFragmentPresenter presenter;
     private final RecyclerView recyclerView;
-    private final OnClickListener mOnClickListener = new OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            presenter.onLanguageItemClicked(recyclerView.getChildLayoutPosition(view));
-        }
-    };
+    private final OnClickListener mOnClickListener;
 
-    public LanguagesViewAdapter(HomeFragmentPresenter presenter, RecyclerView recyclerView) {
+    public LanguagesViewAdapter(HomeFragmentPresenter presenter, RecyclerView recyclerView, OnClickListener mOnClickListener) {
         this.presenter = presenter;
         this.recyclerView = recyclerView;
+        this.mOnClickListener = mOnClickListener;
     }
 
     @NonNull
