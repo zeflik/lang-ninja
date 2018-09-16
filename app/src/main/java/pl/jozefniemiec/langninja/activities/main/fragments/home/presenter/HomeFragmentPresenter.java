@@ -1,9 +1,10 @@
-package pl.jozefniemiec.langninja.activities.main.fragments.home;
+package pl.jozefniemiec.langninja.activities.main.fragments.home.presenter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.jozefniemiec.langninja.activities.main.fragments.home.components.LanguageItemView;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.HomeFragmentView;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.components.LanguageItemView;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;

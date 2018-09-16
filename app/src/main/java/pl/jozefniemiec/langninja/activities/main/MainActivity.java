@@ -5,7 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.activities.main.fragments.home.HomeFragment;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.HomeFragment;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.repository.RoomLanguageRepository;
