@@ -32,7 +32,5 @@ public class ViewHolder extends RecyclerView.ViewHolder implements LanguageItemV
     @Override
     public void setLanguageName(String languageName) {
         languageNameTv.setText(languageName);
-
     }
-
 }

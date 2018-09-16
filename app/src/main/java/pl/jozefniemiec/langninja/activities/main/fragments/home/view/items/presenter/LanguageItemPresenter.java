@@ -4,7 +4,7 @@ import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.view.
 
 public interface LanguageItemPresenter {
 
-    public void onBindLanguageItemViewAtPosition(int position, LanguageItemView itemView);
+    void onBindLanguageItemViewAtPosition(int position, LanguageItemView itemView);
 
-    public int getLanguageItemsCount();
+    int getLanguageItemsCount();
 }
