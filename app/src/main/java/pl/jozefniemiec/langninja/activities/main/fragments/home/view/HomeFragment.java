@@ -15,7 +15,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.activities.language.LanguageCard;
+import pl.jozefniemiec.langninja.activities.language.view.LanguageCard;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenter;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenterImpl;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.presenter.LanguageItemPresenter;
