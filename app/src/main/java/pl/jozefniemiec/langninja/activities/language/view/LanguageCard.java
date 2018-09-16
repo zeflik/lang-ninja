@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.language.view.pages.view.LanguagePageAdapter;
 
+import static pl.jozefniemiec.langninja.activities.main.fragments.home.view.HomeFragment.LANGUAGE_CODE;
+
 public class LanguageCard extends AppCompatActivity {
 
     private ViewPager mViewPager;
@@ -21,6 +23,7 @@ public class LanguageCard extends AppCompatActivity {
 
         ActionBar supportActionBar = getSupportActionBar();
         supportActionBar.setDisplayHomeAsUpEnabled(true);
+        supportActionBar.setTitle(getIntent().getStringExtra(LANGUAGE_CODE));
 
         languagePageAdapter = new LanguagePageAdapter(getBaseContext());
         mViewPager = findViewById(R.id.language_card_view_pager);
