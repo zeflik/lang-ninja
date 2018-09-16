@@ -18,13 +18,9 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.language.view.LanguageCard;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenter;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenterImpl;
-import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.presenter.LanguageItemPresenter;
-import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.presenter.LanguageItemPresenterImpl;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.view.LanguagesViewAdapter;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.RoomLanguageRepository;
-import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
-import pl.jozefniemiec.langninja.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 public class HomeFragment extends Fragment implements HomeFragmentView, View.OnClickListener {
@@ -53,9 +49,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView, View.OnC
 
     @Override
     public void showLanguages(List<Language> languageList) {
-        ResourcesManager resourcesManager = new AndroidResourceManager(getResources());
-        LanguageItemPresenter languageItemPresenter = new LanguageItemPresenterImpl(languageList, resourcesManager);
-        LanguagesViewAdapter adapter = new LanguagesViewAdapter(languageItemPresenter, this);
+        LanguagesViewAdapter adapter = new LanguagesViewAdapter(getContext().getResources(), languageList, this);
         recyclerView.setAdapter(adapter);
     }
 
