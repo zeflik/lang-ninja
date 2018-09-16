@@ -1,28 +1,30 @@
 package com.example.joseph.langninja.fragments.home;
 
-import com.example.joseph.langninja.dao.LanguageDao;
 import com.example.joseph.langninja.fragments.home.components.LanguageItemView;
 import com.example.joseph.langninja.fragments.home.resources.ResourcesManager;
 import com.example.joseph.langninja.model.Language;
+import com.example.joseph.langninja.repository.LanguageRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeFragmentPresenter {
 
-    private final HomeFragmentView fragment;
+    private final HomeFragmentView view;
     private final List<Language> languages = new ArrayList<>();
     private final ResourcesManager resourcesManager;
+    private final LanguageRepository languageRepository;
 
 
-    public HomeFragmentPresenter(HomeFragmentView fragment, LanguageDao languageDao, ResourcesManager resourcesManager) {
-        this.fragment = fragment;
+    public HomeFragmentPresenter(HomeFragmentView view, LanguageRepository languageRepository, ResourcesManager resourcesManager) {
+        this.view = view;
         this.resourcesManager = resourcesManager;
-        languages.addAll(languageDao.getAll());
+        this.languageRepository = languageRepository;
     }
 
     public void loadLanguages() {
-        fragment.showLanguages(languages);
+        languages.addAll(languageRepository.getLanguages());
+        view.showLanguages(languages);
     }
 
     public void onBindLanguageItemViewAtPosition(int position, LanguageItemView itemView) {
@@ -36,7 +38,7 @@ public class HomeFragmentPresenter {
     }
 
     public void onItemClicked(int position) {
-        fragment.openLanguagePage(languages.get(position).getCode());
+        view.showLanguageDetails(languages.get(position).getCode());
     }
 }
 

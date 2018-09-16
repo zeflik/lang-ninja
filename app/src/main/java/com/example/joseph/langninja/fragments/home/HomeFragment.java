@@ -12,11 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.joseph.langninja.R;
-import com.example.joseph.langninja.dao.AppDatabase;
-import com.example.joseph.langninja.dao.LanguageDao;
 import com.example.joseph.langninja.fragments.home.components.LanguagesViewAdapter;
 import com.example.joseph.langninja.fragments.home.resources.AndroidResourceManager;
 import com.example.joseph.langninja.model.Language;
+import com.example.joseph.langninja.repository.RoomLanguageRepository;
 import com.example.joseph.langninja.utils.Utility;
 
 import java.util.List;
@@ -41,9 +40,8 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
         recyclerView = getView().findViewById(R.id.rvNumbers);
         int numberOfColumns = Utility.calculateNoOfColumns(getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
-        LanguageDao languageDao = AppDatabase.getInstance(getContext()).languageDao();
         AndroidResourceManager androidResourceManager = new AndroidResourceManager(getResources());
-        homeFragmentPresenter = new HomeFragmentPresenter(this, languageDao, androidResourceManager);
+        homeFragmentPresenter = new HomeFragmentPresenter(this, new RoomLanguageRepository(getContext()), androidResourceManager);
         homeFragmentPresenter.loadLanguages();
     }
 
@@ -54,7 +52,7 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     }
 
     @Override
-    public void openLanguagePage(String languageCode) {
+    public void showLanguageDetails(String languageCode) {
         Toast.makeText(getContext(), "creating activity " + languageCode, Toast.LENGTH_LONG).show();
     }
 }
