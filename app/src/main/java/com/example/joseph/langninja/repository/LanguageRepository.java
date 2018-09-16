@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface LanguageRepository {
 
-    List<Language> getLanguages();
+    List<Language> getAll();
+
+    void insertAll(Language... languages);
 }

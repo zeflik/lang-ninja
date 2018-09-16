@@ -23,8 +23,12 @@ public class HomeFragmentPresenter {
     }
 
     public void loadLanguages() {
-        languages.addAll(languageRepository.getLanguages());
-        view.showLanguages(languages);
+        try {
+            languages.addAll(languageRepository.getAll());
+            view.showLanguages(languages);
+        } catch (RuntimeException e) {
+            view.showError(e.getMessage());
+        }
     }
 
     public void onBindLanguageItemViewAtPosition(int position, LanguageItemView itemView) {

@@ -55,4 +55,9 @@ public class HomeFragment extends Fragment implements HomeFragmentView {
     public void showLanguageDetails(String languageCode) {
         Toast.makeText(getContext(), "creating activity " + languageCode, Toast.LENGTH_LONG).show();
     }
+
+    @Override
+    public void showError(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
 }

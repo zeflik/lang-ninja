@@ -1,4 +1,4 @@
-package com.example.joseph.langninja.dao;
+package com.example.joseph.langninja.repository.room;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

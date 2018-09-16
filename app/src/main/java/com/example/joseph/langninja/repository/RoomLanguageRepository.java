@@ -2,9 +2,9 @@ package com.example.joseph.langninja.repository;
 
 import android.content.Context;
 
-import com.example.joseph.langninja.dao.AppDatabase;
-import com.example.joseph.langninja.dao.LanguageDao;
 import com.example.joseph.langninja.model.Language;
+import com.example.joseph.langninja.repository.room.AppDatabase;
+import com.example.joseph.langninja.repository.room.LanguageDao;
 
 import java.util.List;
 
@@ -21,9 +21,18 @@ public class RoomLanguageRepository implements LanguageRepository {
     }
 
     @Override
-    public List<Language> getLanguages() throws RuntimeException {
+    public List<Language> getAll() throws RuntimeException {
         try {
             return languageDao.getAll();
+        } catch (Exception e) {
+            throw new RuntimeException(ROOM_DATABASE_ERROR_MESSAGE);
+        }
+    }
+
+    @Override
+    public void insertAll(Language... languages) {
+        try {
+            languageDao.insertAll(languages);
         } catch (Exception e) {
             throw new RuntimeException(ROOM_DATABASE_ERROR_MESSAGE);
         }

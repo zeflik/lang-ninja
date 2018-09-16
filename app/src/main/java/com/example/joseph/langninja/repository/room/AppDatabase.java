@@ -1,4 +1,4 @@
-package com.example.joseph.langninja.dao;
+package com.example.joseph.langninja.repository.room;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
@@ -45,7 +45,7 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract LanguageDao languageDao();
-
 }
+
 
 

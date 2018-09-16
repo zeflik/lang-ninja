@@ -9,4 +9,6 @@ public interface HomeFragmentView {
     void showLanguages(List<Language> languageList);
 
     void showLanguageDetails(String languageCode);
+
+    void showError(String message);
 }
