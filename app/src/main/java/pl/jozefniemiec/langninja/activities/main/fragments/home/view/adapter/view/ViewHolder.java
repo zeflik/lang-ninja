@@ -5,18 +5,22 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 
 public class ViewHolder extends RecyclerView.ViewHolder implements LanguageItemView {
-    private TextView languageNameTv;
-    private TextView languageNativeNameTv;
-    private ImageView languageFlag;
+
+    @BindView(R.id.tvLanguageName)
+    TextView languageNameTv;
+    @BindView(R.id.tvNativeLanguageName)
+    TextView languageNativeNameTv;
+    @BindView(R.id.ivFlagOnList)
+    ImageView languageFlag;
 
     ViewHolder(View itemView) {
         super(itemView);
-        languageNameTv = itemView.findViewById(R.id.tvLanguageName);
-        languageNativeNameTv = itemView.findViewById(R.id.tvNativeLanguageName);
-        languageFlag = itemView.findViewById(R.id.ivFlagOnList);
+        ButterKnife.bind(this, itemView);
     }
 
     @Override

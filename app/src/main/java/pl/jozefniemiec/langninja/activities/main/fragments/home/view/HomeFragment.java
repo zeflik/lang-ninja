@@ -14,6 +14,9 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.language.view.LanguageCard;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenter;
@@ -28,23 +31,31 @@ public class HomeFragment extends Fragment implements HomeFragmentView, View.OnC
     private static final String TAG = "HomeFragment";
     public static final String LANGUAGE_CODE = "Language Code";
 
-    private RecyclerView recyclerView;
+    @BindView(R.id.rvNumbers)
+    RecyclerView recyclerView;
     private HomeFragmentPresenter presenter;
+    private Unbinder unbinder;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        recyclerView = getView().findViewById(R.id.rvNumbers);
         int numberOfColumns = Utility.calculateNoOfColumns(getContext());
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
         presenter = new HomeFragmentPresenterImpl(this, new RoomLanguageRepository(getContext()));
         presenter.loadLanguages();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override

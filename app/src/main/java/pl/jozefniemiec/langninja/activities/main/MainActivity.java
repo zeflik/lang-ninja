@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.view.HomeFragment;
 import pl.jozefniemiec.langninja.model.Language;
@@ -14,17 +16,19 @@ import pl.jozefniemiec.langninja.repository.room.AppDatabase;
 public class MainActivity extends AppCompatActivity {
 
     private SectionPageAdapter mSectionsPageAdapter;
-    private ViewPager mViewPager;
+
+    @BindView(R.id.language_view_pager)
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
         initializeDatabase();
         mSectionsPageAdapter = new SectionPageAdapter(getSupportFragmentManager());
         HomeFragment homeFragment = new HomeFragment();
         mSectionsPageAdapter.addFragment(homeFragment, "Home");
-        mViewPager = findViewById(R.id.language_view_pager);
         mViewPager.setAdapter(mSectionsPageAdapter);
     }
 

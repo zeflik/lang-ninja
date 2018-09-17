@@ -9,12 +9,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
 
 public class LanguagePageAdapter extends PagerAdapter {
 
     private final Context context;
+
+    @BindView(R.id.languagePageSentence)
+    TextView sentence;
+    @BindView(R.id.ivFlagOnCard)
+    ImageView flag;
 
     public LanguagePageAdapter(Context context) {
         this.context = context;
@@ -26,9 +33,8 @@ public class LanguagePageAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         LayoutInflater inflater = LayoutInflater.from(context);
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.language_page, container, false);
-        TextView sentence = layout.findViewById(R.id.languagePageSentence);
+        ButterKnife.bind(this, layout);
         sentence.setText("sentence");
-        ImageView flag = layout.findViewById(R.id.ivFlagOnCard);
         int id = new AndroidResourceManager(context.getResources()).getFlagId("de");
         flag.setImageResource(id);
         container.addView(layout);

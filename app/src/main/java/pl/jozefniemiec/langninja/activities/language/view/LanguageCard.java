@@ -6,6 +6,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.language.presenter.LanguageCardPresenter;
 import pl.jozefniemiec.langninja.activities.language.presenter.LanguageCardPresenterImpl;
@@ -15,14 +17,17 @@ import static pl.jozefniemiec.langninja.activities.main.fragments.home.view.Home
 
 public class LanguageCard extends AppCompatActivity implements LanguageCardView {
 
-    private ViewPager mViewPager;
     private LanguagePageAdapter languagePageAdapter;
     private LanguageCardPresenter presenter;
+
+    @BindView(R.id.language_card_view_pager)
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_language_card);
+        ButterKnife.bind(this);
 
         ActionBar supportActionBar = getSupportActionBar();
         supportActionBar.setDisplayHomeAsUpEnabled(true);
@@ -35,7 +40,6 @@ public class LanguageCard extends AppCompatActivity implements LanguageCardView 
     @Override
     public void showData() {
         languagePageAdapter = new LanguagePageAdapter(getBaseContext());
-        mViewPager = findViewById(R.id.language_card_view_pager);
         mViewPager.setAdapter(languagePageAdapter);
     }
 
