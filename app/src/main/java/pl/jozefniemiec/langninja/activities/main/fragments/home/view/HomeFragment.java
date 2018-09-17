@@ -18,7 +18,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.language.view.LanguageCard;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenter;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenterImpl;
-import pl.jozefniemiec.langninja.activities.main.fragments.home.view.items.view.LanguagesViewAdapter;
+import pl.jozefniemiec.langninja.activities.main.fragments.home.view.adapter.view.LanguagesViewAdapter;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.utils.Utility;

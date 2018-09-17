@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.language.presenter.LanguageCardPresenter;
 import pl.jozefniemiec.langninja.activities.language.presenter.LanguageCardPresenterImpl;
-import pl.jozefniemiec.langninja.activities.language.view.pages.view.LanguagePageAdapter;
+import pl.jozefniemiec.langninja.activities.language.view.adapter.view.LanguagePageAdapter;
 
 import static pl.jozefniemiec.langninja.activities.main.fragments.home.view.HomeFragment.LANGUAGE_CODE;
 
