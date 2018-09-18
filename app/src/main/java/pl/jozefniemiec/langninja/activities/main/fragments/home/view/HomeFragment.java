@@ -14,6 +14,8 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -23,6 +25,7 @@ import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFr
 import pl.jozefniemiec.langninja.activities.main.fragments.home.presenter.HomeFragmentPresenterImpl;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.view.adapter.view.LanguagesViewAdapter;
 import pl.jozefniemiec.langninja.model.Language;
+import pl.jozefniemiec.langninja.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.repository.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.utils.Utility;
 
@@ -36,6 +39,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView, View.OnC
     private HomeFragmentPresenter presenter;
     private Unbinder unbinder;
 
+    @Inject
+    public HomeFragment() {
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,8 +54,10 @@ public class HomeFragment extends Fragment implements HomeFragmentView, View.OnC
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         int numberOfColumns = Utility.calculateNoOfColumns(getContext());
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numberOfColumns));
-        presenter = new HomeFragmentPresenterImpl(this, new RoomLanguageRepository(getContext()));
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
+        recyclerView.setLayoutManager(gridLayoutManager);
+        LanguageRepository roomLanguageRepository = new RoomLanguageRepository(getContext());
+        presenter = new HomeFragmentPresenterImpl(this, roomLanguageRepository);
         presenter.loadLanguages();
     }
 
