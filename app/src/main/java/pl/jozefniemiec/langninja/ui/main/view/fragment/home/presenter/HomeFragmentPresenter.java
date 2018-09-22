@@ -1,6 +1,6 @@
-package pl.jozefniemiec.langninja.ui.main.fragment.home.presenter;
+package pl.jozefniemiec.langninja.ui.main.view.fragment.home.presenter;
 
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter.LanguageItemView;
+import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter.LanguageItemView;
 
 public interface HomeFragmentPresenter {
 

@@ -13,7 +13,7 @@ import pl.jozefniemiec.langninja.ui.language.presenter.LanguageCardPresenter;
 import pl.jozefniemiec.langninja.ui.language.presenter.LanguageCardPresenterImpl;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.view.LanguagePageAdapter;
 
-import static pl.jozefniemiec.langninja.ui.main.fragment.home.view.HomeFragment.LANGUAGE_CODE;
+import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
 
 public class LanguageCard extends AppCompatActivity implements LanguageCardView {
 

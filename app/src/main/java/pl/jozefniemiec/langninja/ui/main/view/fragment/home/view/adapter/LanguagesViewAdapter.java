@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter;
+package pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.presenter.HomeFragmentPresenter;
+import pl.jozefniemiec.langninja.ui.main.view.fragment.home.presenter.HomeFragmentPresenter;
 
 import static android.view.View.OnClickListener;
 

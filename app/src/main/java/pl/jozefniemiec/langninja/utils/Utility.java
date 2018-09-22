@@ -1,11 +1,9 @@
 package pl.jozefniemiec.langninja.utils;
 
-import android.content.Context;
 import android.util.DisplayMetrics;
 
 public class Utility {
-    public static int calculateNoOfColumns(Context context) {
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+    public static int calculateNoOfColumns(DisplayMetrics displayMetrics) {
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         return (int) (dpWidth / 140);
     }

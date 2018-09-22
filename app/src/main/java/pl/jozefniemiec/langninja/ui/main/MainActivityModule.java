@@ -6,6 +6,10 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
+import pl.jozefniemiec.langninja.ui.main.presenter.MainPresenter;
+import pl.jozefniemiec.langninja.ui.main.presenter.MainPresenterImpl;
+import pl.jozefniemiec.langninja.ui.main.view.MainActivity;
+import pl.jozefniemiec.langninja.ui.main.view.MainView;
 
 @Module
 public abstract class MainActivityModule {

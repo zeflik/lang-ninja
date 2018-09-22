@@ -1,9 +1,8 @@
-package pl.jozefniemiec.langninja.ui.main;
+package pl.jozefniemiec.langninja.ui.main.view.fragment.home;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.HomeFragment;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.HomeFragmentModule;
+import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment;
 
 @Module
 public abstract class HomeFragmentProvider {

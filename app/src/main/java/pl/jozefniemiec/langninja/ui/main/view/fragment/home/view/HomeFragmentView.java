@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.fragment.home.view;
+package pl.jozefniemiec.langninja.ui.main.view.fragment.home.view;
 
 import java.util.List;
 

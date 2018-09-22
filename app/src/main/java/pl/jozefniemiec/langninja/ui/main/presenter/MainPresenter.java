@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main;
+package pl.jozefniemiec.langninja.ui.main.presenter;
 
 public interface MainPresenter {
 

@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.fragment.home.presenter;
+package pl.jozefniemiec.langninja.ui.main.view.fragment.home.presenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import javax.inject.Inject;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.HomeFragmentView;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter.LanguageItemView;
+import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragmentView;
+import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter.LanguageItemView;
 
 public class HomeFragmentPresenterImpl implements HomeFragmentPresenter {
 
