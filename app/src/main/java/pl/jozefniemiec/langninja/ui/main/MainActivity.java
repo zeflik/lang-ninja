@@ -2,6 +2,7 @@ package pl.jozefniemiec.langninja.ui.main;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -9,9 +10,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.repository.LanguageRepository;
-import pl.jozefniemiec.langninja.repository.room.AppDatabase;
 import pl.jozefniemiec.langninja.ui.main.fragment.home.view.HomeFragment;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainView {
@@ -23,7 +21,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
     SectionPageAdapter mSectionsPageAdapter;
 
     @Inject
-    LanguageRepository languageRepository;
+    MainPresenter mainPresenter;
 
     @Inject
     HomeFragment homeFragment;
@@ -32,31 +30,20 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         ButterKnife.bind(this);
-
-        initializeDatabase();
         mSectionsPageAdapter.addFragment(homeFragment, "Home");
         mViewPager.setAdapter(mSectionsPageAdapter);
-    }
-
-    private void initializeDatabase() {
-
-        languageRepository.insertAll(
-                new Language("pl_PL", "Polski"),
-                new Language("en_GB", "English"),
-                new Language("de", "German")
-        );
+        mainPresenter.loadMain();
     }
 
     @Override
     protected void onDestroy() {
-        AppDatabase.destroyInstance();
+        mainPresenter.onExitCleanup();
         super.onDestroy();
     }
 
     @Override
-    public void onMainLoaded() {
-
+    public void showFragments() {
+        Toast.makeText(this, "Main Activity loaded", Toast.LENGTH_SHORT).show();
     }
 }
