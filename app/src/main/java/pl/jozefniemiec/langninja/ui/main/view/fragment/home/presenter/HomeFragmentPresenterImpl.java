@@ -26,6 +26,7 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenter {
         this.resourcesManager = resourcesManager;
     }
 
+    @Override
     public void loadLanguages() {
         try {
             languages.addAll(languageRepository.getAll());
@@ -35,16 +36,19 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenter {
         }
     }
 
+    @Override
     public void onLanguageItemClicked(int position) {
         view.showLanguageDetails(languages.get(position).getCode());
     }
 
+    @Override
     public void onBindLanguageItemViewAtPosition(int position, LanguageItemView itemView) {
         itemView.setLanguageNativeName(languages.get(position).getNativeName());
         itemView.setLanguageFlag(resourcesManager.getFlagId(languages.get(position).getCode().toLowerCase()));
         itemView.setLanguageName(resourcesManager.getLanguageName(languages.get(position).getCode()));
     }
 
+    @Override
     public int getLanguageItemsCount() {
         return languages.size();
     }
