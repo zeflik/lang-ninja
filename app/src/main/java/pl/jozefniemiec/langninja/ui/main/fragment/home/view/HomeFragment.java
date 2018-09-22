@@ -23,7 +23,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.ui.language.view.LanguageCard;
 import pl.jozefniemiec.langninja.ui.main.fragment.home.presenter.HomeFragmentPresenter;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter.view.LanguagesViewAdapter;
+import pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter.LanguagesViewAdapter;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 public class HomeFragment extends DaggerFragment implements HomeFragmentView, View.OnClickListener {
@@ -70,7 +70,7 @@ public class HomeFragment extends DaggerFragment implements HomeFragmentView, Vi
 
     @Override
     public void showLanguages(List<Language> languageList) {
-        LanguagesViewAdapter adapter = new LanguagesViewAdapter(getContext().getResources(), languageList, this);
+        LanguagesViewAdapter adapter = new LanguagesViewAdapter(homeFragmentPresenter, this);
         recyclerView.setAdapter(adapter);
     }
 

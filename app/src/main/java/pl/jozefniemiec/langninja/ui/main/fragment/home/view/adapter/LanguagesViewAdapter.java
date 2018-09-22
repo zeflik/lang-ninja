@@ -1,33 +1,25 @@
-package pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter.view;
+package pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter;
 
-import android.content.res.Resources;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
-import pl.jozefniemiec.langninja.resources.ResourcesManager;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter.presenter.LanguageItemPresenter;
-import pl.jozefniemiec.langninja.ui.main.fragment.home.view.adapter.presenter.LanguageItemPresenterImpl;
+import pl.jozefniemiec.langninja.ui.main.fragment.home.presenter.HomeFragmentPresenter;
 
 import static android.view.View.OnClickListener;
 
 
 public class LanguagesViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    private final LanguageItemPresenter presenter;
+    private final HomeFragmentPresenter presenter;
     private final OnClickListener mOnClickListener;
 
-    public LanguagesViewAdapter(Resources resources, List<Language> languages, OnClickListener mOnClickListener) {
+    public LanguagesViewAdapter(HomeFragmentPresenter presenter, OnClickListener mOnClickListener) {
+        this.presenter = presenter;
         this.mOnClickListener = mOnClickListener;
-        ResourcesManager resourcesManager = new AndroidResourceManager(resources);
-        presenter = new LanguageItemPresenterImpl(languages, resourcesManager);
     }
 
     @NonNull
