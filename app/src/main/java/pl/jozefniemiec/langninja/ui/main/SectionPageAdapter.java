@@ -11,8 +11,8 @@ import javax.inject.Inject;
 
 public class SectionPageAdapter extends FragmentPagerAdapter {
 
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
+    private final List<Fragment> fragments = new ArrayList<>();
+    private final List<String> fragmentsTitle = new ArrayList<>();
 
     @Inject
     public SectionPageAdapter(FragmentManager fm) {
@@ -20,22 +20,22 @@ public class SectionPageAdapter extends FragmentPagerAdapter {
     }
 
     public void addFragment(Fragment fragment, String title) {
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
+        fragments.add(fragment);
+        fragmentsTitle.add(title);
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return mFragmentTitleList.get(position);
+        return fragmentsTitle.get(position);
     }
 
     @Override
     public Fragment getItem(int position) {
-        return mFragmentList.get(position);
+        return fragments.get(position);
     }
 
     @Override
     public int getCount() {
-        return mFragmentList.size();
+        return fragments.size();
     }
 }

@@ -15,10 +15,10 @@ import pl.jozefniemiec.langninja.ui.main.fragment.home.view.HomeFragment;
 public class MainActivity extends DaggerAppCompatActivity implements MainView {
 
     @BindView(R.id.language_view_pager)
-    ViewPager mViewPager;
+    ViewPager viewPager;
 
     @Inject
-    SectionPageAdapter mSectionsPageAdapter;
+    SectionPageAdapter sectionPageAdapter;
 
     @Inject
     MainPresenter mainPresenter;
@@ -28,8 +28,8 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mSectionsPageAdapter.addFragment(HomeFragment.newInstance(), "Home");
-        mViewPager.setAdapter(mSectionsPageAdapter);
+        sectionPageAdapter.addFragment(HomeFragment.newInstance(), "Home");
+        viewPager.setAdapter(sectionPageAdapter);
         mainPresenter.loadMain();
     }
 
