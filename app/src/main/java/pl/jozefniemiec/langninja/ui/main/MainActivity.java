@@ -23,15 +23,12 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
     @Inject
     MainPresenter mainPresenter;
 
-    @Inject
-    HomeFragment homeFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mSectionsPageAdapter.addFragment(homeFragment, "Home");
+        mSectionsPageAdapter.addFragment(HomeFragment.newInstance(), "Home");
         mViewPager.setAdapter(mSectionsPageAdapter);
         mainPresenter.loadMain();
     }
