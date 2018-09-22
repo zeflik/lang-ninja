@@ -1,10 +1,11 @@
 package pl.jozefniemiec.langninja.di;
 
 import dagger.Component;
-import pl.jozefniemiec.langninja.activities.main.MainActivity;
+import dagger.android.AndroidInjectionModule;
+import dagger.android.AndroidInjector;
+import pl.jozefniemiec.langninja.LangNinjaApplication;
 
-@Component(modules = {LanguageRepositoryModule.class, FragmentManagerModule.class})
-public interface LangNinjaApplicationComponent {
+@Component(modules = {AndroidInjectionModule.class, LangNinjaApplicationModule.class})
+public interface LangNinjaApplicationComponent extends AndroidInjector<LangNinjaApplication> {
 
-    void injectHomeActivity(MainActivity mainActivity);
 }

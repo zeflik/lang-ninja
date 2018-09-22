@@ -8,12 +8,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.AndroidInjection;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.activities.main.fragments.home.view.HomeFragment;
-import pl.jozefniemiec.langninja.di.ContextModule;
-import pl.jozefniemiec.langninja.di.DaggerLangNinjaApplicationComponent;
-import pl.jozefniemiec.langninja.di.FragmentManagerModule;
-import pl.jozefniemiec.langninja.di.LangNinjaApplicationComponent;
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.repository.room.AppDatabase;
@@ -23,10 +20,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.language_view_pager)
     ViewPager mViewPager;
 
-    @Inject
+    //    @Inject
     SectionPageAdapter mSectionsPageAdapter;
 
-    @Inject
     LanguageRepository languageRepository;
 
     @Inject
@@ -39,11 +35,19 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        LangNinjaApplicationComponent component = DaggerLangNinjaApplicationComponent.builder()
+        AndroidInjection.inject(this);
+
+        /*LangNinjaApplicationComponent component = DaggerLangNinjaApplicationComponent.builder()
                 .contextModule(new ContextModule(this))
                 .fragmentManagerModule(new FragmentManagerModule(getSupportFragmentManager()))
                 .build();
-        component.injectHomeActivity(this);
+        component.injectHomeActivity(this);*/
+
+        if (homeFragment != null) {
+            System.out.println("DI worked");
+        } else {
+            System.out.println("DI not worked");
+        }
 
         initializeDatabase();
         mSectionsPageAdapter.addFragment(homeFragment, "Home");
