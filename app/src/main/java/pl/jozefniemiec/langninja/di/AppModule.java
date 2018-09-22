@@ -16,19 +16,15 @@ import pl.jozefniemiec.langninja.resources.ResourcesManager;
 public abstract class AppModule {
 
     @Provides
-    static LanguageRepository provideLanguageRepository(Context context) {
-        return new RoomLanguageRepository(context);
-    }
-
-    @Provides
     static Resources provideResources(Application application) {
         return application.getResources();
     }
 
-    @Provides
-    static ResourcesManager provideResourcesManager(Resources resources) {
-        return new AndroidResourceManager(resources);
-    }
+    @Binds
+    abstract ResourcesManager provideResourcesManager(AndroidResourceManager androidResourceManager);
+
+    @Binds
+    abstract LanguageRepository provideLanguageRepository(RoomLanguageRepository repository);
 
     @Binds
     abstract Context provideContext(Application application);

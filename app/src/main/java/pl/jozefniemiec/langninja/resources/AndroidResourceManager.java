@@ -2,6 +2,8 @@ package pl.jozefniemiec.langninja.resources;
 
 import android.content.res.Resources;
 
+import javax.inject.Inject;
+
 import pl.jozefniemiec.langninja.R;
 
 public class AndroidResourceManager implements ResourcesManager {
@@ -9,6 +11,7 @@ public class AndroidResourceManager implements ResourcesManager {
     private final Resources resources;
     private final String packageName;
 
+    @Inject
     public AndroidResourceManager(Resources resources) {
         this.resources = resources;
         packageName = resources.getString(R.string.app_package_name);

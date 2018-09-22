@@ -9,4 +9,6 @@ public interface LanguageRepository {
     List<Language> getAll();
 
     void insertAll(Language... languages);
+
+    void destroyInstance();
 }

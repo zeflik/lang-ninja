@@ -4,6 +4,8 @@ import android.content.Context;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.room.AppDatabase;
 import pl.jozefniemiec.langninja.repository.room.LanguageDao;
@@ -15,6 +17,7 @@ public class RoomLanguageRepository implements LanguageRepository {
     private final Context context;
     private final LanguageDao languageDao;
 
+    @Inject
     public RoomLanguageRepository(Context context) {
         this.context = context;
         this.languageDao = AppDatabase.getInstance(context).languageDao();
@@ -36,5 +39,10 @@ public class RoomLanguageRepository implements LanguageRepository {
         } catch (Exception e) {
             throw new RuntimeException(ROOM_DATABASE_ERROR_MESSAGE);
         }
+    }
+
+    @Override
+    public void destroyInstance() {
+        AppDatabase.destroyInstance();
     }
 }

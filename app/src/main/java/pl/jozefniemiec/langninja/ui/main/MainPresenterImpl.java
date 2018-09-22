@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
-import pl.jozefniemiec.langninja.repository.room.AppDatabase;
 
 public class MainPresenterImpl implements MainPresenter {
 
@@ -33,6 +32,6 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onExitCleanup() {
-        AppDatabase.destroyInstance();
+        languageRepository.destroyInstance();
     }
 }
