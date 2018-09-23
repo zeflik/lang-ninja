@@ -42,7 +42,7 @@ public class RoomLanguageRepository implements LanguageRepository {
     }
 
     @Override
-    public void destroyInstance() {
+    public void close() {
         AppDatabase.destroyInstance();
     }
 }

@@ -24,7 +24,6 @@ import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.ui.language.view.LanguageCard;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.presenter.HomeFragmentPresenter;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter.LanguagesViewAdapter;
-import pl.jozefniemiec.langninja.utils.Utility;
 
 public class HomeFragment extends DaggerFragment implements HomeFragmentView, View.OnClickListener {
 
@@ -36,6 +35,9 @@ public class HomeFragment extends DaggerFragment implements HomeFragmentView, Vi
 
     @Inject
     HomeFragmentPresenter homeFragmentPresenter;
+
+    @Inject
+    GridLayoutManager gridLayoutManager;
 
     private Unbinder unbinder;
 
@@ -56,8 +58,6 @@ public class HomeFragment extends DaggerFragment implements HomeFragmentView, Vi
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        int numberOfColumns = Utility.calculateNoOfColumns(getContext().getResources().getDisplayMetrics());
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), numberOfColumns);
         recyclerView.setLayoutManager(gridLayoutManager);
         homeFragmentPresenter.loadLanguages();
     }

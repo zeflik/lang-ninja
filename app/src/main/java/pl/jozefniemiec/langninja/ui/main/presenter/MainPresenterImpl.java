@@ -33,6 +33,6 @@ public class MainPresenterImpl implements MainPresenter {
 
     @Override
     public void onExitCleanup() {
-        languageRepository.destroyInstance();
+        languageRepository.close();
     }
 }

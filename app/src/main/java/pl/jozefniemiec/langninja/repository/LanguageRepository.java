@@ -10,5 +10,5 @@ public interface LanguageRepository {
 
     void insertAll(Language... languages);
 
-    void destroyInstance();
+    void close();
 }
