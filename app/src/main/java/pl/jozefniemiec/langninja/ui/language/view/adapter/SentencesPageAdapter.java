@@ -21,6 +21,7 @@ public class SentencesPageAdapter extends PagerAdapter implements SentencesItemV
 
     @BindView(R.id.languagePageSentence)
     TextView sentence;
+
     @BindView(R.id.ivFlagOnCard)
     ImageView flag;
 
