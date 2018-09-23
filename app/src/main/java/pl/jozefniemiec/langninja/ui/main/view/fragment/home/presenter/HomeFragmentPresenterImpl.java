@@ -19,7 +19,9 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenter {
     private final ResourcesManager resourcesManager;
 
     @Inject
-    public HomeFragmentPresenterImpl(HomeFragmentView view, LanguageRepository languageRepository, ResourcesManager resourcesManager) {
+    public HomeFragmentPresenterImpl(HomeFragmentView view,
+                                     LanguageRepository languageRepository,
+                                     ResourcesManager resourcesManager) {
         this.view = view;
         this.languageRepository = languageRepository;
         this.resourcesManager = resourcesManager;
