@@ -9,4 +9,6 @@ public interface LanguageCardPresenter {
     void loadPageDataAtPosition(int position, SentencesItemView itemView);
 
     int getPageCount();
+
+    void onPageChange(int position);
 }

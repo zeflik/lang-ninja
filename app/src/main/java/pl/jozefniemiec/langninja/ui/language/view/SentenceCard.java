@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import javax.inject.Inject;
 
@@ -16,7 +17,8 @@ import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
 
 import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
 
-public class SentenceCard extends DaggerAppCompatActivity implements SentenceCardView {
+public class SentenceCard extends DaggerAppCompatActivity
+        implements SentenceCardView, ViewPager.OnPageChangeListener {
 
     @Inject
     SentencesPageAdapter languagePageAdapter;
@@ -25,12 +27,15 @@ public class SentenceCard extends DaggerAppCompatActivity implements SentenceCar
     LanguageCardPresenter presenter;
 
     @BindView(R.id.language_card_view_pager)
-    ViewPager mViewPager;
+    ViewPager viewPager;
+
+    @BindView(R.id.languagePageCount)
+    TextView numberingTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_language_card);
+        setContentView(R.layout.activity_sentence_card);
         ButterKnife.bind(this);
 
         ActionBar supportActionBar = getSupportActionBar();
@@ -42,7 +47,13 @@ public class SentenceCard extends DaggerAppCompatActivity implements SentenceCar
 
     @Override
     public void showData() {
-        mViewPager.setAdapter(languagePageAdapter);
+        viewPager.setAdapter(languagePageAdapter);
+        viewPager.addOnPageChangeListener(this);
+    }
+
+    @Override
+    public void showNumbering(String numbering) {
+        numberingTv.setText(numbering);
     }
 
     @Override
@@ -54,5 +65,20 @@ public class SentenceCard extends DaggerAppCompatActivity implements SentenceCar
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        presenter.onPageChange(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
     }
 }

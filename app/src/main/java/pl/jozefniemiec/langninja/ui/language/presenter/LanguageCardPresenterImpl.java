@@ -30,6 +30,7 @@ public class LanguageCardPresenterImpl implements LanguageCardPresenter {
         initializeDatabase();
         sentences = sentenceRepository.getLanguageSentences(languageCode);
         view.showData();
+        view.showNumbering(1 + " / " + getPageCount());
     }
 
     @Override
@@ -41,6 +42,11 @@ public class LanguageCardPresenterImpl implements LanguageCardPresenter {
     @Override
     public int getPageCount() {
         return sentences.size();
+    }
+
+    @Override
+    public void onPageChange(int position) {
+        view.showNumbering(position + 1 + " / " + getPageCount());
     }
 
     private void initializeDatabase() {
