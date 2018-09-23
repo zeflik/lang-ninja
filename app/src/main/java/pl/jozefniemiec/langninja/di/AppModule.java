@@ -9,6 +9,8 @@ import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.repository.RoomLanguageRepository;
+import pl.jozefniemiec.langninja.repository.RoomSentenceRepository;
+import pl.jozefniemiec.langninja.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;
 
@@ -21,11 +23,14 @@ public abstract class AppModule {
     }
 
     @Binds
-    abstract ResourcesManager provideResourcesManager(AndroidResourceManager androidResourceManager);
+    abstract ResourcesManager bindResourcesManager(AndroidResourceManager androidResourceManager);
 
     @Binds
-    abstract LanguageRepository provideLanguageRepository(RoomLanguageRepository repository);
+    abstract LanguageRepository bindLanguageRepository(RoomLanguageRepository repository);
 
     @Binds
-    abstract Context provideContext(Application application);
+    abstract SentenceRepository bindSentenceRepository(RoomSentenceRepository repository);
+
+    @Binds
+    abstract Context bindContext(Application application);
 }

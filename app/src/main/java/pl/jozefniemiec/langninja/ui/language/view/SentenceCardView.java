@@ -1,6 +1,6 @@
 package pl.jozefniemiec.langninja.ui.language.view;
 
-public interface LanguageCardView {
+public interface SentenceCardView {
 
     void showData();
 }

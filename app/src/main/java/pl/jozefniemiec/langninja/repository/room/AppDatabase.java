@@ -6,10 +6,12 @@ import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
 import pl.jozefniemiec.langninja.model.Language;
+import pl.jozefniemiec.langninja.model.Sentence;
 
 @Database(
         entities = {
-                Language.class
+                Language.class,
+                Sentence.class
         },
         version = 1)
 
@@ -27,15 +29,6 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase buildDatabase(final Context context) {
         return Room.inMemoryDatabaseBuilder(context,
                 AppDatabase.class)
-//                .addCallback(new Callback() {
-//                    @Override
-//                    public void onCreate(@NonNull SupportSQLiteDatabase db) {
-//                        super.onCreate(db);
-//                        Executors.newSingleThreadScheduledExecutor()
-//                                .execute(() -> getInstance(context).basicTaskDao()
-//                                        .insertAll(InitialData.populateData()));
-//                    }
-//                })
                 .allowMainThreadQueries()
                 .build();
     }
@@ -45,6 +38,8 @@ public abstract class AppDatabase extends RoomDatabase {
     }
 
     public abstract LanguageDao languageDao();
+
+    public abstract SentenceDao sentenceDao();
 }
 
 

@@ -21,7 +21,7 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.ui.language.view.LanguageCard;
+import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.presenter.HomeFragmentPresenter;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter.LanguagesViewAdapter;
 
@@ -78,7 +78,7 @@ public class HomeFragment extends DaggerFragment implements HomeFragmentView, Vi
 
     @Override
     public void showLanguageDetails(String languageCode) {
-        Intent intent = new Intent(getContext(), LanguageCard.class);
+        Intent intent = new Intent(getContext(), SentenceCard.class);
         intent.putExtra(LANGUAGE_CODE, languageCode);
         startActivity(intent);
     }

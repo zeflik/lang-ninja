@@ -12,19 +12,21 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
+import pl.jozefniemiec.langninja.ui.language.presenter.LanguageCardPresenter;
 
-public class LanguagePageAdapter extends PagerAdapter {
+public class SentencesPageAdapter extends PagerAdapter implements SentencesItemView {
 
     private final Context context;
+    private final LanguageCardPresenter presenter;
 
     @BindView(R.id.languagePageSentence)
     TextView sentence;
     @BindView(R.id.ivFlagOnCard)
     ImageView flag;
 
-    public LanguagePageAdapter(Context context) {
+    public SentencesPageAdapter(Context context, LanguageCardPresenter presenter) {
         this.context = context;
+        this.presenter = presenter;
     }
 
     @NonNull
@@ -33,16 +35,14 @@ public class LanguagePageAdapter extends PagerAdapter {
         LayoutInflater inflater = LayoutInflater.from(context);
         ViewGroup layout = (ViewGroup) inflater.inflate(R.layout.language_page, container, false);
         ButterKnife.bind(this, layout);
-        sentence.setText("sentence");
-        int id = new AndroidResourceManager(context.getResources()).getFlagId("de");
-        flag.setImageResource(id);
+        presenter.loadPageDataAtPosition(position, this);
         container.addView(layout);
         return layout;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return presenter.getPageCount();
     }
 
     @Override
@@ -58,5 +58,15 @@ public class LanguagePageAdapter extends PagerAdapter {
     @Override
     public int getItemPosition(@NonNull Object object) {
         return PagerAdapter.POSITION_NONE;
+    }
+
+    @Override
+    public void setFlag(int id) {
+        flag.setImageResource(id);
+    }
+
+    @Override
+    public void setSentence(String sentence) {
+        this.sentence.setText(sentence);
     }
 }
