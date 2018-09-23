@@ -8,7 +8,7 @@ import pl.jozefniemiec.langninja.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesItemView;
 
-public class LanguageCardPresenterImpl implements LanguageCardPresenter {
+public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     private final SentenceCardView view;
     private final ResourcesManager resourcesManager;
@@ -16,7 +16,7 @@ public class LanguageCardPresenterImpl implements LanguageCardPresenter {
     private String languageCode;
     private List<Sentence> sentences;
 
-    public LanguageCardPresenterImpl(SentenceCardView view,
+    public SentenceCardPresenterImpl(SentenceCardView view,
                                      ResourcesManager resourcesManager,
                                      SentenceRepository sentenceRepository) {
         this.view = view;

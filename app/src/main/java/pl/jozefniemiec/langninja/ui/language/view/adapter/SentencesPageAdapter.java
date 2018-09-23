@@ -12,19 +12,19 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.language.presenter.LanguageCardPresenter;
+import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
 
 public class SentencesPageAdapter extends PagerAdapter implements SentencesItemView {
 
     private final Context context;
-    private final LanguageCardPresenter presenter;
+    private final SentenceCardPresenter presenter;
 
     @BindView(R.id.languagePageSentence)
     TextView sentence;
     @BindView(R.id.ivFlagOnCard)
     ImageView flag;
 
-    public SentencesPageAdapter(Context context, LanguageCardPresenter presenter) {
+    public SentencesPageAdapter(Context context, SentenceCardPresenter presenter) {
         this.context = context;
         this.presenter = presenter;
     }

@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.language.presenter.LanguageCardPresenter;
+import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
 
 import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
@@ -24,7 +24,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     SentencesPageAdapter languagePageAdapter;
 
     @Inject
-    LanguageCardPresenter presenter;
+    SentenceCardPresenter presenter;
 
     @BindView(R.id.language_card_view_pager)
     ViewPager viewPager;
