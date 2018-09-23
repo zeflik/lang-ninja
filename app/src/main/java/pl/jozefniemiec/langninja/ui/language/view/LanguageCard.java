@@ -3,22 +3,26 @@ package pl.jozefniemiec.langninja.ui.language.view;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.language.presenter.LanguageCardPresenter;
-import pl.jozefniemiec.langninja.ui.language.presenter.LanguageCardPresenterImpl;
-import pl.jozefniemiec.langninja.ui.language.view.adapter.view.LanguagePageAdapter;
+import pl.jozefniemiec.langninja.ui.language.view.adapter.LanguagePageAdapter;
 
 import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
 
-public class LanguageCard extends AppCompatActivity implements LanguageCardView {
+public class LanguageCard extends DaggerAppCompatActivity implements LanguageCardView {
 
-    private LanguagePageAdapter languagePageAdapter;
-    private LanguageCardPresenter presenter;
+    @Inject
+    LanguagePageAdapter languagePageAdapter;
+
+    @Inject
+    LanguageCardPresenter presenter;
 
     @BindView(R.id.language_card_view_pager)
     ViewPager mViewPager;
@@ -33,13 +37,11 @@ public class LanguageCard extends AppCompatActivity implements LanguageCardView 
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         supportActionBar.setTitle(getIntent().getStringExtra(LANGUAGE_CODE));
 
-        presenter = new LanguageCardPresenterImpl(this);
         presenter.loadData();
     }
 
     @Override
     public void showData() {
-        languagePageAdapter = new LanguagePageAdapter(getBaseContext());
         mViewPager.setAdapter(languagePageAdapter);
     }
 

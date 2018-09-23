@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.language.view.adapter.view;
+package pl.jozefniemiec.langninja.ui.language.view.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -26,7 +26,6 @@ public class LanguagePageAdapter extends PagerAdapter {
     public LanguagePageAdapter(Context context) {
         this.context = context;
     }
-
 
     @NonNull
     @Override

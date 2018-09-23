@@ -10,7 +10,6 @@ public class LanguageCardPresenterImpl implements LanguageCardPresenter {
         this.view = view;
     }
 
-
     @Override
     public void loadData() {
         view.showData();
