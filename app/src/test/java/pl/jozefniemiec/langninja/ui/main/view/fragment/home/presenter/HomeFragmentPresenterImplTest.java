@@ -15,7 +15,9 @@ import pl.jozefniemiec.langninja.model.Language;
 import pl.jozefniemiec.langninja.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragmentView;
+import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter.LanguageItemView;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +34,8 @@ public class HomeFragmentPresenterImplTest {
     private ResourcesManager resourcesManager;
     @InjectMocks
     private HomeFragmentPresenterImpl presenter;
+    @Mock
+    private LanguageItemView itemView;
 
     @Before
     public void setUp() {
@@ -40,27 +44,42 @@ public class HomeFragmentPresenterImplTest {
         languages.add(new Language("en_EN", "English"));
         languages.add(new Language("de_DE", "Deutsch"));
         when(languageRepository.getAll()).thenReturn(languages);
+        presenter.loadLanguages();
     }
 
     @Test
-    public void loadLanguagesAndPassToView() {
-        presenter.loadLanguages();
+    public void passDataToView() {
         verify(view).showLanguages(languages);
     }
 
     @Test
     public void findLanguageCodeOnItemClickAndPassToViewToShowDetails() {
-        presenter.loadLanguages();
         int position = 1;
         presenter.onLanguageItemClicked(position);
         verify(view).showLanguageDetails(languages.get(position).getCode());
     }
 
     @Test
-    public void onBindLanguageItemViewAtPosition() {
+    public void passResourcesToItemViewAtPosition() {
+        int position = 2;
+        String langCode = languages.get(position).getCode();
+        when(resourcesManager.getLanguageName(langCode)).thenReturn("Lang Name");
+        when(resourcesManager.getFlagId(langCode.toLowerCase())).thenReturn(123);
+        presenter.onBindLanguageItemViewAtPosition(position, itemView);
+        verify(itemView).setLanguageName("Lang Name");
+        verify(itemView).setLanguageFlag(123);
+    }
+
+
+    @Test
+    public void passDataToItemViewAtPosition() {
+        int position = 0;
+        presenter.onBindLanguageItemViewAtPosition(position, itemView);
+        verify(itemView).setLanguageNativeName(languages.get(position).getNativeName());
     }
 
     @Test
-    public void getLanguageItemsCount() {
+    public void provideLanguageItemsCount() {
+        assertEquals(languages.size(), presenter.getLanguageItemsCount());
     }
 }

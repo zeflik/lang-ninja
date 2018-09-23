@@ -20,29 +20,29 @@ public class MainPresenterImplTest {
     public MockitoRule mockitoRule = MockitoJUnit.rule();
 
     @Mock
-    private MainView mainView;
+    private MainView view;
 
     @Mock
     private LanguageRepository languageRepository;
 
     @InjectMocks
-    private MainPresenterImpl mainPresenter;
+    private MainPresenterImpl presenter;
 
     @Test
     public void showFragmentsInView() {
-        mainPresenter.loadMain();
-        verify(mainView).showFragments();
+        presenter.loadMain();
+        verify(view).showFragments();
     }
 
     @Test
     public void closeRepositoryOnDestroy() {
-        mainPresenter.onExitCleanup();
+        presenter.onExitCleanup();
         verify(languageRepository).close();
     }
 
     @Test
     public void createDBInitialData() {
-        mainPresenter.loadMain();
+        presenter.loadMain();
         verify(languageRepository).insertAll(any(Language.class));
     }
 }

@@ -15,18 +15,18 @@ import static android.view.View.OnClickListener;
 public class LanguagesViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     private final HomeFragmentPresenter presenter;
-    private final OnClickListener mOnClickListener;
+    private final OnClickListener onClickListener;
 
-    public LanguagesViewAdapter(HomeFragmentPresenter presenter, OnClickListener mOnClickListener) {
+    public LanguagesViewAdapter(HomeFragmentPresenter presenter, OnClickListener onClickListener) {
         this.presenter = presenter;
-        this.mOnClickListener = mOnClickListener;
+        this.onClickListener = onClickListener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.language_card_item, parent, false);
-        view.setOnClickListener(mOnClickListener);
+        view.setOnClickListener(onClickListener);
         return new ViewHolder(view);
     }
 
