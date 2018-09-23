@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import javax.inject.Inject;
+
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.presenter.HomeFragmentPresenter;
 
@@ -17,6 +19,7 @@ public class LanguagesViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     private final HomeFragmentPresenter presenter;
     private final OnClickListener onClickListener;
 
+    @Inject
     public LanguagesViewAdapter(HomeFragmentPresenter presenter, OnClickListener onClickListener) {
         this.presenter = presenter;
         this.onClickListener = onClickListener;

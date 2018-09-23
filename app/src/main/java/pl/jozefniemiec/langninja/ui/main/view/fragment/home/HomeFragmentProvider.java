@@ -8,5 +8,6 @@ import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment;
 public abstract class HomeFragmentProvider {
 
     @ContributesAndroidInjector(modules = HomeFragmentModule.class)
+    @HomeFragmentScope
     abstract HomeFragment provideHomeFragment();
 }

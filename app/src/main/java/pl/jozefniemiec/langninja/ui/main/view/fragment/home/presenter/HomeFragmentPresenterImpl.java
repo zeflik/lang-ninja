@@ -18,7 +18,6 @@ public class HomeFragmentPresenterImpl implements HomeFragmentPresenter {
     private List<Language> languages = new ArrayList<>();
     private final ResourcesManager resourcesManager;
 
-
     @Inject
     public HomeFragmentPresenterImpl(HomeFragmentView view, LanguageRepository languageRepository, ResourcesManager resourcesManager) {
         this.view = view;

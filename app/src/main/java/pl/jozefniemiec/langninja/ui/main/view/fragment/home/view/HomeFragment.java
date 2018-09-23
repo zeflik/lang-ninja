@@ -39,6 +39,9 @@ public class HomeFragment extends DaggerFragment implements HomeFragmentView, Vi
     @Inject
     GridLayoutManager gridLayoutManager;
 
+    @Inject
+    LanguagesViewAdapter adapter;
+
     private Unbinder unbinder;
 
     public static HomeFragment newInstance() {
@@ -70,7 +73,6 @@ public class HomeFragment extends DaggerFragment implements HomeFragmentView, Vi
 
     @Override
     public void showLanguages(List<Language> languageList) {
-        LanguagesViewAdapter adapter = new LanguagesViewAdapter(homeFragmentPresenter, this);
         recyclerView.setAdapter(adapter);
     }
 

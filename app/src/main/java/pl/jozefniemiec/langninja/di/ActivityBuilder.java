@@ -10,6 +10,7 @@ import pl.jozefniemiec.langninja.ui.main.view.fragment.home.HomeFragmentProvider
 public abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = {MainActivityModule.class, HomeFragmentProvider.class})
+    @MainActivityScope
     abstract MainActivity bindMainActivity();
 
 }
