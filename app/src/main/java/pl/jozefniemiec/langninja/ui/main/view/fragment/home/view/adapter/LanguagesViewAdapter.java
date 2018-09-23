@@ -28,7 +28,8 @@ public class LanguagesViewAdapter extends RecyclerView.Adapter<ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.language_card_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.language_card_item, parent, false);
         view.setOnClickListener(onClickListener);
         return new ViewHolder(view);
     }
