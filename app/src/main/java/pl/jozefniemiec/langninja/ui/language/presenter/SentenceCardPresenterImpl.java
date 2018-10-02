@@ -1,5 +1,6 @@
 package pl.jozefniemiec.langninja.ui.language.presenter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import pl.jozefniemiec.langninja.model.Sentence;
@@ -71,6 +72,17 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     @Override
     public void readerLanguageNotSupported(String languageCode) {
         view.showErrorMessage("Language " + languageCode + "not supported");
+    }
+
+    @Override
+    public void microphoneButtonClicked() {
+        view.stopSpeaking();
+        view.speechListen(languageCode);
+    }
+
+    @Override
+    public void spokenText(ArrayList<String> spokenTextsList) {
+        view.showSpokenText(spokenTextsList.get(0));
     }
 
     private void initializeDatabase() {

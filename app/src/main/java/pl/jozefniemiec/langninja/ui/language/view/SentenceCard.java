@@ -1,6 +1,10 @@
 package pl.jozefniemiec.langninja.ui.language.view;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
@@ -10,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -24,7 +29,11 @@ import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
 import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
 
 public class SentenceCard extends DaggerAppCompatActivity
-        implements SentenceCardView, ViewPager.OnPageChangeListener, TextToSpeech.OnInitListener {
+        implements
+        SentenceCardView,
+        ViewPager.OnPageChangeListener,
+        TextToSpeech.OnInitListener,
+        RecognitionListener {
 
     @Inject
     SentencesPageAdapter languagePageAdapter;
@@ -35,6 +44,9 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Inject
     TextToSpeech textToSpeech;
 
+    @Inject
+    SpeechRecognizer speechRecognizer;
+
     @BindView(R.id.language_card_view_pager)
     ViewPager viewPager;
 
@@ -43,6 +55,12 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @BindView(R.id.language_card_play_button)
     ImageButton playButton;
+
+    @BindView(R.id.language_card_microphone_button)
+    ImageButton microphoneButton;
+
+    @BindView(R.id.languagePageAnswerTv)
+    TextView answerTv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +72,10 @@ public class SentenceCard extends DaggerAppCompatActivity
         supportActionBar.setDisplayHomeAsUpEnabled(true);
         supportActionBar.setTitle(getIntent().getStringExtra(LANGUAGE_CODE));
 
+        microphoneButton.setOnClickListener(x -> presenter.microphoneButtonClicked());
+
         presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE));
+        speechRecognizer.setRecognitionListener(this);
     }
 
     @Override
@@ -107,6 +128,20 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
+    public void speechListen(String languageCode) {
+        Toast.makeText(this, "Listening ", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+        speechRecognizer.startListening(intent);
+    }
+
+    @Override
+    public void showSpokenText(String text) {
+        answerTv.setText(text);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
@@ -149,5 +184,51 @@ public class SentenceCard extends DaggerAppCompatActivity
             textToSpeech.shutdown();
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onReadyForSpeech(Bundle params) {
+        Toast.makeText(this, "Ready", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBeginningOfSpeech() {
+
+    }
+
+    @Override
+    public void onRmsChanged(float rmsdB) {
+
+    }
+
+    @Override
+    public void onBufferReceived(byte[] buffer) {
+
+    }
+
+    @Override
+    public void onEndOfSpeech() {
+
+    }
+
+    @Override
+    public void onError(int error) {
+
+    }
+
+    @Override
+    public void onResults(Bundle results) {
+        ArrayList<String> spokenTextsList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        presenter.spokenText(spokenTextsList);
+    }
+
+    @Override
+    public void onPartialResults(Bundle partialResults) {
+
+    }
+
+    @Override
+    public void onEvent(int eventType, Bundle params) {
+
     }
 }

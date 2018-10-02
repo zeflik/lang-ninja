@@ -1,5 +1,7 @@
 package pl.jozefniemiec.langninja.ui.language.presenter;
 
+import java.util.ArrayList;
+
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesItemView;
 
 public interface SentenceCardPresenter {
@@ -17,4 +19,8 @@ public interface SentenceCardPresenter {
     void readerInitialized(boolean isWorking);
 
     void readerLanguageNotSupported(String languageCode);
+
+    void microphoneButtonClicked();
+
+    void spokenText(ArrayList<String> spokenTextsList);
 }

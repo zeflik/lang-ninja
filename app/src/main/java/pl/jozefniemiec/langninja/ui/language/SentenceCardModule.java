@@ -1,6 +1,7 @@
 package pl.jozefniemiec.langninja.ui.language;
 
 import android.content.Context;
+import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 
 import dagger.Binds;
@@ -36,6 +37,11 @@ public abstract class SentenceCardModule {
     @Provides
     static TextToSpeech providesTextToSpeech(Context context, TextToSpeech.OnInitListener listener) {
         return new TextToSpeech(context, listener);
+    }
+
+    @Provides
+    static SpeechRecognizer providesSpeechRecognizer(Context context) {
+        return SpeechRecognizer.createSpeechRecognizer(context);
     }
 
     @Binds

@@ -17,4 +17,8 @@ public interface SentenceCardView {
     void showPlayButton();
 
     void hidePlayButton();
+
+    void speechListen(String languageCode);
+
+    void showSpokenText(String s);
 }
