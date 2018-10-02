@@ -78,14 +78,14 @@ public class HomeFragment extends DaggerFragment implements HomeFragmentView, Vi
 
     @Override
     public void showLanguageDetails(String languageCode) {
-        Intent intent = new Intent(getContext(), SentenceCard.class);
+        Intent intent = new Intent(requireContext(), SentenceCard.class);
         intent.putExtra(LANGUAGE_CODE, languageCode);
         startActivity(intent);
     }
 
     @Override
     public void showError(String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

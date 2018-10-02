@@ -26,6 +26,6 @@ public class AndroidResourceManager implements ResourcesManager {
 
     @Override
     public int getFlagId(String languageCode) {
-        return resources.getIdentifier(languageCode, "drawable", packageName);
+        return resources.getIdentifier(languageCode.toLowerCase(), "drawable", packageName);
     }
 }

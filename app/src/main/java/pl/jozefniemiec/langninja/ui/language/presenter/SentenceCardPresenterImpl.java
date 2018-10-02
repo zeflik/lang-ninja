@@ -15,6 +15,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     private final SentenceRepository sentenceRepository;
     private String languageCode;
     private List<Sentence> sentences;
+    private int currentPosition;
 
     public SentenceCardPresenterImpl(SentenceCardView view,
                                      ResourcesManager resourcesManager,
@@ -35,7 +36,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void loadPageDataAtPosition(int position, SentencesItemView itemView) {
-        itemView.setFlag(resourcesManager.getFlagId(languageCode.toLowerCase()));
+        itemView.setFlag(resourcesManager.getFlagId(languageCode));
         itemView.setSentence(sentences.get(position).getSentence());
     }
 
@@ -45,8 +46,31 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     }
 
     @Override
-    public void onPageChange(int position) {
-        view.showNumbering(position + 1 + " / " + getPageCount());
+    public void pageChanged(int newPosition) {
+        currentPosition = newPosition;
+        view.stopSpeaking();
+        view.showNumbering(newPosition + 1 + " / " + getPageCount());
+    }
+
+    @Override
+    public void playButtonClicked() {
+        view.speak(sentences.get(currentPosition).getSentence());
+    }
+
+    @Override
+    public void readerInitialized(boolean isWorking) {
+        if (isWorking) {
+            view.setReaderLanguage(sentences.get(currentPosition).getLanguageCode());
+            view.showPlayButton();
+        } else {
+            view.showErrorMessage("Reader not initialized");
+            view.hidePlayButton();
+        }
+    }
+
+    @Override
+    public void readerLanguageNotSupported(String languageCode) {
+        view.showErrorMessage("Language " + languageCode + "not supported");
     }
 
     private void initializeDatabase() {

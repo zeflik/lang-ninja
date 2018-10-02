@@ -5,4 +5,16 @@ public interface SentenceCardView {
     void showData();
 
     void showNumbering(String numbering);
+
+    int speak(String text);
+
+    void stopSpeaking();
+
+    void setReaderLanguage(String languageCode);
+
+    void showErrorMessage(String message);
+
+    void showPlayButton();
+
+    void hidePlayButton();
 }

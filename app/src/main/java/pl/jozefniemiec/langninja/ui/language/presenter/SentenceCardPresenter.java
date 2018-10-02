@@ -10,5 +10,11 @@ public interface SentenceCardPresenter {
 
     int getPageCount();
 
-    void onPageChange(int position);
+    void pageChanged(int newPosition);
+
+    void playButtonClicked();
+
+    void readerInitialized(boolean isWorking);
+
+    void readerLanguageNotSupported(String languageCode);
 }
