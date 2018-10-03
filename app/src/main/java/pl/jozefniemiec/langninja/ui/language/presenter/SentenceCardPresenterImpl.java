@@ -50,39 +50,51 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     public void pageChanged(int newPosition) {
         currentPosition = newPosition;
         view.stopSpeaking();
+        view.stopListening();
         view.showNumbering(newPosition + 1 + " / " + getPageCount());
     }
 
     @Override
     public void playButtonClicked() {
+        view.stopListening();
         view.speak(sentences.get(currentPosition).getSentence());
     }
 
     @Override
-    public void readerInitialized(boolean isWorking) {
+    public void speakerInitialized(boolean isWorking) {
         if (isWorking) {
-            view.setReaderLanguage(sentences.get(currentPosition).getLanguageCode());
-            view.showPlayButton();
+            view.setSpeakerLanguage(sentences.get(currentPosition).getLanguageCode());
+            view.showSpeakButton();
         } else {
             view.showErrorMessage("Reader not initialized");
-            view.hidePlayButton();
+            view.hideSpeakButton();
         }
     }
 
     @Override
-    public void readerLanguageNotSupported(String languageCode) {
+    public void speakerLanguageNotSupported(String languageCode) {
         view.showErrorMessage("Language " + languageCode + "not supported");
     }
 
     @Override
     public void microphoneButtonClicked() {
         view.stopSpeaking();
-        view.speechListen(languageCode);
+        view.listenSpeech(languageCode);
     }
 
     @Override
     public void spokenText(ArrayList<String> spokenTextsList) {
         view.showSpokenText(spokenTextsList.get(0));
+    }
+
+    @Override
+    public void speechListening() {
+        view.showActiveMicrophoneButton();
+    }
+
+    @Override
+    public void speechEnded() {
+        view.showNormalMicrophoneButton();
     }
 
     private void initializeDatabase() {

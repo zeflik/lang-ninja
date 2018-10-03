@@ -1,6 +1,8 @@
 package pl.jozefniemiec.langninja.ui.language.view;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -79,80 +81,6 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void showData() {
-        viewPager.setAdapter(languagePageAdapter);
-        viewPager.addOnPageChangeListener(this);
-    }
-
-    @Override
-    public void showNumbering(String numbering) {
-        numberingTv.setText(numbering);
-    }
-
-    @Override
-    public int speak(String text) {
-        return textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    @Override
-    public void stopSpeaking() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-        }
-    }
-
-    @Override
-    public void setReaderLanguage(String languageCode) {
-        Locale locale = new Locale(languageCode);
-        if (textToSpeech.isLanguageAvailable(locale) == TextToSpeech.LANG_AVAILABLE) {
-            textToSpeech.setLanguage(locale);
-        } else {
-            presenter.readerLanguageNotSupported(languageCode);
-        }
-    }
-
-    @Override
-    public void showErrorMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void showPlayButton() {
-        playButton.setOnClickListener(x -> presenter.playButtonClicked());
-        playButton.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hidePlayButton() {
-        playButton.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void speechListen(String languageCode) {
-        Toast.makeText(this, "Listening ", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
-        speechRecognizer.startListening(intent);
-    }
-
-    @Override
-    public void showSpokenText(String text) {
-        answerTv.setText(text);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
@@ -168,27 +96,89 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
+    public void showData() {
+        viewPager.setAdapter(languagePageAdapter);
+        viewPager.addOnPageChangeListener(this);
+    }
+
+    @Override
+    public void showNumbering(String numbering) {
+        numberingTv.setText(numbering);
+    }
+
+    @Override
     public void onInit(int status) {
-        presenter.readerInitialized(status == TextToSpeech.SUCCESS);
+        presenter.speakerInitialized(status == TextToSpeech.SUCCESS);
     }
 
     @Override
-    protected void onPause() {
-        stopSpeaking();
-        super.onPause();
+    public void showSpeakButton() {
+        playButton.setOnClickListener(x -> presenter.playButtonClicked());
+        playButton.setVisibility(View.VISIBLE);
     }
 
     @Override
-    protected void onDestroy() {
-        if (textToSpeech != null) {
-            textToSpeech.shutdown();
+    public void hideSpeakButton() {
+        playButton.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setSpeakerLanguage(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        if (textToSpeech.isLanguageAvailable(locale) == TextToSpeech.LANG_AVAILABLE) {
+            textToSpeech.setLanguage(locale);
+        } else {
+            presenter.speakerLanguageNotSupported(languageCode);
         }
-        super.onDestroy();
+    }
+
+    @Override
+    public int speak(String text) {
+        return textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+    }
+
+    @Override
+    public void stopSpeaking() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+        }
+    }
+
+    @Override
+    public void showActiveMicrophoneButton() {
+        microphoneButton.getBackground().setColorFilter(Color.GREEN, PorterDuff.Mode.MULTIPLY);
+    }
+
+    @Override
+    public void showNormalMicrophoneButton() {
+        microphoneButton.getBackground().clearColorFilter();
+    }
+
+    @Override
+    public void listenSpeech(String languageCode) {
+        showActiveMicrophoneButton();
+        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+        speechRecognizer.startListening(intent);
+    }
+
+    @Override
+    public void stopListening() {
+        if (speechRecognizer != null) {
+            speechRecognizer.stopListening();
+        }
+        showNormalMicrophoneButton();
+    }
+
+    @Override
+    public void showSpokenText(String text) {
+        answerTv.setText(text);
     }
 
     @Override
     public void onReadyForSpeech(Bundle params) {
-        Toast.makeText(this, "Ready", Toast.LENGTH_SHORT).show();
+        presenter.speechListening();
     }
 
     @Override
@@ -208,7 +198,7 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void onEndOfSpeech() {
-
+        presenter.speechEnded();
     }
 
     @Override
@@ -230,5 +220,38 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void onEvent(int eventType, Bundle params) {
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                super.onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onPause() {
+        stopSpeaking();
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.shutdown();
+        }
+        if (speechRecognizer != null) {
+            speechRecognizer.destroy();
+        }
+        super.onDestroy();
     }
 }

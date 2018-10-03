@@ -10,15 +10,21 @@ public interface SentenceCardView {
 
     void stopSpeaking();
 
-    void setReaderLanguage(String languageCode);
+    void setSpeakerLanguage(String languageCode);
 
     void showErrorMessage(String message);
 
-    void showPlayButton();
+    void showSpeakButton();
 
-    void hidePlayButton();
+    void hideSpeakButton();
 
-    void speechListen(String languageCode);
+    void listenSpeech(String languageCode);
 
     void showSpokenText(String s);
+
+    void showActiveMicrophoneButton();
+
+    void showNormalMicrophoneButton();
+
+    void stopListening();
 }
