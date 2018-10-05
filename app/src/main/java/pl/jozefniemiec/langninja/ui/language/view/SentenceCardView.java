@@ -6,25 +6,31 @@ public interface SentenceCardView {
 
     void showNumbering(String numbering);
 
-    int speak(String text);
+    void showReadButton();
 
-    void stopSpeaking();
+    void hideReadButton();
 
-    void setSpeakerLanguage(String languageCode);
+    void setReaderLanguage(String languageCode);
 
-    void showErrorMessage(String message);
+    int read(String text);
 
-    void showSpeakButton();
+    void stopReading();
 
-    void hideSpeakButton();
+    void activateSpeechButton();
+
+    void highlightSpeakButton();
+
+    void unHighlightSpeakButton();
 
     void listenSpeech(String languageCode);
 
     void showSpokenText(String s);
 
-    void showActiveMicrophoneButton();
+    void stopSpeechListening();
 
-    void showNormalMicrophoneButton();
+    void cancelSpeechListening();
 
-    void stopListening();
+    void showErrorMessage(String message);
+
+    void deactivateSpeechButton();
 }

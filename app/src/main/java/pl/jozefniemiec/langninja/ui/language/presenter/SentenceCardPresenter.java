@@ -16,15 +16,29 @@ public interface SentenceCardPresenter {
 
     void playButtonClicked();
 
-    void speakerInitialized(boolean isWorking);
+    void hiddenPlayButtonClicked();
 
-    void speakerLanguageNotSupported(String languageCode);
+    void readerInitialized();
 
-    void microphoneButtonClicked();
+    void readerReady();
 
-    void spokenText(ArrayList<String> spokenTextsList);
+    void readerLanguageNotSupported();
+
+    void unHighlightedMicrophoneButtonClicked();
 
     void speechListening();
 
+    void spokenText(ArrayList<String> spokenTextsList);
+
     void speechEnded();
+
+    void speechError(int string);
+
+    void highlightedMicrophoneButtonClicked();
+
+    void speechAvailable(boolean isAvailable);
+
+    void deactivatedMicrophoneButtonClicked();
+
+    void readerNotInitialized();
 }

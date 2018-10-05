@@ -1,5 +1,7 @@
 package pl.jozefniemiec.langninja.ui.language.presenter;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,37 +51,73 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     @Override
     public void pageChanged(int newPosition) {
         currentPosition = newPosition;
-        view.stopSpeaking();
-        view.stopListening();
+        view.stopReading();
+        view.cancelSpeechListening();
+        view.unHighlightSpeakButton();
         view.showNumbering(newPosition + 1 + " / " + getPageCount());
     }
 
     @Override
     public void playButtonClicked() {
-        view.stopListening();
-        view.speak(sentences.get(currentPosition).getSentence());
-    }
-
-    @Override
-    public void speakerInitialized(boolean isWorking) {
-        if (isWorking) {
-            view.setSpeakerLanguage(sentences.get(currentPosition).getLanguageCode());
-            view.showSpeakButton();
-        } else {
-            view.showErrorMessage("Reader not initialized");
-            view.hideSpeakButton();
+        view.cancelSpeechListening();
+        view.unHighlightSpeakButton();
+        int status = view.read(sentences.get(currentPosition).getSentence());
+        if (status != 0) {
+            view.showErrorMessage("Reader error");
+            view.hideReadButton();
         }
     }
 
     @Override
-    public void speakerLanguageNotSupported(String languageCode) {
-        view.showErrorMessage("Language " + languageCode + "not supported");
+    public void hiddenPlayButtonClicked() {
+        view.showErrorMessage("Language not supported");
     }
 
     @Override
-    public void microphoneButtonClicked() {
-        view.stopSpeaking();
+    public void readerInitialized() {
+        view.setReaderLanguage(sentences.get(currentPosition).getLanguageCode());
+    }
+
+    @Override
+    public void readerReady() {
+        view.showReadButton();
+    }
+
+    @Override
+    public void readerLanguageNotSupported() {
+        view.showErrorMessage("Language " + languageCode + "not supported");
+        view.hideReadButton();
+        Log.d("reader", "not supported");
+    }
+
+    @Override
+    public void speechAvailable(boolean isAvailable) {
+        if (isAvailable) {
+            view.activateSpeechButton();
+        } else {
+            view.deactivateSpeechButton();
+        }
+    }
+
+    @Override
+    public void deactivatedMicrophoneButtonClicked() {
+        view.showErrorMessage("Google speech not instaled");
+    }
+
+    @Override
+    public void readerNotInitialized() {
+        view.showErrorMessage("Reader is not available");
+    }
+
+    @Override
+    public void unHighlightedMicrophoneButtonClicked() {
+        view.stopReading();
         view.listenSpeech(languageCode);
+    }
+
+    @Override
+    public void highlightedMicrophoneButtonClicked() {
+        view.stopSpeechListening();
     }
 
     @Override
@@ -89,12 +127,19 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void speechListening() {
-        view.showActiveMicrophoneButton();
+        view.highlightSpeakButton();
     }
 
     @Override
     public void speechEnded() {
-        view.showNormalMicrophoneButton();
+        view.unHighlightSpeakButton();
+    }
+
+    @Override
+    public void speechError(int errorCode) {
+        view.unHighlightSpeakButton();
+        String message = resourcesManager.findSpeechErrorMessage(errorCode);
+        view.showErrorMessage(message);
     }
 
     private void initializeDatabase() {

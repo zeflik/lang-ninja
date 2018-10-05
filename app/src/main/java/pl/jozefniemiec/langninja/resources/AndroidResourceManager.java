@@ -1,6 +1,7 @@
 package pl.jozefniemiec.langninja.resources;
 
 import android.content.res.Resources;
+import android.speech.SpeechRecognizer;
 
 import javax.inject.Inject;
 
@@ -27,5 +28,42 @@ public class AndroidResourceManager implements ResourcesManager {
     @Override
     public int getFlagId(String languageCode) {
         return resources.getIdentifier(languageCode.toLowerCase(), "drawable", packageName);
+    }
+
+    @Override
+    public String findSpeechErrorMessage(int errorCode) {
+        int messageId;
+        switch (errorCode) {
+            case SpeechRecognizer.ERROR_AUDIO:
+                messageId = R.string.speech_error_audio;
+                break;
+            case SpeechRecognizer.ERROR_CLIENT:
+                messageId = R.string.speech_unknown_error;
+                break;
+            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                messageId = R.string.speech_error_permission;
+                break;
+            case SpeechRecognizer.ERROR_NETWORK:
+                messageId = R.string.speech_error_network;
+                break;
+            case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
+                messageId = R.string.speech_error_no_input;
+                break;
+            case SpeechRecognizer.ERROR_NO_MATCH:
+                messageId = R.string.speech_error_no_match;
+                break;
+            case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
+                messageId = R.string.speech_error_busy;
+                break;
+            case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
+                messageId = R.string.speech_error_no_input;
+                break;
+            case SpeechRecognizer.ERROR_SERVER:
+                messageId = R.string.speech_error_server;
+                break;
+            default:
+                messageId = R.string.speech_unknown_error;
+        }
+        return resources.getString(messageId);
     }
 }
