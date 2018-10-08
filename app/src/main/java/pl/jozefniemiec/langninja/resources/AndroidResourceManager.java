@@ -66,4 +66,14 @@ public class AndroidResourceManager implements ResourcesManager {
         }
         return resources.getString(messageId);
     }
+
+    @Override
+    public String getNeedInternetConnectionMessage() {
+        return resources.getString(R.string.need_internet_connection);
+    }
+
+    @Override
+    public String getLanguageNotSupportedMessage() {
+        return resources.getString(R.string.language_not_supported);
+    }
 }

@@ -7,4 +7,8 @@ public interface ResourcesManager {
     int getFlagId(String s);
 
     String findSpeechErrorMessage(int errorCode);
+
+    String getNeedInternetConnectionMessage();
+
+    String getLanguageNotSupportedMessage();
 }

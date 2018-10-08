@@ -30,5 +30,7 @@
     <string name="speech_error_no_match">Nic nie zrozumiałem</string>
     <string name="speech_error_busy">Urządzenie zajęte</string>
     <string name="speech_error_server">Błąd serwera</string>
+    <string name="need_internet_connection">Potrzebne połączenie internetowe</string>
+    <string name="language_not_supported">Język nie jest wspierany</string>
 
 </resources>

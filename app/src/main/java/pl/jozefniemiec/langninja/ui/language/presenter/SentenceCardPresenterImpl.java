@@ -135,12 +135,12 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter, ReaderL
     @Override
     public void onReadError() {
         view.unHighlightReadButton();
-        view.showErrorMessage("Potrzebne połączenie internetowe");
+        view.showErrorMessage(resourcesManager.getNeedInternetConnectionMessage());
     }
 
     @Override
     public void hiddenPlayButtonClicked() {
-        view.showErrorMessage("Język nie jest wspierany");
+        view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
     }
 
     @Override
