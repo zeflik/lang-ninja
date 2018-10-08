@@ -13,6 +13,8 @@ import pl.jozefniemiec.langninja.repository.RoomSentenceRepository;
 import pl.jozefniemiec.langninja.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.resources.AndroidResourceManager;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;
+import pl.jozefniemiec.langninja.voice.Reader;
+import pl.jozefniemiec.langninja.voice.ReaderImpl;
 
 @Module
 public abstract class AppModule {
@@ -34,4 +36,6 @@ public abstract class AppModule {
     @Binds
     abstract Context bindContext(Application application);
 
+    @Binds
+    abstract Reader bindReader(ReaderImpl reader);
 }

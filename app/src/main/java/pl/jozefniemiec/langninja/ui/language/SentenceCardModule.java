@@ -14,7 +14,6 @@ import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
 import pl.jozefniemiec.langninja.voice.Reader;
-import pl.jozefniemiec.langninja.voice.ReaderImpl;
 
 @Module
 public abstract class SentenceCardModule {
@@ -40,9 +39,6 @@ public abstract class SentenceCardModule {
     static SpeechRecognizer providesSpeechRecognizer(Context context) {
         return SpeechRecognizer.createSpeechRecognizer(context);
     }
-
-    @Binds
-    abstract Reader bindReader(ReaderImpl reader);
 
     @Binds
     abstract SentenceCardView bindLanguageCardView(SentenceCard sentenceCard);
