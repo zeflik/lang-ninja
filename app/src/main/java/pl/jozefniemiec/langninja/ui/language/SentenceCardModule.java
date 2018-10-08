@@ -2,7 +2,6 @@ package pl.jozefniemiec.langninja.ui.language;
 
 import android.content.Context;
 import android.speech.SpeechRecognizer;
-import android.speech.tts.TextToSpeech;
 
 import dagger.Binds;
 import dagger.Module;
@@ -14,6 +13,8 @@ import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenterImpl
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
+import pl.jozefniemiec.langninja.voice.Reader;
+import pl.jozefniemiec.langninja.voice.ReaderImpl;
 
 @Module
 public abstract class SentenceCardModule {
@@ -30,13 +31,9 @@ public abstract class SentenceCardModule {
     static SentenceCardPresenter
     provideLanguageCardPresenter(SentenceCardView view,
                                  ResourcesManager resourcesManager,
-                                 SentenceRepository sentenceRepository) {
-        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository);
-    }
-
-    @Provides
-    static TextToSpeech providesTextToSpeech(Context context, TextToSpeech.OnInitListener listener) {
-        return new TextToSpeech(context, listener);
+                                 SentenceRepository sentenceRepository,
+                                 Reader reader) {
+        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository, reader);
     }
 
     @Provides
@@ -45,8 +42,9 @@ public abstract class SentenceCardModule {
     }
 
     @Binds
-    abstract SentenceCardView bindLanguageCardView(SentenceCard sentenceCard);
+    abstract Reader bindReader(ReaderImpl reader);
 
     @Binds
-    abstract TextToSpeech.OnInitListener provideTTSOnInitListener(SentenceCard sentenceCard);
+    abstract SentenceCardView bindLanguageCardView(SentenceCard sentenceCard);
+
 }

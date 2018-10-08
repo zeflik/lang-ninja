@@ -1,7 +1,5 @@
 package pl.jozefniemiec.langninja.ui.language.presenter;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,22 +8,29 @@ import pl.jozefniemiec.langninja.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesItemView;
+import pl.jozefniemiec.langninja.voice.Reader;
+import pl.jozefniemiec.langninja.voice.ReaderListener;
 
-public class SentenceCardPresenterImpl implements SentenceCardPresenter {
+public class SentenceCardPresenterImpl implements SentenceCardPresenter, ReaderListener {
 
+    private static final String TAG = "SentenceCardPresenter";
     private final SentenceCardView view;
     private final ResourcesManager resourcesManager;
     private final SentenceRepository sentenceRepository;
+    private final Reader reader;
     private String languageCode;
     private List<Sentence> sentences;
     private int currentPosition;
 
     public SentenceCardPresenterImpl(SentenceCardView view,
                                      ResourcesManager resourcesManager,
-                                     SentenceRepository sentenceRepository) {
+                                     SentenceRepository sentenceRepository,
+                                     Reader reader) {
         this.view = view;
         this.resourcesManager = resourcesManager;
         this.sentenceRepository = sentenceRepository;
+        this.reader = reader;
+        reader.setOnReadListener(this);
     }
 
     @Override
@@ -51,43 +56,10 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     @Override
     public void pageChanged(int newPosition) {
         currentPosition = newPosition;
-        view.stopReading();
         view.cancelSpeechListening();
         view.unHighlightSpeakButton();
+        reader.stop();
         view.showNumbering(newPosition + 1 + " / " + getPageCount());
-    }
-
-    @Override
-    public void playButtonClicked() {
-        view.cancelSpeechListening();
-        view.unHighlightSpeakButton();
-        int status = view.read(sentences.get(currentPosition).getSentence());
-        if (status != 0) {
-            view.showErrorMessage("Reader error");
-            view.hideReadButton();
-        }
-    }
-
-    @Override
-    public void hiddenPlayButtonClicked() {
-        view.showErrorMessage("Language not supported");
-    }
-
-    @Override
-    public void readerInitialized() {
-        view.setReaderLanguage(sentences.get(currentPosition).getLanguageCode());
-    }
-
-    @Override
-    public void readerReady() {
-        view.showReadButton();
-    }
-
-    @Override
-    public void readerLanguageNotSupported() {
-        view.showErrorMessage("Language " + languageCode + "not supported");
-        view.hideReadButton();
-        Log.d("reader", "not supported");
     }
 
     @Override
@@ -105,13 +77,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     }
 
     @Override
-    public void readerNotInitialized() {
-        view.showErrorMessage("Reader is not available");
-    }
-
-    @Override
     public void unHighlightedMicrophoneButtonClicked() {
-        view.stopReading();
         view.listenSpeech(languageCode);
     }
 
@@ -140,6 +106,50 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         view.unHighlightSpeakButton();
         String message = resourcesManager.findSpeechErrorMessage(errorCode);
         view.showErrorMessage(message);
+    }
+
+    @Override
+    public void onReaderInit(boolean isWorking) {
+        if (isWorking && reader.setLanguage(languageCode)) {
+            view.showReadButton();
+        } else {
+            view.hideReadButton();
+        }
+    }
+
+    @Override
+    public void playButtonClicked() {
+        reader.read(sentences.get(currentPosition).getSentence());
+    }
+
+    @Override
+    public void onStartOfRead() {
+        view.highlightReadButton();
+    }
+
+    @Override
+    public void onEndOfRead() {
+        view.unHighlightReadButton();
+    }
+
+    @Override
+    public void onReadError() {
+        view.showErrorMessage("Potrzebne połączenie internetowe");
+    }
+
+    @Override
+    public void hiddenPlayButtonClicked() {
+        view.showErrorMessage("Język nie jest wspierany");
+    }
+
+    @Override
+    public void onViewPause() {
+        reader.stop();
+    }
+
+    @Override
+    public void onViewDestroy() {
+        reader.shutdown();
     }
 
     private void initializeDatabase() {

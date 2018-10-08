@@ -7,17 +7,14 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
-import android.speech.tts.TextToSpeech;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -34,7 +31,6 @@ public class SentenceCard extends DaggerAppCompatActivity
         implements
         SentenceCardView,
         ViewPager.OnPageChangeListener,
-        TextToSpeech.OnInitListener,
         RecognitionListener {
 
     public static final int HIGHLIGHT_COLOR_FILTER = Color.GREEN;
@@ -44,9 +40,6 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Inject
     SentenceCardPresenter presenter;
-
-    @Inject
-    TextToSpeech textToSpeech;
 
     @Inject
     SpeechRecognizer speechRecognizer;
@@ -107,19 +100,6 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void onInit(int status) {
-        switch (status) {
-            case TextToSpeech.SUCCESS:
-                presenter.readerInitialized();
-                break;
-            default:
-                presenter.readerNotInitialized();
-                break;
-        }
-        Log.d("reader", "error: " + status);
-    }
-
-    @Override
     public void showReadButton() {
         readButton.setOnClickListener(x -> presenter.playButtonClicked());
         showButton(readButton);
@@ -129,29 +109,6 @@ public class SentenceCard extends DaggerAppCompatActivity
     public void hideReadButton() {
         readButton.setOnClickListener(x -> presenter.hiddenPlayButtonClicked());
         hideButton(readButton);
-    }
-
-    @Override
-    public void setReaderLanguage(String languageCode) {
-        Locale locale = new Locale(languageCode);
-        int status = textToSpeech.setLanguage(locale);
-        if (status == TextToSpeech.SUCCESS) {
-            presenter.readerReady();
-        } else {
-            presenter.readerLanguageNotSupported();
-        }
-    }
-
-    @Override
-    public int read(String text) {
-        return textToSpeech.speak(text, TextToSpeech.QUEUE_FLUSH, null);
-    }
-
-    @Override
-    public void stopReading() {
-        if (textToSpeech != null) {
-            textToSpeech.stop();
-        }
     }
 
     @Override
@@ -176,6 +133,16 @@ public class SentenceCard extends DaggerAppCompatActivity
     public void deactivateSpeechButton() {
         speechButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
         speechButton.setOnClickListener(x -> presenter.deactivatedMicrophoneButtonClicked());
+    }
+
+    @Override
+    public void highlightReadButton() {
+        highlightButton(readButton);
+    }
+
+    @Override
+    public void unHighlightReadButton() {
+        unHighlightButton(readButton);
     }
 
     @Override
@@ -265,36 +232,34 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void showErrorMessage(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
     }
 
     private void hideButton(ImageButton imageButton) {
-        imageButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_ATOP);
+        runOnUiThread(() -> imageButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_ATOP));
     }
 
     private void showButton(ImageButton imageButton) {
-        imageButton.getBackground().clearColorFilter();
+        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
     }
 
     private void highlightButton(ImageButton imageButton) {
-        imageButton.getBackground().setColorFilter(HIGHLIGHT_COLOR_FILTER, PorterDuff.Mode.SRC_ATOP);
+        runOnUiThread(() -> imageButton.getBackground().setColorFilter(HIGHLIGHT_COLOR_FILTER, PorterDuff.Mode.SRC_ATOP));
     }
 
     private void unHighlightButton(ImageButton imageButton) {
-        imageButton.getBackground().clearColorFilter();
+        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
     }
 
     @Override
     protected void onPause() {
-        stopReading();
+        presenter.onViewPause();
         super.onPause();
     }
 
     @Override
     protected void onDestroy() {
-        if (textToSpeech != null) {
-            textToSpeech.shutdown();
-        }
+        presenter.onViewDestroy();
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }

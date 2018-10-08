@@ -14,16 +14,6 @@ public interface SentenceCardPresenter {
 
     void pageChanged(int newPosition);
 
-    void playButtonClicked();
-
-    void hiddenPlayButtonClicked();
-
-    void readerInitialized();
-
-    void readerReady();
-
-    void readerLanguageNotSupported();
-
     void unHighlightedMicrophoneButtonClicked();
 
     void speechListening();
@@ -40,5 +30,11 @@ public interface SentenceCardPresenter {
 
     void deactivatedMicrophoneButtonClicked();
 
-    void readerNotInitialized();
+    void playButtonClicked();
+
+    void hiddenPlayButtonClicked();
+
+    void onViewPause();
+
+    void onViewDestroy();
 }

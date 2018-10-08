@@ -10,12 +10,6 @@ public interface SentenceCardView {
 
     void hideReadButton();
 
-    void setReaderLanguage(String languageCode);
-
-    int read(String text);
-
-    void stopReading();
-
     void activateSpeechButton();
 
     void highlightSpeakButton();
@@ -33,4 +27,8 @@ public interface SentenceCardView {
     void showErrorMessage(String message);
 
     void deactivateSpeechButton();
+
+    void highlightReadButton();
+
+    void unHighlightReadButton();
 }
