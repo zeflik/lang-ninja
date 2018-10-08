@@ -134,6 +134,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter, ReaderL
 
     @Override
     public void onReadError() {
+        view.unHighlightReadButton();
         view.showErrorMessage("Potrzebne połączenie internetowe");
     }
 

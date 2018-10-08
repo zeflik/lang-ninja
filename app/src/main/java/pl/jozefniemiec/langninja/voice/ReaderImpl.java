@@ -64,7 +64,8 @@ public class ReaderImpl implements Reader, TextToSpeech.OnInitListener {
     @Override
     public boolean setLanguage(String string) {
         Locale locale = new Locale(string);
-        return textToSpeech.setLanguage(locale) == TextToSpeech.LANG_AVAILABLE;
+        int result = textToSpeech.setLanguage(locale);
+        return (result != TextToSpeech.LANG_NOT_SUPPORTED);
     }
 
     @Override
