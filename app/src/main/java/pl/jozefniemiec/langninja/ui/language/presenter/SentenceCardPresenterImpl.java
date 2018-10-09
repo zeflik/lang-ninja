@@ -2,35 +2,29 @@ package pl.jozefniemiec.langninja.ui.language.presenter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import pl.jozefniemiec.langninja.model.Sentence;
 import pl.jozefniemiec.langninja.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesItemView;
-import pl.jozefniemiec.langninja.voice.Reader;
-import pl.jozefniemiec.langninja.voice.ReaderListener;
 
-public class SentenceCardPresenterImpl implements SentenceCardPresenter, ReaderListener {
+public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
-    private static final String TAG = "SentenceCardPresenter";
     private final SentenceCardView view;
     private final ResourcesManager resourcesManager;
     private final SentenceRepository sentenceRepository;
-    private final Reader reader;
     private String languageCode;
     private List<Sentence> sentences;
     private int currentPosition;
 
     public SentenceCardPresenterImpl(SentenceCardView view,
                                      ResourcesManager resourcesManager,
-                                     SentenceRepository sentenceRepository,
-                                     Reader reader) {
+                                     SentenceRepository sentenceRepository) {
         this.view = view;
         this.resourcesManager = resourcesManager;
         this.sentenceRepository = sentenceRepository;
-        this.reader = reader;
-        reader.setOnReadListener(this);
     }
 
     @Override
@@ -44,7 +38,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter, ReaderL
 
     @Override
     public void loadPageDataAtPosition(int position, SentencesItemView itemView) {
-        itemView.setFlag(resourcesManager.getFlagId(languageCode));
+        itemView.setFlagId(resourcesManager.getFlagId(languageCode));
         itemView.setSentence(sentences.get(position).getSentence());
     }
 
@@ -57,69 +51,31 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter, ReaderL
     public void pageChanged(int newPosition) {
         currentPosition = newPosition;
         view.cancelSpeechListening();
-        view.unHighlightSpeakButton();
-        reader.stop();
+        view.unHighlightSpeechButton();
+        view.stopReading();
+        view.unHighlightReadButton();
         view.showNumbering(newPosition + 1 + " / " + getPageCount());
     }
 
     @Override
-    public void speechAvailable(boolean isAvailable) {
-        if (isAvailable) {
-            view.activateSpeechButton();
-        } else {
-            view.deactivateSpeechButton();
-        }
+    public void playButtonClicked() {
+        view.cancelSpeechListening();
+        view.unHighlightSpeechButton();
+        view.read(sentences.get(currentPosition).getSentence());
     }
 
     @Override
-    public void deactivatedMicrophoneButtonClicked() {
-        view.showErrorMessage("Google speech not instaled");
-    }
-
-    @Override
-    public void unHighlightedMicrophoneButtonClicked() {
-        view.listenSpeech(languageCode);
-    }
-
-    @Override
-    public void highlightedMicrophoneButtonClicked() {
-        view.stopSpeechListening();
-    }
-
-    @Override
-    public void spokenText(ArrayList<String> spokenTextsList) {
-        view.showSpokenText(spokenTextsList.get(0));
-    }
-
-    @Override
-    public void speechListening() {
-        view.highlightSpeakButton();
-    }
-
-    @Override
-    public void speechEnded() {
-        view.unHighlightSpeakButton();
-    }
-
-    @Override
-    public void speechError(int errorCode) {
-        view.unHighlightSpeakButton();
-        String message = resourcesManager.findSpeechErrorMessage(errorCode);
-        view.showErrorMessage(message);
+    public void deactivatedPlayButtonClicked() {
+        view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
     }
 
     @Override
     public void onReaderInit(boolean isWorking) {
-        if (isWorking && reader.setLanguage(languageCode)) {
-            view.showReadButton();
+        if (isWorking && view.setReaderLanguage(new Locale(languageCode))) {
+            view.activateReadButton();
         } else {
-            view.hideReadButton();
+            view.deactivateReadButton();
         }
-    }
-
-    @Override
-    public void playButtonClicked() {
-        reader.read(sentences.get(currentPosition).getSentence());
     }
 
     @Override
@@ -139,18 +95,62 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter, ReaderL
     }
 
     @Override
-    public void hiddenPlayButtonClicked() {
-        view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
+    public void onReadyForSpeech() {
+        view.highlightSpeechButton();
+    }
+
+    @Override
+    public void onSpeechEnded() {
+        view.unHighlightSpeechButton();
+    }
+
+    @Override
+    public void onSpeechResults(ArrayList<String> spokenTextsList) {
+        view.showSpokenText(spokenTextsList.get(0));
+    }
+
+    @Override
+    public void onSpeechError(int errorCode) {
+        view.unHighlightSpeechButton();
+        String message = resourcesManager.findSpeechErrorMessage(errorCode);
+        view.showErrorMessage(message);
+    }
+
+    @Override
+    public void deactivatedMicrophoneButtonClicked() {
+        view.showErrorMessage("Google speech not instaled");
+    }
+
+    @Override
+    public void highlightedMicrophoneButtonClicked() {
+        view.stopSpeechListening();
+    }
+
+    @Override
+    public void unHighlightedMicrophoneButtonClicked() {
+        view.stopReading();
+        view.unHighlightReadButton();
+        view.startListening(languageCode);
+    }
+
+    @Override
+    public void onSpeechRecognizerInit(boolean recognitionAvailable) {
+        if (recognitionAvailable) {
+            view.activateSpeechButton();
+        } else {
+            view.deactivateSpeechButton();
+        }
     }
 
     @Override
     public void onViewPause() {
-        reader.stop();
+        view.stopReading();
+        view.cancelSpeechListening();
     }
 
     @Override
     public void onViewDestroy() {
-        reader.shutdown();
+
     }
 
     private void initializeDatabase() {

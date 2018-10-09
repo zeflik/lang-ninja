@@ -13,7 +13,7 @@ public class AndroidResourceManager implements ResourcesManager {
     private final String packageName;
 
     @Inject
-    public AndroidResourceManager(Resources resources) {
+    AndroidResourceManager(Resources resources) {
         this.resources = resources;
         packageName = resources.getString(R.string.app_package_name);
     }
@@ -59,7 +59,7 @@ public class AndroidResourceManager implements ResourcesManager {
                 messageId = R.string.speech_error_no_input;
                 break;
             case SpeechRecognizer.ERROR_SERVER:
-                messageId = R.string.speech_error_server;
+                messageId = R.string.need_internet_connection;
                 break;
             default:
                 messageId = R.string.speech_unknown_error;

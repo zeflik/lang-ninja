@@ -62,7 +62,7 @@ public class SentencesPageAdapter extends PagerAdapter implements SentencesItemV
     }
 
     @Override
-    public void setFlag(int id) {
+    public void setFlagId(int id) {
         flag.setImageResource(id);
     }
 

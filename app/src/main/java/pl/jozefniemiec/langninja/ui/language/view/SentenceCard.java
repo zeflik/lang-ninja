@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
@@ -14,7 +15,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -24,16 +26,18 @@ import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
+import pl.jozefniemiec.langninja.ui.language.view.listener.speech.SpeechRecognitionListener;
 
 import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
 
 public class SentenceCard extends DaggerAppCompatActivity
         implements
         SentenceCardView,
-        ViewPager.OnPageChangeListener,
-        RecognitionListener {
+        ViewPager.OnPageChangeListener {
 
-    public static final int HIGHLIGHT_COLOR_FILTER = Color.GREEN;
+    public static final int HIGHLIGHT_BUTTON_COLOR = Color.GREEN;
+    public static final int INACTIVE_BUTTON_COLOR = Color.LTGRAY;
+    private static final String TAG = "SentenceCard";
 
     @Inject
     SentencesPageAdapter languagePageAdapter;
@@ -42,7 +46,16 @@ public class SentenceCard extends DaggerAppCompatActivity
     SentenceCardPresenter presenter;
 
     @Inject
+    TextToSpeech textToSpeech;
+
+    @Inject
+    UtteranceProgressListener utteranceProgressListener;
+
+    @Inject
     SpeechRecognizer speechRecognizer;
+
+    @Inject
+    SpeechRecognitionListener speechRecognitionListener;
 
     @BindView(R.id.language_card_view_pager)
     ViewPager viewPager;
@@ -70,7 +83,10 @@ public class SentenceCard extends DaggerAppCompatActivity
         supportActionBar.setTitle(getIntent().getStringExtra(LANGUAGE_CODE));
 
         presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE));
-        presenter.speechAvailable(SpeechRecognizer.isRecognitionAvailable(this));
+        textToSpeech.setOnUtteranceProgressListener(utteranceProgressListener);
+        speechRecognizer.setRecognitionListener(speechRecognitionListener);
+        boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(this);
+        presenter.onSpeechRecognizerInit(recognitionAvailable);
     }
 
     @Override
@@ -100,39 +116,15 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void showReadButton() {
+    public void activateReadButton() {
         readButton.setOnClickListener(x -> presenter.playButtonClicked());
         showButton(readButton);
     }
 
     @Override
-    public void hideReadButton() {
-        readButton.setOnClickListener(x -> presenter.hiddenPlayButtonClicked());
+    public void deactivateReadButton() {
+        readButton.setOnClickListener(x -> presenter.deactivatedPlayButtonClicked());
         hideButton(readButton);
-    }
-
-    @Override
-    public void activateSpeechButton() {
-        speechRecognizer.setRecognitionListener(this);
-        unHighlightSpeakButton();
-    }
-
-    @Override
-    public void highlightSpeakButton() {
-        highlightButton(speechButton);
-        speechButton.setOnClickListener(x -> presenter.highlightedMicrophoneButtonClicked());
-    }
-
-    @Override
-    public void unHighlightSpeakButton() {
-        unHighlightButton(speechButton);
-        speechButton.setOnClickListener(x -> presenter.unHighlightedMicrophoneButtonClicked());
-    }
-
-    @Override
-    public void deactivateSpeechButton() {
-        speechButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
-        speechButton.setOnClickListener(x -> presenter.deactivatedMicrophoneButtonClicked());
     }
 
     @Override
@@ -146,12 +138,61 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void listenSpeech(String languageCode) {
-        highlightSpeakButton();
+    public boolean setReaderLanguage(Locale locale) {
+        if (textToSpeech.isLanguageAvailable(locale) != TextToSpeech.LANG_NOT_SUPPORTED) {
+            textToSpeech.setLanguage(locale);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void read(String sentence) {
+        HashMap<String, String> params = new HashMap<>();
+        params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, sentence);
+        textToSpeech.speak(sentence, TextToSpeech.QUEUE_FLUSH, params);
+    }
+
+    @Override
+    public void stopReading() {
+        textToSpeech.stop();
+    }
+
+    @Override
+    public void activateSpeechButton() {
+        unHighlightSpeechButton();
+        speechButton.setOnClickListener(x -> presenter.unHighlightedMicrophoneButtonClicked());
+    }
+
+    @Override
+    public void deactivateSpeechButton() {
+        speechButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
+        speechButton.setOnClickListener(x -> presenter.deactivatedMicrophoneButtonClicked());
+    }
+
+    @Override
+    public void highlightSpeechButton() {
+        highlightButton(speechButton);
+        speechButton.setOnClickListener(x -> presenter.highlightedMicrophoneButtonClicked());
+    }
+
+    @Override
+    public void unHighlightSpeechButton() {
+        unHighlightButton(speechButton);
+        speechButton.setOnClickListener(x -> presenter.unHighlightedMicrophoneButtonClicked());
+    }
+
+    @Override
+    public void startListening(String languageCode) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getPackageName());
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
         speechRecognizer.startListening(intent);
+    }
+
+    @Override
+    public void showSpokenText(String text) {
+        answerTv.setText(text);
     }
 
     @Override
@@ -169,54 +210,8 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void showSpokenText(String text) {
-        answerTv.setText(text);
-    }
-
-    @Override
-    public void onReadyForSpeech(Bundle params) {
-        presenter.speechListening();
-    }
-
-    @Override
-    public void onBeginningOfSpeech() {
-
-    }
-
-    @Override
-    public void onRmsChanged(float rmsdB) {
-
-    }
-
-    @Override
-    public void onBufferReceived(byte[] buffer) {
-
-    }
-
-    @Override
-    public void onEndOfSpeech() {
-        presenter.speechEnded();
-    }
-
-    @Override
-    public void onError(int errorCode) {
-        presenter.speechError(errorCode);
-    }
-
-    @Override
-    public void onResults(Bundle results) {
-        ArrayList<String> spokenTextsList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        presenter.spokenText(spokenTextsList);
-    }
-
-    @Override
-    public void onPartialResults(Bundle partialResults) {
-
-    }
-
-    @Override
-    public void onEvent(int eventType, Bundle params) {
-
+    public void showErrorMessage(String message) {
+        runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
     }
 
     @Override
@@ -231,27 +226,6 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void showErrorMessage(String message) {
-        runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
-    }
-
-    private void hideButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.SRC_ATOP));
-    }
-
-    private void showButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
-    }
-
-    private void highlightButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().setColorFilter(HIGHLIGHT_COLOR_FILTER, PorterDuff.Mode.SRC_ATOP));
-    }
-
-    private void unHighlightButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
-    }
-
-    @Override
     protected void onPause() {
         presenter.onViewPause();
         super.onPause();
@@ -263,6 +237,25 @@ public class SentenceCard extends DaggerAppCompatActivity
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
         }
+        if (textToSpeech != null) {
+            textToSpeech.shutdown();
+        }
         super.onDestroy();
+    }
+
+    private void hideButton(ImageButton imageButton) {
+        runOnUiThread(() -> imageButton.getBackground().setColorFilter(INACTIVE_BUTTON_COLOR, PorterDuff.Mode.SRC_ATOP));
+    }
+
+    private void showButton(ImageButton imageButton) {
+        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
+    }
+
+    private void highlightButton(ImageButton imageButton) {
+        runOnUiThread(() -> imageButton.getBackground().setColorFilter(HIGHLIGHT_BUTTON_COLOR, PorterDuff.Mode.SRC_ATOP));
+    }
+
+    private void unHighlightButton(ImageButton imageButton) {
+        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
     }
 }

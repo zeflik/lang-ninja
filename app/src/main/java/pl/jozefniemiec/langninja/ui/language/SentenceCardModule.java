@@ -2,6 +2,8 @@ package pl.jozefniemiec.langninja.ui.language;
 
 import android.content.Context;
 import android.speech.SpeechRecognizer;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 
 import dagger.Binds;
 import dagger.Module;
@@ -13,7 +15,8 @@ import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenterImpl
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
-import pl.jozefniemiec.langninja.voice.Reader;
+import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnInitListener;
+import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnUtteranceProgressListener;
 
 @Module
 public abstract class SentenceCardModule {
@@ -30,17 +33,32 @@ public abstract class SentenceCardModule {
     static SentenceCardPresenter
     provideLanguageCardPresenter(SentenceCardView view,
                                  ResourcesManager resourcesManager,
-                                 SentenceRepository sentenceRepository,
-                                 Reader reader) {
-        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository, reader);
+                                 SentenceRepository sentenceRepository) {
+        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository);
     }
 
     @Provides
+    @SentenceCardScope
     static SpeechRecognizer providesSpeechRecognizer(Context context) {
         return SpeechRecognizer.createSpeechRecognizer(context);
     }
 
+    @Provides
+    @SentenceCardScope
+    static TextToSpeech providesTextToSpeech(Context context, TextToSpeech.OnInitListener listener) {
+        return new TextToSpeech(context, listener);
+    }
+
     @Binds
+    @SentenceCardScope
     abstract SentenceCardView bindLanguageCardView(SentenceCard sentenceCard);
+
+    @Binds
+    @SentenceCardScope
+    abstract TextToSpeech.OnInitListener bindTextToSpeechOnInitListener(OnInitListener listener);
+
+    @Binds
+    @SentenceCardScope
+    abstract UtteranceProgressListener bindUtteranceProgressListener(OnUtteranceProgressListener listener);
 
 }

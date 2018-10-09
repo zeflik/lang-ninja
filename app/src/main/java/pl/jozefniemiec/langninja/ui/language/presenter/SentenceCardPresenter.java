@@ -14,25 +14,33 @@ public interface SentenceCardPresenter {
 
     void pageChanged(int newPosition);
 
+    void playButtonClicked();
+
+    void deactivatedPlayButtonClicked();
+
+    void onReaderInit(boolean isWorking);
+
+    void onStartOfRead();
+
+    void onEndOfRead();
+
+    void onReadError();
+
     void unHighlightedMicrophoneButtonClicked();
-
-    void speechListening();
-
-    void spokenText(ArrayList<String> spokenTextsList);
-
-    void speechEnded();
-
-    void speechError(int string);
 
     void highlightedMicrophoneButtonClicked();
 
-    void speechAvailable(boolean isAvailable);
-
     void deactivatedMicrophoneButtonClicked();
 
-    void playButtonClicked();
+    void onSpeechRecognizerInit(boolean recognitionAvailable);
 
-    void hiddenPlayButtonClicked();
+    void onReadyForSpeech();
+
+    void onSpeechEnded();
+
+    void onSpeechError(int errorCode);
+
+    void onSpeechResults(ArrayList<String> spokenTextsList);
 
     void onViewPause();
 

@@ -1,22 +1,36 @@
 package pl.jozefniemiec.langninja.ui.language.view;
 
+import java.util.Locale;
+
 public interface SentenceCardView {
 
     void showData();
 
     void showNumbering(String numbering);
 
-    void showReadButton();
+    void activateReadButton();
 
-    void hideReadButton();
+    void deactivateReadButton();
+
+    void highlightReadButton();
+
+    void unHighlightReadButton();
+
+    boolean setReaderLanguage(Locale locale);
+
+    void read(String sentence);
+
+    void stopReading();
 
     void activateSpeechButton();
 
-    void highlightSpeakButton();
+    void deactivateSpeechButton();
 
-    void unHighlightSpeakButton();
+    void highlightSpeechButton();
 
-    void listenSpeech(String languageCode);
+    void unHighlightSpeechButton();
+
+    void startListening(String languageCode);
 
     void showSpokenText(String s);
 
@@ -25,10 +39,4 @@ public interface SentenceCardView {
     void cancelSpeechListening();
 
     void showErrorMessage(String message);
-
-    void deactivateSpeechButton();
-
-    void highlightReadButton();
-
-    void unHighlightReadButton();
 }
