@@ -166,7 +166,7 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void deactivateSpeechButton() {
-        speechButton.getBackground().setColorFilter(Color.LTGRAY, PorterDuff.Mode.MULTIPLY);
+        hideButton(speechButton);
         speechButton.setOnClickListener(x -> presenter.deactivatedMicrophoneButtonClicked());
     }
 
