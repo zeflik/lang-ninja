@@ -150,7 +150,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void onViewDestroy() {
-
+        sentenceRepository.close();
     }
 
     private void initializeDatabase() {

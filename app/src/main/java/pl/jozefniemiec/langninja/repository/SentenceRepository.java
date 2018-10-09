@@ -9,4 +9,6 @@ public interface SentenceRepository {
     List<Sentence> getLanguageSentences(String langCode);
 
     void insertAll(Sentence... sentences);
+
+    void close();
 }

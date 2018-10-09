@@ -30,4 +30,9 @@ public class RoomSentenceRepository implements SentenceRepository {
     public void insertAll(Sentence... sentences) {
         sentenceDao.insertAll(sentences);
     }
+
+    @Override
+    public void close() {
+        AppDatabase.destroyInstance();
+    }
 }
