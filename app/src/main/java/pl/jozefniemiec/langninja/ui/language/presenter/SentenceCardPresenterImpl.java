@@ -18,6 +18,8 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     private String languageCode;
     private List<Sentence> sentences;
     private int currentPosition;
+    private boolean isReading;
+    private boolean isListeningSpeech;
 
     public SentenceCardPresenterImpl(SentenceCardView view,
                                      ResourcesManager resourcesManager,
@@ -50,17 +52,14 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     @Override
     public void pageChanged(int newPosition) {
         currentPosition = newPosition;
-        view.cancelSpeechListening();
-        view.unHighlightSpeechButton();
-        view.stopReading();
-        view.unHighlightReadButton();
+        cancelSpeechListening();
+        stopReading();
         view.showNumbering(newPosition + 1 + " / " + getPageCount());
     }
 
     @Override
     public void playButtonClicked() {
-        view.cancelSpeechListening();
-        view.unHighlightSpeechButton();
+        cancelSpeechListening();
         view.read(sentences.get(currentPosition).getSentence());
     }
 
@@ -80,27 +79,32 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void onStartOfRead() {
+        isReading = true;
         view.highlightReadButton();
     }
 
     @Override
     public void onEndOfRead() {
+        isReading = false;
         view.unHighlightReadButton();
     }
 
     @Override
     public void onReadError() {
+        isReading = false;
         view.unHighlightReadButton();
         view.showErrorMessage(resourcesManager.getNeedInternetConnectionMessage());
     }
 
     @Override
     public void onReadyForSpeech() {
+        isListeningSpeech = true;
         view.highlightSpeechButton();
     }
 
     @Override
     public void onSpeechEnded() {
+        isListeningSpeech = false;
         view.unHighlightSpeechButton();
     }
 
@@ -111,6 +115,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void onSpeechError(int errorCode) {
+        isListeningSpeech = false;
         view.unHighlightSpeechButton();
         String message = resourcesManager.findSpeechErrorMessage(errorCode);
         view.showErrorMessage(message);
@@ -128,8 +133,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void unHighlightedMicrophoneButtonClicked() {
-        view.stopReading();
-        view.unHighlightReadButton();
+        stopReading();
         view.startListening(languageCode);
     }
 
@@ -144,13 +148,30 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void onViewPause() {
-        view.stopReading();
-        view.cancelSpeechListening();
+        stopReading();
+        cancelSpeechListening();
+        isListeningSpeech = false;
     }
 
     @Override
     public void onViewDestroy() {
         sentenceRepository.close();
+    }
+
+    private void stopReading() {
+        if (isReading) {
+            view.stopReading();
+            view.unHighlightReadButton();
+            isReading = false;
+        }
+    }
+
+    private void cancelSpeechListening() {
+        if (isListeningSpeech) {
+            view.cancelSpeechListening();
+            view.unHighlightSpeechButton();
+            isListeningSpeech = false;
+        }
     }
 
     private void initializeDatabase() {
