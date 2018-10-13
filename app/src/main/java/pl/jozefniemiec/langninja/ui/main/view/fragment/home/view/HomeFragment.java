@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.model.Language;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.presenter.HomeFragmentPresenter;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter.LanguagesViewAdapter;

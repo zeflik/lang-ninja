@@ -2,8 +2,8 @@ package pl.jozefniemiec.langninja.ui.main.presenter;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.repository.LanguageRepository;
+import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.main.view.MainView;
 
 public class MainPresenterImpl implements MainPresenter {

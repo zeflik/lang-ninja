@@ -8,8 +8,9 @@ import android.speech.tts.UtteranceProgressListener;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import pl.jozefniemiec.langninja.repository.SentenceRepository;
-import pl.jozefniemiec.langninja.resources.ResourcesManager;
+import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
+import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
+import pl.jozefniemiec.langninja.service.ApplicationsManager;
 import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
 import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenterImpl;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
@@ -17,7 +18,6 @@ import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
 import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnInitListener;
 import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnUtteranceProgressListener;
-import pl.jozefniemiec.langninja.utils.ApplicationsManager;
 
 @Module
 public abstract class SentenceCardModule {

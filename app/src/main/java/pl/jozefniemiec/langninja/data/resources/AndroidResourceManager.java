@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.resources;
+package pl.jozefniemiec.langninja.data.resources;
 
 import android.content.res.Resources;
 import android.speech.SpeechRecognizer;

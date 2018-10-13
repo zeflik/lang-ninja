@@ -2,7 +2,7 @@ package pl.jozefniemiec.langninja.ui.main.view.fragment.home.view;
 
 import java.util.List;
 
-import pl.jozefniemiec.langninja.model.Language;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 
 public interface HomeFragmentView {
 

@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.repository.room;
+package pl.jozefniemiec.langninja.data.repository.room;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
@@ -9,7 +9,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import pl.jozefniemiec.langninja.model.Language;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 
 @Dao
 public interface LanguageDao {

@@ -1,10 +1,10 @@
-package pl.jozefniemiec.langninja.resources;
+package pl.jozefniemiec.langninja.data.resources;
 
 public interface ResourcesManager {
 
     String getLanguageName(String languageCode);
 
-    int getFlagId(String s);
+    int getFlagId(String languageCode);
 
     String findOnSpeechErrorMessage(int errorCode);
 

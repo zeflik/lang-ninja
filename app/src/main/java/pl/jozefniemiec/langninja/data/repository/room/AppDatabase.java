@@ -1,12 +1,12 @@
-package pl.jozefniemiec.langninja.repository.room;
+package pl.jozefniemiec.langninja.data.repository.room;
 
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
-import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.model.Sentence;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 
 @Database(
         entities = {

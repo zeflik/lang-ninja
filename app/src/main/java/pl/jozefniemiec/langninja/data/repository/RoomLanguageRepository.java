@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.repository;
+package pl.jozefniemiec.langninja.data.repository;
 
 import android.content.Context;
 
@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.repository.room.AppDatabase;
-import pl.jozefniemiec.langninja.repository.room.LanguageDao;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.data.repository.room.AppDatabase;
+import pl.jozefniemiec.langninja.data.repository.room.LanguageDao;
 
 public class RoomLanguageRepository implements LanguageRepository {
 

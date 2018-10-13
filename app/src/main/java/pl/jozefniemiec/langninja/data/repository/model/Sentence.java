@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.model;
+package pl.jozefniemiec.langninja.data.repository.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

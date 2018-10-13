@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.utils;
+package pl.jozefniemiec.langninja.service;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;

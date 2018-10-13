@@ -11,9 +11,9 @@ import org.mockito.junit.MockitoRule;
 import java.util.ArrayList;
 import java.util.List;
 
-import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.repository.LanguageRepository;
-import pl.jozefniemiec.langninja.resources.ResourcesManager;
+import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragmentView;
 import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.adapter.LanguageItemView;
 

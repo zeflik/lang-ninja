@@ -7,8 +7,8 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
 
-import pl.jozefniemiec.langninja.model.Language;
-import pl.jozefniemiec.langninja.repository.LanguageRepository;
+import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.main.view.MainView;
 
 import static org.mockito.ArgumentMatchers.any;
