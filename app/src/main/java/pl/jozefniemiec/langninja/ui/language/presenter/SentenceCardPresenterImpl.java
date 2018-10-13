@@ -9,24 +9,29 @@ import pl.jozefniemiec.langninja.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesItemView;
+import pl.jozefniemiec.langninja.utils.ApplicationsManager;
 
 public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     private final SentenceCardView view;
     private final ResourcesManager resourcesManager;
     private final SentenceRepository sentenceRepository;
+    private final ApplicationsManager applicationsManager;
     private String languageCode;
     private List<Sentence> sentences;
     private int currentPosition;
     private boolean isReading;
     private boolean isListeningSpeech;
+    private String speechRecognizerErrorMessage;
 
     public SentenceCardPresenterImpl(SentenceCardView view,
                                      ResourcesManager resourcesManager,
-                                     SentenceRepository sentenceRepository) {
+                                     SentenceRepository sentenceRepository,
+                                     ApplicationsManager applicationsManager) {
         this.view = view;
         this.resourcesManager = resourcesManager;
         this.sentenceRepository = sentenceRepository;
+        this.applicationsManager = applicationsManager;
     }
 
     @Override
@@ -36,6 +41,21 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         sentences = sentenceRepository.getLanguageSentences(languageCode);
         view.showData();
         view.showNumbering(1 + " / " + getPageCount());
+        int speechRecognizerAvailable =
+                applicationsManager.checkForApplication("com.google.android.googlequicksearchbox");
+        switch (speechRecognizerAvailable) {
+            case ApplicationsManager.INSTALLED_ENABLED:
+                view.activateSpeechRecognizer();
+                break;
+            case ApplicationsManager.INSTALLED_DISABLED:
+                speechRecognizerErrorMessage = "Google search zablokowane";
+                view.deactivateSpeechButton();
+                break;
+            case ApplicationsManager.NOT_INSTALLED:
+                speechRecognizerErrorMessage = "Google search niedostępne";
+                view.deactivateSpeechButton();
+                break;
+        }
     }
 
     @Override
@@ -117,13 +137,13 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     public void onSpeechError(int errorCode) {
         isListeningSpeech = false;
         view.unHighlightSpeechButton();
-        String message = resourcesManager.findSpeechErrorMessage(errorCode);
+        String message = resourcesManager.findOnSpeechErrorMessage(errorCode);
         view.showErrorMessage(message);
     }
 
     @Override
     public void deactivatedMicrophoneButtonClicked() {
-        view.showErrorMessage("Google speech not instaled");
+        view.showErrorMessage(speechRecognizerErrorMessage);
     }
 
     @Override
@@ -142,6 +162,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         if (recognitionAvailable) {
             view.activateSpeechButton();
         } else {
+            speechRecognizerErrorMessage = "Google speech not working";
             view.deactivateSpeechButton();
         }
     }

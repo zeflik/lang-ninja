@@ -6,7 +6,7 @@ public interface ResourcesManager {
 
     int getFlagId(String s);
 
-    String findSpeechErrorMessage(int errorCode);
+    String findOnSpeechErrorMessage(int errorCode);
 
     String getNeedInternetConnectionMessage();
 

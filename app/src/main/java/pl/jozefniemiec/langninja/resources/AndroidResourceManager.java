@@ -31,14 +31,14 @@ public class AndroidResourceManager implements ResourcesManager {
     }
 
     @Override
-    public String findSpeechErrorMessage(int errorCode) {
+    public String findOnSpeechErrorMessage(int errorCode) {
         int messageId;
         switch (errorCode) {
             case SpeechRecognizer.ERROR_AUDIO:
                 messageId = R.string.speech_error_audio;
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
-                messageId = R.string.speech_unknown_error;
+                messageId = R.string.speech_error_client;
                 break;
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
                 messageId = R.string.speech_error_permission;

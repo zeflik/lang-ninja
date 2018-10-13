@@ -17,6 +17,7 @@ import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
 import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnInitListener;
 import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnUtteranceProgressListener;
+import pl.jozefniemiec.langninja.utils.ApplicationsManager;
 
 @Module
 public abstract class SentenceCardModule {
@@ -33,8 +34,9 @@ public abstract class SentenceCardModule {
     static SentenceCardPresenter
     provideLanguageCardPresenter(SentenceCardView view,
                                  ResourcesManager resourcesManager,
-                                 SentenceRepository sentenceRepository) {
-        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository);
+                                 SentenceRepository sentenceRepository,
+                                 ApplicationsManager applicationsManager) {
+        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository, applicationsManager);
     }
 
     @Provides

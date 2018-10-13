@@ -2,7 +2,6 @@ package pl.jozefniemiec.langninja.ui.main.view;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -42,6 +41,5 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
 
     @Override
     public void showFragments() {
-        Toast.makeText(this, "Main Activity loaded", Toast.LENGTH_SHORT).show();
     }
 }

@@ -84,9 +84,6 @@ public class SentenceCard extends DaggerAppCompatActivity
 
         presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE));
         textToSpeech.setOnUtteranceProgressListener(utteranceProgressListener);
-        speechRecognizer.setRecognitionListener(speechRecognitionListener);
-        boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(this);
-        presenter.onSpeechRecognizerInit(recognitionAvailable);
     }
 
     @Override
@@ -156,6 +153,13 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void stopReading() {
         textToSpeech.stop();
+    }
+
+    @Override
+    public void activateSpeechRecognizer() {
+        speechRecognizer.setRecognitionListener(speechRecognitionListener);
+        boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(this);
+        presenter.onSpeechRecognizerInit(recognitionAvailable);
     }
 
     @Override

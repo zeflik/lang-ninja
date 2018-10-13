@@ -26,11 +26,12 @@
     <string name="speech_unknown_error">Nieokreślony błąd</string>
     <string name="speech_error_permission">Niewystarczające uprawnienia aplikacji</string>
     <string name="speech_error_network">Brak połączenia z internetem</string>
-    <string name="speech_error_no_input">Musisz coś powiedzieć</string>
+    <string name="speech_error_no_input">Nic nie usłyszałem</string>
     <string name="speech_error_no_match">Nic nie zrozumiałem</string>
     <string name="speech_error_busy">Urządzenie zajęte</string>
     <string name="speech_error_server">Błąd serwera</string>
     <string name="need_internet_connection">Potrzebne połączenie internetowe</string>
     <string name="language_not_supported">Język nie jest wspierany</string>
+    <string name="speech_error_client">Błąd usługi Google Speech - zaktualizuj do najnowszej wersji</string>
 
 </resources>

@@ -22,6 +22,8 @@ public interface SentenceCardView {
 
     void stopReading();
 
+    void activateSpeechRecognizer();
+
     void activateSpeechButton();
 
     void deactivateSpeechButton();
