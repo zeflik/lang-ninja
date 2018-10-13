@@ -20,8 +20,6 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     private String languageCode;
     private List<Sentence> sentences;
     private int currentPosition;
-    private boolean isReading;
-    private boolean isListeningSpeech;
     private String speechRecognizerErrorMessage;
 
     public SentenceCardPresenterImpl(SentenceCardView view,
@@ -99,32 +97,27 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void onStartOfRead() {
-        isReading = true;
         view.highlightReadButton();
     }
 
     @Override
     public void onEndOfRead() {
-        isReading = false;
         view.unHighlightReadButton();
     }
 
     @Override
     public void onReadError() {
-        isReading = false;
         view.unHighlightReadButton();
         view.showErrorMessage(resourcesManager.getNeedInternetConnectionMessage());
     }
 
     @Override
     public void onReadyForSpeech() {
-        isListeningSpeech = true;
         view.highlightSpeechButton();
     }
 
     @Override
     public void onSpeechEnded() {
-        isListeningSpeech = false;
         view.unHighlightSpeechButton();
     }
 
@@ -135,7 +128,6 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void onSpeechError(int errorCode) {
-        isListeningSpeech = false;
         view.unHighlightSpeechButton();
         String message = resourcesManager.findOnSpeechErrorMessage(errorCode);
         view.showErrorMessage(message);
@@ -171,7 +163,6 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     public void onViewPause() {
         stopReading();
         cancelSpeechListening();
-        isListeningSpeech = false;
     }
 
     @Override
@@ -180,18 +171,16 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     }
 
     private void stopReading() {
-        if (isReading) {
+        if (view.isReading()) {
             view.stopReading();
             view.unHighlightReadButton();
-            isReading = false;
         }
     }
 
     private void cancelSpeechListening() {
-        if (isListeningSpeech) {
+        if (view.isListeningSpeech()) {
             view.cancelSpeechListening();
             view.unHighlightSpeechButton();
-            isListeningSpeech = false;
         }
     }
 

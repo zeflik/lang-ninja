@@ -151,6 +151,11 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
+    public boolean isReading() {
+        return textToSpeech.isSpeaking();
+    }
+
+    @Override
     public void stopReading() {
         textToSpeech.stop();
     }
@@ -192,6 +197,11 @@ public class SentenceCard extends DaggerAppCompatActivity
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
         speechRecognizer.startListening(intent);
+    }
+
+    @Override
+    public boolean isListeningSpeech() {
+        return speechRecognitionListener.isListeningSpeech();
     }
 
     @Override

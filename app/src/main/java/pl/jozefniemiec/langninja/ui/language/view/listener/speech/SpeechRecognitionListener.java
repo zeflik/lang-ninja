@@ -12,6 +12,7 @@ import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
 public class SpeechRecognitionListener implements RecognitionListener {
 
     private final SentenceCardPresenter presenter;
+    private boolean listeningSpeech;
 
     @Inject
     public SpeechRecognitionListener(SentenceCardPresenter presenter) {
@@ -20,6 +21,7 @@ public class SpeechRecognitionListener implements RecognitionListener {
 
     @Override
     public void onReadyForSpeech(Bundle params) {
+        listeningSpeech = true;
         presenter.onReadyForSpeech();
     }
 
@@ -40,11 +42,13 @@ public class SpeechRecognitionListener implements RecognitionListener {
 
     @Override
     public void onEndOfSpeech() {
+        listeningSpeech = false;
         presenter.onSpeechEnded();
     }
 
     @Override
     public void onError(int errorCode) {
+        listeningSpeech = false;
         presenter.onSpeechError(errorCode);
     }
 
@@ -62,5 +66,9 @@ public class SpeechRecognitionListener implements RecognitionListener {
     @Override
     public void onEvent(int eventType, Bundle params) {
 
+    }
+
+    public boolean isListeningSpeech() {
+        return listeningSpeech;
     }
 }

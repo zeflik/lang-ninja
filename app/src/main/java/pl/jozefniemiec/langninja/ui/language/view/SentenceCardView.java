@@ -20,6 +20,8 @@ public interface SentenceCardView {
 
     void read(String sentence);
 
+    boolean isReading();
+
     void stopReading();
 
     void activateSpeechRecognizer();
@@ -33,6 +35,8 @@ public interface SentenceCardView {
     void unHighlightSpeechButton();
 
     void startListening(String languageCode);
+
+    boolean isListeningSpeech();
 
     void showSpokenText(String s);
 
