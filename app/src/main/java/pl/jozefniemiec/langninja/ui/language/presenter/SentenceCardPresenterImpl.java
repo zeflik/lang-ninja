@@ -144,7 +144,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     }
 
     @Override
-    public void unHighlightedMicrophoneButtonClicked() {
+    public void speechRecognizerButtonClicked() {
         stopReading();
         view.startListening(languageCode);
     }

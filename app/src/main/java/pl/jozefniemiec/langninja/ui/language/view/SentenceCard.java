@@ -121,7 +121,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void deactivateReadButton() {
         readButton.setOnClickListener(x -> presenter.deactivatedPlayButtonClicked());
-        hideButton(readButton);
+        grayOutButton(readButton);
     }
 
     @Override
@@ -169,13 +169,12 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void activateSpeechButton() {
-        unHighlightSpeechButton();
-        speechButton.setOnClickListener(x -> presenter.unHighlightedMicrophoneButtonClicked());
+        speechButton.setOnClickListener(x -> presenter.speechRecognizerButtonClicked());
     }
 
     @Override
     public void deactivateSpeechButton() {
-        hideButton(speechButton);
+        grayOutButton(speechButton);
         speechButton.setOnClickListener(x -> presenter.deactivatedMicrophoneButtonClicked());
     }
 
@@ -188,7 +187,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void unHighlightSpeechButton() {
         unHighlightButton(speechButton);
-        speechButton.setOnClickListener(x -> presenter.unHighlightedMicrophoneButtonClicked());
+        speechButton.setOnClickListener(x -> presenter.speechRecognizerButtonClicked());
     }
 
     @Override
@@ -257,7 +256,7 @@ public class SentenceCard extends DaggerAppCompatActivity
         super.onDestroy();
     }
 
-    private void hideButton(ImageButton imageButton) {
+    private void grayOutButton(ImageButton imageButton) {
         runOnUiThread(() -> imageButton.getBackground().setColorFilter(INACTIVE_BUTTON_COLOR, PorterDuff.Mode.SRC_ATOP));
     }
 

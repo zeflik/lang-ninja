@@ -26,7 +26,7 @@ public interface SentenceCardPresenter {
 
     void onReadError();
 
-    void unHighlightedMicrophoneButtonClicked();
+    void speechRecognizerButtonClicked();
 
     void highlightedMicrophoneButtonClicked();
 
