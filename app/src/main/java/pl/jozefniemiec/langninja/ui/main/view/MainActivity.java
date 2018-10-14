@@ -28,8 +28,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        sectionPageAdapter.addFragment(HomeFragment.newInstance(), "Home");
-        viewPager.setAdapter(sectionPageAdapter);
         mainPresenter.loadMain();
     }
 
@@ -41,5 +39,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
 
     @Override
     public void showFragments() {
+        sectionPageAdapter.addFragment(HomeFragment.newInstance(), "Home");
+        viewPager.setAdapter(sectionPageAdapter);
     }
 }
