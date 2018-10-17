@@ -35,7 +35,6 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     @Override
     public void loadData(String languageCode) {
         this.languageCode = languageCode;
-        initializeDatabase();
         sentences = sentenceRepository.getLanguageSentences(languageCode);
         view.showData();
         view.showNumbering(1 + " / " + getPageCount());
@@ -182,15 +181,5 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
             view.cancelSpeechListening();
             view.unHighlightSpeechButton();
         }
-    }
-
-    private void initializeDatabase() {
-        sentenceRepository.insertAll(
-                new Sentence("Ala ma kota", "pl_PL", 0),
-                new Sentence("Ala ma psa", "pl_PL", 0),
-                new Sentence("Danke", "de", 0),
-                new Sentence("Thanx", "en_GB", 0),
-                new Sentence("Ala ma mrówkę", "pl_PL", 0)
-        );
     }
 }

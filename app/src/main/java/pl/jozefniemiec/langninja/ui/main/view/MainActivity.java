@@ -32,12 +32,6 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
     }
 
     @Override
-    protected void onDestroy() {
-        mainPresenter.onExitCleanup();
-        super.onDestroy();
-    }
-
-    @Override
     public void showFragments() {
         sectionPageAdapter.addFragment(HomeFragment.newInstance(), "Home");
         viewPager.setAdapter(sectionPageAdapter);
