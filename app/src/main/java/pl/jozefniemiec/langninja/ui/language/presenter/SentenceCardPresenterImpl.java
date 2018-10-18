@@ -133,12 +133,12 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     }
 
     @Override
-    public void deactivatedMicrophoneButtonClicked() {
+    public void deactivatedSpeechButtonClicked() {
         view.showErrorMessage(speechRecognizerErrorMessage);
     }
 
     @Override
-    public void highlightedMicrophoneButtonClicked() {
+    public void highlightedSpeechButtonClicked() {
         view.stopSpeechListening();
     }
 

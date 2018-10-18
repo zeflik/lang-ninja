@@ -175,13 +175,13 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void deactivateSpeechButton() {
         grayOutButton(speechButton);
-        speechButton.setOnClickListener(x -> presenter.deactivatedMicrophoneButtonClicked());
+        speechButton.setOnClickListener(x -> presenter.deactivatedSpeechButtonClicked());
     }
 
     @Override
     public void highlightSpeechButton() {
         highlightButton(speechButton);
-        speechButton.setOnClickListener(x -> presenter.highlightedMicrophoneButtonClicked());
+        speechButton.setOnClickListener(x -> presenter.highlightedSpeechButtonClicked());
     }
 
     @Override

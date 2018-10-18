@@ -28,9 +28,9 @@ public interface SentenceCardPresenter {
 
     void speechRecognizerButtonClicked();
 
-    void highlightedMicrophoneButtonClicked();
+    void highlightedSpeechButtonClicked();
 
-    void deactivatedMicrophoneButtonClicked();
+    void deactivatedSpeechButtonClicked();
 
     void onSpeechRecognizerInit(boolean recognitionAvailable);
 
