@@ -45,4 +45,6 @@ public interface SentenceCardView {
     void cancelSpeechListening();
 
     void showErrorMessage(String message);
+
+    void showGoogleInstallDialog();
 }

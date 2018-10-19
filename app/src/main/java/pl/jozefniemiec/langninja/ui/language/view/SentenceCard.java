@@ -3,6 +3,7 @@ package pl.jozefniemiec.langninja.ui.language.view;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -10,6 +11,7 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -225,6 +227,24 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void showErrorMessage(String message) {
         runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+    }
+
+    @Override
+    public void showGoogleInstallDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Do rozpoznawania mowy Lang Ninja używa programu Google, czy chcesz go pobrać za darmo z Google Play?")
+                .setPositiveButton("OK", (dialog, id) -> {
+                    final String appPackageName = "com.google.android.googlequicksearchbox";
+                    try {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                    }
+                })
+                .setNegativeButton("Anuluj", (dialog, id) -> {
+                    // User cancelled the dialog
+                });
+        builder.create().show();
     }
 
     @Override

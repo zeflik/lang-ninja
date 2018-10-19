@@ -134,7 +134,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void deactivatedSpeechButtonClicked() {
-        view.showErrorMessage(speechRecognizerErrorMessage);
+        view.showGoogleInstallDialog();
     }
 
     @Override
