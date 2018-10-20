@@ -18,10 +18,11 @@
     <string name="microphone_button">przycisk mikrofonu</string>
     <string name="answer">odpowiedź</string>
     <string name="category">Kategoria</string>
-
-    <!--no not translate-->
+    <string name="button_ok">OK</string>
+    <string name="button_cancel">Anuluj</string>
+    <string name="agree_to_install_google">Do rozpoznawania mowy Lang Ninja używa programu Google, czy chcesz go pobrać za darmo z Google Play?</string>
+    <string name="agree_to_install_tts">Do odczytywania Lang Ninja używa programu Google TTS, czy chcesz go pobrać za darmo z Google Play?</string>
     <string name="language_name_prefix">language_name_</string>
-    <string name="app_package_name">pl.jozefniemiec.langninja</string>
     <string name="speech_error_audio">Błąd mikrofonu</string>
     <string name="speech_unknown_error">Nieokreślony błąd</string>
     <string name="speech_error_permission">Niewystarczające uprawnienia aplikacji</string>
@@ -34,4 +35,10 @@
     <string name="language_not_supported">Język nie jest wspierany</string>
     <string name="speech_error_client">Błąd usługi Google Speech - zaktualizuj do najnowszej wersji</string>
 
+    <!--play store-->
+    <string name="app_market_link">"market://details?id="</string>
+    <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
+    <string name="app_package_name">pl.jozefniemiec.langninja</string>
+    <string name="google_speech_package_name">com.google.android.googlequicksearchbox</string>
+    <string name="google_tts_package_name">com.google.android.tts</string>
 </resources>

@@ -3,7 +3,6 @@ package pl.jozefniemiec.langninja.ui.language.view;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.net.Uri;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
@@ -29,6 +28,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
 import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
 import pl.jozefniemiec.langninja.ui.language.view.listener.speech.SpeechRecognitionListener;
+import pl.jozefniemiec.langninja.utils.AppUtils;
 
 import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
 
@@ -232,17 +232,23 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void showGoogleInstallDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Do rozpoznawania mowy Lang Ninja używa programu Google, czy chcesz go pobrać za darmo z Google Play?")
-                .setPositiveButton("OK", (dialog, id) -> {
-                    final String appPackageName = "com.google.android.googlequicksearchbox";
-                    try {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                    } catch (android.content.ActivityNotFoundException anfe) {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                    }
-                })
-                .setNegativeButton("Anuluj", (dialog, id) -> {
-                    // User cancelled the dialog
+        builder.setMessage(R.string.agree_to_install_google)
+                .setPositiveButton(R.string.button_ok, (dialog, id) ->
+                        AppUtils.openPlayStoreForSpeechRecognizer(this)
+                )
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> {
+                });
+        builder.create().show();
+    }
+
+    @Override
+    public void showTTSInstallDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(R.string.agree_to_install_tts)
+                .setPositiveButton(R.string.button_ok, (dialog, id) ->
+                        AppUtils.openPlayStoreForTTS(this)
+                )
+                .setNegativeButton(R.string.button_cancel, (dialog, id) -> {
                 });
         builder.create().show();
     }

@@ -47,4 +47,6 @@ public interface SentenceCardView {
     void showErrorMessage(String message);
 
     void showGoogleInstallDialog();
+
+    void showTTSInstallDialog();
 }

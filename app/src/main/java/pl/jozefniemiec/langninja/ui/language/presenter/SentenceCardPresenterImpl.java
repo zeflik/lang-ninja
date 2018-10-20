@@ -82,7 +82,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void deactivatedPlayButtonClicked() {
-        view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
+        view.showTTSInstallDialog();
     }
 
     @Override
