@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.language.presenter;
+package pl.jozefniemiec.langninja.ui.sentences;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,6 @@ import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.service.ApplicationsManager;
-import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
-import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesItemView;
 
 public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 

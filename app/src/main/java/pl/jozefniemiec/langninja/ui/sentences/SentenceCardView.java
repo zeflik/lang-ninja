@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.language.view;
+package pl.jozefniemiec.langninja.ui.sentences;
 
 import java.util.Locale;
 

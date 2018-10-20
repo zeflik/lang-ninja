@@ -9,7 +9,8 @@ import org.mockito.junit.MockitoRule;
 
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
-import pl.jozefniemiec.langninja.ui.main.view.MainView;
+import pl.jozefniemiec.langninja.ui.main.MainPresenterImpl;
+import pl.jozefniemiec.langninja.ui.main.MainView;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -36,7 +37,6 @@ public class MainPresenterImplTest {
 
     @Test
     public void closeRepositoryOnDestroy() {
-        presenter.onExitCleanup();
         verify(languageRepository).close();
     }
 

@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.language.view;
+package pl.jozefniemiec.langninja.ui.sentences;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -25,12 +25,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
-import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
-import pl.jozefniemiec.langninja.ui.language.view.listener.speech.SpeechRecognitionListener;
+import pl.jozefniemiec.langninja.ui.sentences.listener.speech.SpeechRecognitionListener;
 import pl.jozefniemiec.langninja.utils.AppUtils;
 
-import static pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment.LANGUAGE_CODE;
+import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE;
 
 public class SentenceCard extends DaggerAppCompatActivity
         implements

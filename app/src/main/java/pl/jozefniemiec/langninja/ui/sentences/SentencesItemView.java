@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.language.view.adapter;
+package pl.jozefniemiec.langninja.ui.sentences;
 
 public interface SentencesItemView {
 

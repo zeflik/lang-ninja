@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.view;
+package pl.jozefniemiec.langninja.ui.main;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
@@ -9,8 +9,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.main.presenter.MainPresenter;
-import pl.jozefniemiec.langninja.ui.main.view.fragment.home.view.HomeFragment;
+import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainView {
 
@@ -33,7 +32,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
 
     @Override
     public void showFragments() {
-        sectionPageAdapter.addFragment(HomeFragment.newInstance(), "Home");
+        sectionPageAdapter.addFragment(LanguagesFragment.newInstance(), "Languages");
         viewPager.setAdapter(sectionPageAdapter);
     }
 }

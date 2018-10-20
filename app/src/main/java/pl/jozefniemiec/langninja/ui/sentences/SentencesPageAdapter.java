@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.language.view.adapter;
+package pl.jozefniemiec.langninja.ui.sentences;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,7 +12,6 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
 
 public class SentencesPageAdapter extends PagerAdapter implements SentencesItemView {
 

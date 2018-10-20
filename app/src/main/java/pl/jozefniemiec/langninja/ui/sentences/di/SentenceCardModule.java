@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.language;
+package pl.jozefniemiec.langninja.ui.sentences.di;
 
 import android.content.Context;
 import android.speech.SpeechRecognizer;
@@ -11,13 +11,13 @@ import dagger.Provides;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.service.ApplicationsManager;
-import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
-import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenterImpl;
-import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
-import pl.jozefniemiec.langninja.ui.language.view.SentenceCardView;
-import pl.jozefniemiec.langninja.ui.language.view.adapter.SentencesPageAdapter;
-import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnInitListener;
-import pl.jozefniemiec.langninja.ui.language.view.listener.tts.OnUtteranceProgressListener;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenterImpl;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardView;
+import pl.jozefniemiec.langninja.ui.sentences.SentencesPageAdapter;
+import pl.jozefniemiec.langninja.ui.sentences.listener.tts.OnInitListener;
+import pl.jozefniemiec.langninja.ui.sentences.listener.tts.OnUtteranceProgressListener;
 
 @Module
 public abstract class SentenceCardModule {

@@ -1,10 +1,10 @@
-package pl.jozefniemiec.langninja.ui.language.view.listener.tts;
+package pl.jozefniemiec.langninja.ui.sentences.listener.tts;
 
 import android.speech.tts.TextToSpeech;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.language.presenter.SentenceCardPresenter;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
 
 public class OnInitListener implements TextToSpeech.OnInitListener {
 

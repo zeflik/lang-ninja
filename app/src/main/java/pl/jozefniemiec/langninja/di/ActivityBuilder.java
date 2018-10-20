@@ -2,18 +2,18 @@ package pl.jozefniemiec.langninja.di;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import pl.jozefniemiec.langninja.ui.language.SentenceCardModule;
-import pl.jozefniemiec.langninja.ui.language.SentenceCardScope;
-import pl.jozefniemiec.langninja.ui.language.view.SentenceCard;
-import pl.jozefniemiec.langninja.ui.main.MainActivityModule;
-import pl.jozefniemiec.langninja.ui.main.MainActivityScope;
-import pl.jozefniemiec.langninja.ui.main.view.MainActivity;
-import pl.jozefniemiec.langninja.ui.main.view.fragment.home.HomeFragmentProvider;
+import pl.jozefniemiec.langninja.ui.main.MainActivity;
+import pl.jozefniemiec.langninja.ui.main.di.MainActivityModule;
+import pl.jozefniemiec.langninja.ui.main.di.MainActivityScope;
+import pl.jozefniemiec.langninja.ui.main.languages.di.LanguagesFragmentProvider;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
+import pl.jozefniemiec.langninja.ui.sentences.di.SentenceCardModule;
+import pl.jozefniemiec.langninja.ui.sentences.di.SentenceCardScope;
 
 @Module
 abstract class ActivityBuilder {
 
-    @ContributesAndroidInjector(modules = {MainActivityModule.class, HomeFragmentProvider.class})
+    @ContributesAndroidInjector(modules = {MainActivityModule.class, LanguagesFragmentProvider.class})
     @MainActivityScope
     abstract MainActivity bindMainActivity();
 
