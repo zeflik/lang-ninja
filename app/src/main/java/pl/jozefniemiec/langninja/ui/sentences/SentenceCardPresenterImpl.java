@@ -7,27 +7,22 @@ import java.util.Locale;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
-import pl.jozefniemiec.langninja.service.ApplicationsManager;
 
 public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     private final SentenceCardView view;
     private final ResourcesManager resourcesManager;
     private final SentenceRepository sentenceRepository;
-    private final ApplicationsManager applicationsManager;
     private String languageCode;
     private List<Sentence> sentences;
     private int currentPosition;
-    private String speechRecognizerErrorMessage;
 
     public SentenceCardPresenterImpl(SentenceCardView view,
                                      ResourcesManager resourcesManager,
-                                     SentenceRepository sentenceRepository,
-                                     ApplicationsManager applicationsManager) {
+                                     SentenceRepository sentenceRepository) {
         this.view = view;
         this.resourcesManager = resourcesManager;
         this.sentenceRepository = sentenceRepository;
-        this.applicationsManager = applicationsManager;
     }
 
     @Override
@@ -36,21 +31,6 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         sentences = sentenceRepository.getLanguageSentences(languageCode);
         view.showData();
         view.showNumbering(1 + " / " + getPageCount());
-        int speechRecognizerAvailable =
-                applicationsManager.checkForApplication("com.google.android.googlequicksearchbox");
-        switch (speechRecognizerAvailable) {
-            case ApplicationsManager.INSTALLED_ENABLED:
-                view.activateSpeechRecognizer();
-                break;
-            case ApplicationsManager.INSTALLED_DISABLED:
-                speechRecognizerErrorMessage = "Google search zablokowane";
-                view.deactivateSpeechButton();
-                break;
-            case ApplicationsManager.NOT_INSTALLED:
-                speechRecognizerErrorMessage = "Google search niedostępne";
-                view.deactivateSpeechButton();
-                break;
-        }
     }
 
     @Override
@@ -80,6 +60,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void deactivatedPlayButtonClicked() {
+        view.stopSpeechListening();
         view.showTTSInstallDialog();
     }
 
@@ -132,7 +113,13 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void deactivatedSpeechButtonClicked() {
-        view.showGoogleInstallDialog();
+        view.stopReading();
+        if (view.isSpeechRecognizerAvailable()) {
+            view.startListening(languageCode);
+            view.highlightSpeechButton();
+        } else {
+            view.showSpeechRecognizerInstallDialog();
+        }
     }
 
     @Override
@@ -151,7 +138,6 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         if (recognitionAvailable) {
             view.activateSpeechButton();
         } else {
-            speechRecognizerErrorMessage = "Google speech not working";
             view.deactivateSpeechButton();
         }
     }

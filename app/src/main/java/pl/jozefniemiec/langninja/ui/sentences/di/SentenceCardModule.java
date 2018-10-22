@@ -10,14 +10,13 @@ import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
-import pl.jozefniemiec.langninja.service.ApplicationsManager;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenterImpl;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.sentences.SentencesPageAdapter;
-import pl.jozefniemiec.langninja.ui.sentences.listener.tts.OnInitListener;
-import pl.jozefniemiec.langninja.ui.sentences.listener.tts.OnUtteranceProgressListener;
+import pl.jozefniemiec.langninja.ui.sentences.tts.OnInitListener;
+import pl.jozefniemiec.langninja.ui.sentences.tts.OnUtteranceProgressListener;
 
 @Module
 public abstract class SentenceCardModule {
@@ -34,9 +33,8 @@ public abstract class SentenceCardModule {
     static SentenceCardPresenter
     provideLanguageCardPresenter(SentenceCardView view,
                                  ResourcesManager resourcesManager,
-                                 SentenceRepository sentenceRepository,
-                                 ApplicationsManager applicationsManager) {
-        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository, applicationsManager);
+                                 SentenceRepository sentenceRepository) {
+        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository);
     }
 
     @Provides

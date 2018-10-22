@@ -24,8 +24,6 @@ public interface SentenceCardView {
 
     void stopReading();
 
-    void activateSpeechRecognizer();
-
     void activateSpeechButton();
 
     void deactivateSpeechButton();
@@ -46,7 +44,9 @@ public interface SentenceCardView {
 
     void showErrorMessage(String message);
 
-    void showGoogleInstallDialog();
+    void showSpeechRecognizerInstallDialog();
 
     void showTTSInstallDialog();
+
+    boolean isSpeechRecognizerAvailable();
 }

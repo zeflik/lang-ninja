@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.sentences.listener.speech.SpeechRecognitionListener;
+import pl.jozefniemiec.langninja.ui.sentences.speech.SpeechRecognitionListener;
 import pl.jozefniemiec.langninja.utils.AppUtils;
 
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE;
@@ -83,6 +83,7 @@ public class SentenceCard extends DaggerAppCompatActivity
         supportActionBar.setTitle(getIntent().getStringExtra(LANGUAGE_CODE));
 
         presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE));
+        activateSpeechRecognizer();
         textToSpeech.setOnUtteranceProgressListener(utteranceProgressListener);
     }
 
@@ -160,7 +161,6 @@ public class SentenceCard extends DaggerAppCompatActivity
         textToSpeech.stop();
     }
 
-    @Override
     public void activateSpeechRecognizer() {
         speechRecognizer.setRecognitionListener(speechRecognitionListener);
         boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(this);
@@ -228,7 +228,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void showGoogleInstallDialog() {
+    public void showSpeechRecognizerInstallDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.agree_to_install_google)
                 .setPositiveButton(R.string.button_ok, (dialog, id) ->
@@ -249,6 +249,14 @@ public class SentenceCard extends DaggerAppCompatActivity
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> {
                 });
         builder.create().show();
+    }
+
+    @Override
+    public boolean isSpeechRecognizerAvailable() {
+        return AppUtils.checkForApplication(
+                getApplicationContext(),
+                getString(R.string.google_speech_package_name)
+        );
     }
 
     @Override
