@@ -115,8 +115,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     public void deactivatedSpeechButtonClicked() {
         view.stopReading();
         if (view.isSpeechRecognizerAvailable()) {
-            view.startListening(languageCode);
-            view.highlightSpeechButton();
+            view.activateSpeechRecognizer();
         } else {
             view.showSpeechRecognizerInstallDialog();
         }
