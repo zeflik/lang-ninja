@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.data.repository.model.Sentence;
-import pl.jozefniemiec.langninja.data.utils.InitialData;
+import pl.jozefniemiec.langninja.data.utils.InitialDataDebug;
 
 @Database(
         entities = {
@@ -40,8 +40,8 @@ public abstract class AppDatabase extends RoomDatabase {
                     public void onCreate(@NonNull SupportSQLiteDatabase db) {
                         super.onCreate(db);
                         Executors.newSingleThreadScheduledExecutor().execute(() -> {
-                            getInstance(context).languageDao().insertAll(InitialData.populateLanguages());
-                            getInstance(context).sentenceDao().insertAll(InitialData.populateSentences());
+                            getInstance(context).languageDao().insertAll(InitialDataDebug.populateLanguages());
+                            getInstance(context).sentenceDao().insertAll(InitialDataDebug.populateSentences());
                         });
                     }
                 })

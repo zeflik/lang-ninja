@@ -10,6 +10,7 @@
     <string name="language_name_pl_PL">Polski</string>
     <string name="language_name_en_GB">Angielski</string>
     <string name="language_name_de">Niemiecki</string>
+    <string name="language_name_es">Hiszpański</string>
     <string name="page_count">%1$d/%2$d</string>
     <string name="language_flag_description">Obraz flagi</string>
     <string name="quote">Zdanie</string>

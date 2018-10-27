@@ -3,17 +3,19 @@ package pl.jozefniemiec.langninja.data.utils;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 
-public class InitialData {
+public class InitialDataDebug {
 
     private static final String LANGUAGE_CODE_PL = "pl_PL";
     private static final String LANGUAGE_CODE_DE = "de";
     private static final String LANGUAGE_CODE_ENGB = "en_GB";
+    private static final String LANGUAGE_CODE_ES = "es";
 
     public static Language[] populateLanguages() {
         return new Language[]{
                 new Language(LANGUAGE_CODE_PL, "Polski"),
                 new Language(LANGUAGE_CODE_ENGB, "English"),
-                new Language(LANGUAGE_CODE_DE, "Deutsch")
+                new Language(LANGUAGE_CODE_DE, "Deutsch"),
+                new Language(LANGUAGE_CODE_ES, "Español")
         };
     }
 
