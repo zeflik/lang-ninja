@@ -13,28 +13,21 @@
         android:id="@+id/language_card_view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="@dimen/margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@+id/language_page_answer_cv"
-        app:layout_constraintEnd_toStartOf="@+id/languagePageCount"
+        app:layout_constraintEnd_toStartOf="@+id/language_card_play_button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.v7.widget.CardView
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/language_page_answer_cv"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginStart="8dp"
-        android:padding="24dp"
+        android:layout_margin="@dimen/margin"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/language_card_play_button"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/language_card_view_pager">
@@ -43,14 +36,18 @@
             android:id="@+id/languagePageAnswerTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:background="@drawable/shape_speak_bubble"
             android:padding="12dp"
             android:text="@string/answer"
             android:textAlignment="textEnd"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.v7.widget.CardView>
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/languagePageCount"
@@ -69,20 +66,19 @@
         android:id="@+id/language_card_play_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_margin="@dimen/margin_buttons"
         android:background="@drawable/play"
         android:contentDescription="@string/play_button"
         app:layout_constraintBottom_toTopOf="@+id/languagePageCount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <ImageButton
         android:id="@+id/language_card_microphone_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_margin="@dimen/margin_buttons"
         android:background="@drawable/microphone"
         android:contentDescription="@string/microphone_button"
         app:layout_constraintBottom_toBottomOf="parent"
