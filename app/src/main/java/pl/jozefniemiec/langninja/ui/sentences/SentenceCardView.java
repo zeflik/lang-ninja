@@ -4,6 +4,8 @@ import java.util.Locale;
 
 public interface SentenceCardView {
 
+    void setTitle(String string);
+
     void showData();
 
     void showNumbering(String numbering);
@@ -40,7 +42,11 @@ public interface SentenceCardView {
 
     boolean isListeningSpeech();
 
-    void showSpokenText(String s);
+    void showCorrectSpokenText(String text);
+
+    void showWrongSpokenText(String text);
+
+    void hideSpokenText();
 
     void stopSpeechListening();
 

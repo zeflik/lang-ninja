@@ -7,6 +7,7 @@ import java.util.Locale;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
+import pl.jozefniemiec.langninja.utils.Utility;
 
 public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
@@ -31,6 +32,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         sentences = sentenceRepository.getLanguageSentences(languageCode);
         view.showData();
         view.showNumbering(1 + " / " + getPageCount());
+        view.setTitle(resourcesManager.getLanguageName(languageCode));
     }
 
     @Override
@@ -46,6 +48,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void pageChanged(int newPosition) {
+        view.hideSpokenText();
         currentPosition = newPosition;
         cancelSpeechListening();
         stopReading();
@@ -101,7 +104,13 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void onSpeechResults(ArrayList<String> spokenTextsList) {
-        view.showSpokenText(spokenTextsList.get(0));
+        String firstResult = spokenTextsList.get(0);
+        String currentSentence = sentences.get(currentPosition).getSentence();
+        if (firstResult.equalsIgnoreCase(Utility.removePunctationMarks(currentSentence))) {
+            view.showCorrectSpokenText(firstResult);
+        } else {
+            view.showWrongSpokenText(firstResult);
+        }
     }
 
     @Override

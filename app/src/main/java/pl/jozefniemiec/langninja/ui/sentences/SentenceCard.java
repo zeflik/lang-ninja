@@ -3,14 +3,19 @@ package pl.jozefniemiec.langninja.ui.sentences;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.transition.TransitionManager;
 import android.view.MenuItem;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -38,6 +43,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     public static final int HIGHLIGHT_BUTTON_COLOR = Color.GREEN;
     public static final int INACTIVE_BUTTON_COLOR = Color.LTGRAY;
     private static final String TAG = "SentenceCard";
+    private static final long ANIMATION_DELAY_MILIS = 500;
 
     @Inject
     SentencesPageAdapter languagePageAdapter;
@@ -69,8 +75,15 @@ public class SentenceCard extends DaggerAppCompatActivity
     @BindView(R.id.language_card_microphone_button)
     ImageButton speechButton;
 
+    @BindView(R.id.language_layout_without_spoken_text)
+    ConstraintLayout layout;
+
     @BindView(R.id.languagePageAnswerTv)
-    TextView answerTv;
+    TextView spokenTextTv;
+
+    private ConstraintSet layoutNoAnswerSet = new ConstraintSet();
+    private ConstraintSet layoutWithAnswerSet = new ConstraintSet();
+    private ActionBar supportActionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,13 +91,15 @@ public class SentenceCard extends DaggerAppCompatActivity
         setContentView(R.layout.activity_sentence_card);
         ButterKnife.bind(this);
 
-        ActionBar supportActionBar = getSupportActionBar();
         supportActionBar.setDisplayHomeAsUpEnabled(true);
-        supportActionBar.setTitle(getIntent().getStringExtra(LANGUAGE_CODE));
 
-        presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE));
         activateSpeechRecognizer();
         textToSpeech.setOnUtteranceProgressListener(utteranceProgressListener);
+
+        layoutNoAnswerSet.clone(layout);
+        layoutWithAnswerSet.clone(this, R.layout.activity_sentence_card_w_spoken_text);
+
+        presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE));
     }
 
     @Override
@@ -100,6 +115,11 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    public void setTitle(String string) {
+        supportActionBar.setTitle(getIntent().getStringExtra(string));
     }
 
     @Override
@@ -199,13 +219,39 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public boolean isListeningSpeech() {
-        return speechRecognitionListener.isListeningSpeech();
+    public void showCorrectSpokenText(String text) {
+        changeTextViewBackground(spokenTextTv, Color.GREEN);
+        spokenTextTv.setText(text);
+        applyConstraintSetToLayout(layoutWithAnswerSet);
     }
 
     @Override
-    public void showSpokenText(String text) {
-        answerTv.setText(text);
+    public void showWrongSpokenText(String text) {
+        changeTextViewBackground(spokenTextTv, Color.RED);
+        spokenTextTv.setText(text);
+        applyConstraintSetToLayout(layoutWithAnswerSet);
+    }
+
+    @Override
+    public void hideSpokenText() {
+        applyConstraintSetToLayout(layoutNoAnswerSet);
+    }
+
+    private void applyConstraintSetToLayout(ConstraintSet constraintSet) {
+        new Handler().postDelayed(() -> {
+            TransitionManager.beginDelayedTransition(layout);
+            constraintSet.applyTo(layout);
+        }, ANIMATION_DELAY_MILIS);
+    }
+
+    private void changeTextViewBackground(TextView textView, int color) {
+        GradientDrawable tvBackground = (GradientDrawable) textView.getBackground();
+        tvBackground.setColor(color);
+    }
+
+    @Override
+    public boolean isListeningSpeech() {
+        return speechRecognitionListener.isListeningSpeech();
     }
 
     @Override
