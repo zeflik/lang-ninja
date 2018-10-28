@@ -91,6 +91,7 @@ public class SentenceCard extends DaggerAppCompatActivity
         setContentView(R.layout.activity_sentence_card);
         ButterKnife.bind(this);
 
+        supportActionBar = getSupportActionBar();
         supportActionBar.setDisplayHomeAsUpEnabled(true);
 
         activateSpeechRecognizer();
