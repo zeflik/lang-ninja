@@ -63,7 +63,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void deactivatedPlayButtonClicked() {
-        view.stopSpeechListening();
+        cancelSpeechListening();
         view.showTTSInstallDialog();
     }
 
