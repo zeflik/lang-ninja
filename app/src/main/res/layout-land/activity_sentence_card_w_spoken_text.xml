@@ -16,7 +16,7 @@
         android:layout_margin="@dimen/margin"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toTopOf="@+id/languagePageAnswerLayout"
-        app:layout_constraintEnd_toStartOf="@+id/language_card_play_button"
+        app:layout_constraintEnd_toStartOf="@+id/language_card_read_button"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,7 +28,7 @@
         android:layout_margin="@dimen/margin"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/language_card_play_button"
+        app:layout_constraintEnd_toStartOf="@+id/language_card_read_button"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/language_card_view_pager">
@@ -56,15 +56,15 @@
         android:layout_height="90dp"
         android:gravity="center"
         android:text="@string/numbering"
-        app:layout_constraintBottom_toTopOf="@+id/language_card_microphone_button"
-        app:layout_constraintEnd_toEndOf="@+id/language_card_play_button"
+        app:layout_constraintBottom_toTopOf="@+id/language_card_speech_button"
+        app:layout_constraintEnd_toEndOf="@+id/language_card_read_button"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/language_card_play_button"
-        app:layout_constraintTop_toBottomOf="@+id/language_card_play_button" />
+        app:layout_constraintStart_toStartOf="@+id/language_card_read_button"
+        app:layout_constraintTop_toBottomOf="@+id/language_card_read_button" />
 
 
     <ImageButton
-        android:id="@+id/language_card_play_button"
+        android:id="@+id/language_card_read_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="@dimen/margin_buttons"
@@ -76,7 +76,7 @@
         app:layout_constraintVertical_chainStyle="spread_inside" />
 
     <ImageButton
-        android:id="@+id/language_card_microphone_button"
+        android:id="@+id/language_card_speech_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_margin="@dimen/margin_buttons"

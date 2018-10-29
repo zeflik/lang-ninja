@@ -69,10 +69,10 @@ public class SentenceCard extends DaggerAppCompatActivity
     @BindView(R.id.languagePageCount)
     TextView numberingTv;
 
-    @BindView(R.id.language_card_play_button)
+    @BindView(R.id.language_card_read_button)
     ImageButton readButton;
 
-    @BindView(R.id.language_card_microphone_button)
+    @BindView(R.id.language_card_speech_button)
     ImageButton speechButton;
 
     @BindView(R.id.language_layout_without_spoken_text)
@@ -136,13 +136,13 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void activateReadButton() {
-        readButton.setOnClickListener(x -> presenter.playButtonClicked());
+        readButton.setOnClickListener(x -> presenter.readButtonClicked());
         showButton(readButton);
     }
 
     @Override
     public void deactivateReadButton() {
-        readButton.setOnClickListener(x -> presenter.deactivatedPlayButtonClicked());
+        readButton.setOnClickListener(x -> presenter.deactivatedReadButtonClicked());
         grayOutButton(readButton);
     }
 
@@ -296,6 +296,14 @@ public class SentenceCard extends DaggerAppCompatActivity
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> {
                 });
         builder.create().show();
+    }
+
+    @Override
+    public boolean isReaderAvailable() {
+        return AppUtils.checkForApplication(
+                getApplicationContext(),
+                getString(R.string.google_tts_package_name)
+        );
     }
 
     @Override

@@ -69,7 +69,7 @@
 
 
     <ImageButton
-        android:id="@+id/language_card_play_button"
+        android:id="@+id/language_card_read_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginBottom="@dimen/margin_buttons"
@@ -84,7 +84,7 @@
         app:layout_constraintVertical_bias="1.0" />
 
     <ImageButton
-        android:id="@+id/language_card_microphone_button"
+        android:id="@+id/language_card_speech_button"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginBottom="@dimen/margin_buttons"

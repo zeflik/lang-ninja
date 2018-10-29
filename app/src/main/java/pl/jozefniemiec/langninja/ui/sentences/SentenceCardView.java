@@ -57,4 +57,6 @@ public interface SentenceCardView {
     void showSpeechRecognizerInstallDialog();
 
     void showTTSInstallDialog();
+
+    boolean isReaderAvailable();
 }

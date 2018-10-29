@@ -56,15 +56,19 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     }
 
     @Override
-    public void playButtonClicked() {
+    public void readButtonClicked() {
         cancelSpeechListening();
         view.read(sentences.get(currentPosition).getSentence());
     }
 
     @Override
-    public void deactivatedPlayButtonClicked() {
+    public void deactivatedReadButtonClicked() {
         cancelSpeechListening();
-        view.showTTSInstallDialog();
+        if (!view.isReaderAvailable()) {
+            view.showTTSInstallDialog();
+        } else {
+            view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
+        }
     }
 
     @Override
@@ -122,7 +126,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
     @Override
     public void deactivatedSpeechButtonClicked() {
-        view.stopReading();
+        stopReading();
         if (view.isSpeechRecognizerAvailable()) {
             view.activateSpeechRecognizer();
         } else {
