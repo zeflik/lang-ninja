@@ -130,8 +130,9 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void showNumbering(String numbering) {
-        numberingTv.setText(numbering);
+    public void showNumbering(int currentPage, int pageCount) {
+        String pageCountFormat = getResources().getString(R.string.page_count);
+        numberingTv.setText(String.format(pageCountFormat, currentPage, pageCount));
     }
 
     @Override

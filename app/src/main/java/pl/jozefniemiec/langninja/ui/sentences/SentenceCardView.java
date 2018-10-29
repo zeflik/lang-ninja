@@ -8,7 +8,7 @@ public interface SentenceCardView {
 
     void showData();
 
-    void showNumbering(String numbering);
+    void showNumbering(int currentPage, int pageCount);
 
     void activateReadButton();
 
