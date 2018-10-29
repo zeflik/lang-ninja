@@ -120,7 +120,7 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void setTitle(String string) {
-        supportActionBar.setTitle(getIntent().getStringExtra(string));
+        supportActionBar.setTitle(string);
     }
 
     @Override
