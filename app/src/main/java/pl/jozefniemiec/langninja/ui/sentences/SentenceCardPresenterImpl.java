@@ -11,6 +11,8 @@ import pl.jozefniemiec.langninja.utils.Utility;
 
 public class SentenceCardPresenterImpl implements SentenceCardPresenter {
 
+    private final int NUMBERING_SHIFT = 1;
+
     private final SentenceCardView view;
     private final ResourcesManager resourcesManager;
     private final SentenceRepository sentenceRepository;
@@ -31,7 +33,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         this.languageCode = languageCode;
         sentences = sentenceRepository.getLanguageSentences(languageCode);
         view.showData();
-        view.showNumbering(1 + " / " + getPageCount());
+        view.showNumbering(NUMBERING_SHIFT, getPageCount());
         view.setTitle(resourcesManager.getLanguageName(languageCode));
     }
 
@@ -52,7 +54,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
         currentPosition = newPosition;
         cancelSpeechListening();
         stopReading();
-        view.showNumbering(newPosition + 1 + " / " + getPageCount());
+        view.showNumbering(newPosition + NUMBERING_SHIFT, getPageCount());
     }
 
     @Override
