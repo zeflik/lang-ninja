@@ -12,9 +12,9 @@ public interface SentenceCardPresenter {
 
     void pageChanged(int newPosition);
 
-    void playButtonClicked();
+    void readButtonClicked();
 
-    void deactivatedPlayButtonClicked();
+    void deactivatedReadButtonClicked();
 
     void onReaderInit(boolean isWorking);
 
