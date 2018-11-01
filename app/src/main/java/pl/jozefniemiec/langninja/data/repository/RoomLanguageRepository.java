@@ -1,6 +1,7 @@
 package pl.jozefniemiec.langninja.data.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.List;
 
@@ -12,14 +13,13 @@ import pl.jozefniemiec.langninja.data.repository.room.LanguageDao;
 
 public class RoomLanguageRepository implements LanguageRepository {
 
-    public static final String ROOM_DATABASE_ERROR_MESSAGE = "Room Database Error";
+    private static final String ROOM_DATABASE_ERROR_MESSAGE = "Room Database Error: ";
+    private static final String TAG = RoomLanguageRepository.class.getSimpleName();
 
-    private final Context context;
     private final LanguageDao languageDao;
 
     @Inject
-    public RoomLanguageRepository(Context context) {
-        this.context = context;
+    RoomLanguageRepository(Context context) {
         this.languageDao = AppDatabase.getInstance(context).languageDao();
     }
 
@@ -28,6 +28,7 @@ public class RoomLanguageRepository implements LanguageRepository {
         try {
             return languageDao.getAll();
         } catch (Exception e) {
+            Log.e(TAG, ROOM_DATABASE_ERROR_MESSAGE + e.getMessage());
             throw new RuntimeException(ROOM_DATABASE_ERROR_MESSAGE);
         }
     }
@@ -37,6 +38,7 @@ public class RoomLanguageRepository implements LanguageRepository {
         try {
             languageDao.insertAll(languages);
         } catch (Exception e) {
+            Log.e(TAG, ROOM_DATABASE_ERROR_MESSAGE + e.getMessage());
             throw new RuntimeException(ROOM_DATABASE_ERROR_MESSAGE);
         }
     }
