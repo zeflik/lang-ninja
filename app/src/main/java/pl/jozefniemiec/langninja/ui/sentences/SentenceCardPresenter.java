@@ -1,6 +1,7 @@
 package pl.jozefniemiec.langninja.ui.sentences;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface SentenceCardPresenter {
 
@@ -43,4 +44,6 @@ public interface SentenceCardPresenter {
     void onViewPause();
 
     void onViewDestroy();
+
+    void onSpeechSupportedLanguages(List<String> stringArrayList);
 }

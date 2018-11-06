@@ -1,5 +1,8 @@
 package pl.jozefniemiec.langninja.ui.sentences;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -358,5 +361,20 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     private void unHighlightButton(ImageButton imageButton) {
         runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
+    }
+
+    @Override
+    public void findSpeechSupportedLanguages() {
+        Intent detailsIntent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+        sendOrderedBroadcast(
+                detailsIntent, null, new BroadcastReceiver() {
+                    @Override
+                    public void onReceive(Context context, Intent intent) {
+                        Bundle results = getResultExtras(true);
+                        if (results.containsKey(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)) {
+                            presenter.onSpeechSupportedLanguages(results.getStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES));
+                        }
+                    }
+                }, null, Activity.RESULT_OK, null, null);
     }
 }

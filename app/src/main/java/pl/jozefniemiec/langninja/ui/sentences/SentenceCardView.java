@@ -59,4 +59,6 @@ public interface SentenceCardView {
     void showTTSInstallDialog();
 
     boolean isReaderAvailable();
+
+    void findSpeechSupportedLanguages();
 }

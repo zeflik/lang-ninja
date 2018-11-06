@@ -9,6 +9,10 @@ import pl.jozefniemiec.langninja.R;
 
 public class AndroidResourceManager implements ResourcesManager {
 
+    private static final String TAG = AndroidResourceManager.class.getSimpleName();
+    private static final String RESOURCE_NOT_FOUND_MESSAGE = "%s %s - resource not found.";
+    private static final String RESOURCE_TYPE_STRING = "string";
+    private static final String RESOURCE_TYPE_DRAWABLE = "drawable";
     private final Resources resources;
     private final String packageName;
 
@@ -21,13 +25,21 @@ public class AndroidResourceManager implements ResourcesManager {
     @Override
     public String getLanguageName(String languageCode) {
         String resourceName = resources.getString(R.string.language_name_prefix) + languageCode;
-        int id = resources.getIdentifier(resourceName, "string", packageName);
+        int id = findResourceId(resourceName, RESOURCE_TYPE_STRING, packageName);
         return resources.getString(id);
     }
 
     @Override
     public int getFlagId(String languageCode) {
-        return resources.getIdentifier(languageCode.toLowerCase(), "drawable", packageName);
+        return findResourceId(languageCode.toLowerCase(), RESOURCE_TYPE_DRAWABLE, packageName);
+    }
+
+    private int findResourceId(String resourceName, String resourceType, String packageName) {
+        int id = resources.getIdentifier(resourceName, resourceType, packageName);
+        if (id == 0) {
+            throw new RuntimeException(String.format(RESOURCE_NOT_FOUND_MESSAGE, resourceName, resourceType));
+        }
+        return id;
     }
 
     @Override

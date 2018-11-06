@@ -130,6 +130,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     public void deactivatedSpeechButtonClicked() {
         stopReading();
         if (view.isSpeechRecognizerAvailable()) {
+            view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
             view.activateSpeechRecognizer();
         } else {
             view.showSpeechRecognizerInstallDialog();
@@ -150,7 +151,7 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     @Override
     public void onSpeechRecognizerInit(boolean recognitionAvailable) {
         if (recognitionAvailable) {
-            view.activateSpeechButton();
+            view.findSpeechSupportedLanguages();
         } else {
             view.deactivateSpeechButton();
         }
@@ -165,6 +166,15 @@ public class SentenceCardPresenterImpl implements SentenceCardPresenter {
     @Override
     public void onViewDestroy() {
         sentenceRepository.close();
+    }
+
+    @Override
+    public void onSpeechSupportedLanguages(List<String> supportedLanguageCodes) {
+        if (supportedLanguageCodes.contains(languageCode.replace("_", "-"))) {
+            view.activateSpeechButton();
+        } else {
+            view.deactivateSpeechButton();
+        }
     }
 
     private void stopReading() {

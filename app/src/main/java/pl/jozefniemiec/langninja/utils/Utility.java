@@ -5,7 +5,7 @@ import android.util.DisplayMetrics;
 
 public class Utility {
 
-    private static final String PUNCTUATION_MARKS_REGEX = "[\"\',.!?¿:;]";
+    private static final String PUNCTUATION_MARKS_REGEX = "[-+\",.!¡?¿:;]";
 
     public static int calculateNoOfColumns(Context context) {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
