@@ -53,5 +53,7 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-android-processor:$dagger_version"
 
+    implementation "com.squareup.picasso:picasso:2.5.2"
+
     implementation "commons-io:commons-io:2.6"
 }

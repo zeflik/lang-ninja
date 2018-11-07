@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
@@ -62,7 +64,10 @@ public class SentencesPageAdapter extends PagerAdapter implements SentencesItemV
 
     @Override
     public void setFlagId(int id) {
-        flag.setImageResource(id);
+        Picasso
+                .with(context)
+                .load(id)
+                .into(flag);
     }
 
     @Override
