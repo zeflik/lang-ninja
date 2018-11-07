@@ -65,4 +65,9 @@
     <string name="app_package_name">pl.jozefniemiec.langninja</string>
     <string name="google_speech_package_name">com.google.android.googlequicksearchbox</string>
     <string name="google_tts_package_name">com.google.android.tts</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tabs_tongue_twisters">Łamańce językowe</string>
+    <string name="tabs_send_tongue_twister">Wyślij łamańca</string>
 </resources>
