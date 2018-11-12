@@ -5,17 +5,22 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.database.annotations.NotNull;
+
 @Entity
 public class Sentence {
 
     @PrimaryKey
+    @NonNull
+    private String id;
+
     @NonNull
     private String sentence;
 
     @NonNull
     private String languageCode;
 
-    private int difficulty;
+    private int likes;
 
     @Ignore
     public Sentence() {
@@ -27,10 +32,20 @@ public class Sentence {
         this.languageCode = languageCode;
     }
 
-    public Sentence(@NonNull String sentence, @NonNull String languageCode, int difficulty) {
+    public Sentence(@NonNull String sentence, @NonNull String languageCode, int likes) {
         this.sentence = sentence;
         this.languageCode = languageCode;
-        this.difficulty = difficulty;
+        this.likes = likes;
+    }
+
+    @NotNull
+    public String getId() {
+        return id;
+    }
+
+    @NonNull
+    public void setId(String id) {
+        this.id = id;
     }
 
     @NonNull
@@ -51,20 +66,21 @@ public class Sentence {
         this.languageCode = languageCode;
     }
 
-    public int getDifficulty() {
-        return difficulty;
+    public int getLikes() {
+        return likes;
     }
 
-    public void setDifficulty(int difficulty) {
-        this.difficulty = difficulty;
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     @Override
     public String toString() {
         return "Sentence{" +
-                "sentence='" + sentence + '\'' +
+                "id='" + id + '\'' +
+                ", sentence='" + sentence + '\'' +
                 ", languageCode='" + languageCode + '\'' +
-                ", difficulty=" + difficulty +
+                ", likes=" + likes +
                 '}';
     }
 }

@@ -32,6 +32,7 @@ public class LocalDatabaseManager {
                 AsyncTask.execute(() -> {
                     try {
                         Sentence sentence = dataSnapshot.getValue(Sentence.class);
+                        sentence.setId(dataSnapshot.getKey());
                         sentenceRepository.insertAll(sentence);
                         Log.w(TAG, "Adding new sentence: " + sentence);
                     } catch (DatabaseException databaseException) {
@@ -45,6 +46,7 @@ public class LocalDatabaseManager {
                 AsyncTask.execute(() -> {
                     try {
                         Sentence sentence = dataSnapshot.getValue(Sentence.class);
+                        sentence.setId(dataSnapshot.getKey());
                         sentenceRepository.update(sentence);
                         Log.w(TAG, "Updating new sentence: " + sentence);
                     } catch (DatabaseException databaseException) {
@@ -58,6 +60,7 @@ public class LocalDatabaseManager {
                 AsyncTask.execute(() -> {
                     try {
                         Sentence sentence = dataSnapshot.getValue(Sentence.class);
+                        sentence.setId(dataSnapshot.getKey());
                         sentenceRepository.delete(sentence);
                         Log.w(TAG, "Deleting sentence: " + sentence);
                     } catch (DatabaseException databaseException) {
