@@ -21,11 +21,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.data.repository.model.Sentence;
-import pl.jozefniemiec.langninja.data.resources.AndroidResourceManager;
+import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
 import pl.jozefniemiec.langninja.ui.sentence.NewSentence;
 
-public class SendFragment extends Fragment {
+public class SendFragment extends Fragment implements SendFragmentView {
 
     private static final String TAG = SendFragment.class.getSimpleName();
 
@@ -36,6 +35,8 @@ public class SendFragment extends Fragment {
     RecyclerView recyclerView;
 
     private Unbinder unbinder;
+    private FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> adapter;
+    private SendPresenter presenter;
 
     private DatabaseReference dbSentencesRef = FirebaseDatabase.getInstance().getReference("sentence");
 
@@ -51,6 +52,7 @@ public class SendFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_send, container, false);
         unbinder = ButterKnife.bind(this, view);
+        presenter = new SendPresenterImpl(this);
         return view;
     }
 
@@ -59,27 +61,23 @@ public class SendFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         floatingActionButton.setOnClickListener(v -> openNewSentenceActivity());
-        FirebaseRecyclerOptions<Sentence> recyclerOptions = new FirebaseRecyclerOptions.Builder<Sentence>()
-                .setQuery(dbSentencesRef, Sentence.class)
-                .build();
-        FirebaseRecyclerAdapter<Sentence, SentenceRowHolder> adapter =
-                new FirebaseRecyclerAdapter<Sentence, SentenceRowHolder>(recyclerOptions) {
-                    @NonNull
-                    @Override
-                    public SentenceRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext())
-                                .inflate(R.layout.new_sentence_row, parent, false);
-                        return new SentenceRowHolder(view);
-                    }
+        presenter.onViewCreated();
+    }
 
-                    @Override
-                    protected void onBindViewHolder(@NonNull SentenceRowHolder holder, int position, @NonNull Sentence model) {
-                        holder.setFlag(new AndroidResourceManager(getResources()).getFlagId(model.getLanguageCode()));
-                        holder.setSentence(model.getSentence());
-                    }
-                };
+    public void showData() {
+        FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions = new FirebaseRecyclerOptions.Builder<SentenceCandidate>()
+                .setQuery(dbSentencesRef, SentenceCandidate.class)
+                .build();
+        adapter = new FirebaseSendAdapter(this, recyclerOptions);
         recyclerView.setAdapter(adapter);
+    }
+
+    public void listenForNewData() {
         adapter.startListening();
+    }
+
+    public void stopListenForNewData() {
+        adapter.stopListening();
     }
 
     private void openNewSentenceActivity() {
@@ -88,8 +86,21 @@ public class SendFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        presenter.onViewVisible();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onViewInvisible();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
     }
+
 }
