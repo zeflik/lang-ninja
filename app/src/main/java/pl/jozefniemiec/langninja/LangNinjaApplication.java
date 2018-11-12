@@ -1,5 +1,7 @@
 package pl.jozefniemiec.langninja;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
 import pl.jozefniemiec.langninja.di.AppComponent;
@@ -14,5 +16,12 @@ public class LangNinjaApplication extends DaggerApplication {
                 .build();
         appComponent.inject(this);
         return appComponent;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        /* Enable disk persistence  */
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 }

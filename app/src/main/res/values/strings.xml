@@ -70,4 +70,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="tabs_tongue_twisters">Łamańce językowe</string>
     <string name="tabs_send_tongue_twister">Wyślij łamańca</string>
+    <string name="flag">Flaga</string>
+    <string name="send_button">WYŚLIJ</string>
+    <string name="text_hint">Tekst</string>
 </resources>

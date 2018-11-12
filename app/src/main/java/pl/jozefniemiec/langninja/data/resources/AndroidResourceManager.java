@@ -17,7 +17,7 @@ public class AndroidResourceManager implements ResourcesManager {
     private final String packageName;
 
     @Inject
-    AndroidResourceManager(Resources resources) {
+    public AndroidResourceManager(Resources resources) {
         this.resources = resources;
         packageName = resources.getString(R.string.app_package_name);
     }

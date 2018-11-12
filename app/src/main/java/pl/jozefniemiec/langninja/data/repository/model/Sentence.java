@@ -1,6 +1,7 @@
 package pl.jozefniemiec.langninja.data.repository.model;
 
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -15,6 +16,16 @@ public class Sentence {
     private String languageCode;
 
     private int difficulty;
+
+    @Ignore
+    public Sentence() {
+    }
+
+    @Ignore
+    public Sentence(@NonNull String sentence, @NonNull String languageCode) {
+        this.sentence = sentence;
+        this.languageCode = languageCode;
+    }
 
     public Sentence(@NonNull String sentence, @NonNull String languageCode, int difficulty) {
         this.sentence = sentence;
