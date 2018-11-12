@@ -1,11 +1,13 @@
 package pl.jozefniemiec.langninja;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DaggerApplication;
 import pl.jozefniemiec.langninja.di.AppComponent;
 import pl.jozefniemiec.langninja.di.DaggerAppComponent;
+import pl.jozefniemiec.langninja.service.LocalDatabaseManager;
 
 public class LangNinjaApplication extends DaggerApplication {
 
@@ -21,7 +23,9 @@ public class LangNinjaApplication extends DaggerApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        /* Enable disk persistence  */
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        firebaseDatabase.setPersistenceEnabled(true);
+        DatabaseReference sentencesReference = firebaseDatabase.getReference("data");
+        new LocalDatabaseManager(this).syncData(sentencesReference);
     }
 }

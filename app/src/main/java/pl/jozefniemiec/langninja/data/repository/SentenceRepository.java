@@ -10,5 +10,9 @@ public interface SentenceRepository {
 
     void insertAll(Sentence... sentences);
 
+    void update(Sentence sentence);
+
+    void delete(Sentence sentence);
+
     void close();
 }
