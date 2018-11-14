@@ -1,21 +1,19 @@
-package pl.jozefniemiec.langninja.ui.sentence;
+package pl.jozefniemiec.langninja.ui.main.send.creator;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 
-public class NewSentence extends AppCompatActivity {
+public class SentenceCreator extends DaggerAppCompatActivity implements SentenceCreatorContract.View {
 
     @BindView(R.id.sentenceLanguageInput)
     EditText sentenceLanguageInput;
@@ -26,7 +24,8 @@ public class NewSentence extends AppCompatActivity {
     @BindView(R.id.sentenceCreateButton)
     Button sentenceCreateButton;
 
-    private DatabaseReference dbSentencesRef = FirebaseDatabase.getInstance().getReference("sentence");
+    @Inject
+    SentenceCreatorContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +34,16 @@ public class NewSentence extends AppCompatActivity {
         ButterKnife.bind(this);
         sentenceTextInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
         sentenceTextInput.setRawInputType(InputType.TYPE_CLASS_TEXT);
-        sentenceCreateButton.setOnClickListener(v -> createSentence());
+        sentenceCreateButton.setOnClickListener(v -> {
+            String langCode = sentenceTextInput.getText().toString();
+            String sentence = sentenceLanguageInput.getText().toString();
+            presenter.createButtonClicked(langCode, sentence);
+        });
+        presenter.onViewCreated();
     }
 
-    private void createSentence() {
-        Sentence sentence = new Sentence(
-                sentenceTextInput.getText().toString(),
-                sentenceLanguageInput.getText().toString()
-        );
-        dbSentencesRef.push().setValue(sentence);
+    @Override
+    public void close() {
         finish();
     }
 }

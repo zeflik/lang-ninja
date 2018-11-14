@@ -7,4 +7,10 @@ public interface SendFragmentView {
     void listenForNewData();
 
     void stopListenForNewData();
+
+    void showLoginInfo();
+
+    void hideLoginInfo();
+
+    void showLoginPage();
 }

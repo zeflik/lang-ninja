@@ -2,15 +2,10 @@ package pl.jozefniemiec.langninja.ui.main.send;
 
 public class SendPresenterImpl implements SendPresenter {
 
-    SendFragmentView view;
+    private SendFragmentView view;
 
-    public SendPresenterImpl(SendFragmentView view) {
+    SendPresenterImpl(SendFragmentView view) {
         this.view = view;
-    }
-
-    @Override
-    public void onViewCreated() {
-        view.showData();
     }
 
     @Override
@@ -21,5 +16,21 @@ public class SendPresenterImpl implements SendPresenter {
     @Override
     public void onViewInvisible() {
         view.stopListenForNewData();
+    }
+
+    @Override
+    public void loginButtonClicked() {
+        view.showLoginPage();
+    }
+
+    @Override
+    public void onLoginSucceed(String firebaseUserName) {
+        view.hideLoginInfo();
+        view.showData();
+    }
+
+    @Override
+    public void onLoginFailed() {
+        view.showLoginInfo();
     }
 }

@@ -12,9 +12,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseException;
 import com.google.firebase.database.DatabaseReference;
 
-import pl.jozefniemiec.langninja.data.repository.RoomSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Sentence;
+import pl.jozefniemiec.langninja.data.repository.room.RoomSentenceRepository;
 
 public class LocalDatabaseManager {
 
