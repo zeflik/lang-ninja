@@ -15,7 +15,7 @@ import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguageItemView;
-import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentPresenterImpl;
+import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentPresenter;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentView;
 
 import static org.junit.Assert.assertEquals;
@@ -34,7 +34,7 @@ public class LanguagesFragmentPresenterImplTest {
     @Mock
     private ResourcesManager resourcesManager;
     @InjectMocks
-    private LanguagesFragmentPresenterImpl presenter;
+    private LanguagesFragmentPresenter presenter;
     @Mock
     private LanguageItemView itemView;
 

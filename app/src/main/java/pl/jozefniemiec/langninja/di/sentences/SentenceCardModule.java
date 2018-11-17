@@ -12,7 +12,7 @@ import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenterImpl;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
 import pl.jozefniemiec.langninja.ui.sentences.SentencesPageAdapter;
 import pl.jozefniemiec.langninja.ui.sentences.tts.OnInitListener;
 import pl.jozefniemiec.langninja.ui.sentences.tts.OnUtteranceProgressListener;
@@ -33,7 +33,7 @@ public abstract class SentenceCardModule {
     provideLanguageCardPresenter(SentenceCardContract.View view,
                                  ResourcesManager resourcesManager,
                                  SentenceRepository sentenceRepository) {
-        return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository);
+        return new SentenceCardPresenter(view, resourcesManager, sentenceRepository);
     }
 
     @Provides

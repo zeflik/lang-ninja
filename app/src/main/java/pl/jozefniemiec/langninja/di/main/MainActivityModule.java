@@ -7,7 +7,7 @@ import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.ui.main.MainActivity;
 import pl.jozefniemiec.langninja.ui.main.MainContract;
-import pl.jozefniemiec.langninja.ui.main.MainPresenterImpl;
+import pl.jozefniemiec.langninja.ui.main.MainPresenter;
 
 @Module
 public abstract class MainActivityModule {
@@ -21,7 +21,7 @@ public abstract class MainActivityModule {
     @Provides
     @MainActivityScope
     static MainContract.Presenter provideHomePresenter(MainContract.View mainView) {
-        return new MainPresenterImpl(mainView);
+        return new MainPresenter(mainView);
     }
 
     @Binds

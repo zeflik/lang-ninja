@@ -23,8 +23,8 @@ import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
-import pl.jozefniemiec.langninja.ui.languageslist.LanguagesList;
-import pl.jozefniemiec.langninja.ui.languageslist.LanguagesListListener;
+import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListFragment;
+import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListListener;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 public class SentenceCreator extends DaggerAppCompatActivity
@@ -88,7 +88,7 @@ public class SentenceCreator extends DaggerAppCompatActivity
     }
 
     public void startLanguagesListForResult() {
-        LanguagesList languagesFragment = LanguagesList.newInstance();
+        LanguagesListFragment languagesFragment = LanguagesListFragment.newInstance();
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.sentenceCandidateFragmentContainer, languagesFragment)

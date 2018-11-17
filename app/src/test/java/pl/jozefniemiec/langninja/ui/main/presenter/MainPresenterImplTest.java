@@ -9,7 +9,7 @@ import org.mockito.junit.MockitoRule;
 
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
-import pl.jozefniemiec.langninja.ui.main.MainPresenterImpl;
+import pl.jozefniemiec.langninja.ui.main.MainPresenter;
 import pl.jozefniemiec.langninja.ui.main.MainView;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +27,7 @@ public class MainPresenterImplTest {
     private LanguageRepository languageRepository;
 
     @InjectMocks
-    private MainPresenterImpl presenter;
+    private MainPresenter presenter;
 
     @Test
     public void showFragmentsInView() {

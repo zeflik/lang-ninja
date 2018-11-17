@@ -2,12 +2,12 @@ package pl.jozefniemiec.langninja.ui.main;
 
 import javax.inject.Inject;
 
-public class MainPresenterImpl implements MainContract.Presenter {
+public class MainPresenter implements MainContract.Presenter {
 
     private final MainContract.View view;
 
     @Inject
-    public MainPresenterImpl(MainContract.View view) {
+    public MainPresenter(MainContract.View view) {
         this.view = view;
     }
 

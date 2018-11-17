@@ -76,7 +76,7 @@ public class SendFragment extends Fragment implements SendFragmentContract.View 
                                           Bundle savedInstanceState) {
         android.view.View view = inflater.inflate(R.layout.fragment_send, container, false);
         unbinder = ButterKnife.bind(this, view);
-        presenter = new SendPresenterImpl(this);
+        presenter = new SendPresenter(this);
         return view;
     }
 

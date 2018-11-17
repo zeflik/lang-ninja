@@ -9,7 +9,7 @@ import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.utils.Utility;
 
-public class SentenceCardPresenterImpl implements SentenceCardContract.Presenter {
+public class SentenceCardPresenter implements SentenceCardContract.Presenter {
 
     private final int NUMBERING_SHIFT = 1;
 
@@ -20,9 +20,9 @@ public class SentenceCardPresenterImpl implements SentenceCardContract.Presenter
     private List<Sentence> sentences;
     private int currentPosition;
 
-    public SentenceCardPresenterImpl(SentenceCardContract.View view,
-                                     ResourcesManager resourcesManager,
-                                     SentenceRepository sentenceRepository) {
+    public SentenceCardPresenter(SentenceCardContract.View view,
+                                 ResourcesManager resourcesManager,
+                                 SentenceRepository sentenceRepository) {
         this.view = view;
         this.resourcesManager = resourcesManager;
         this.sentenceRepository = sentenceRepository;

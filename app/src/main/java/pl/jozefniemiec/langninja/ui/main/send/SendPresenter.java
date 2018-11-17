@@ -1,10 +1,10 @@
 package pl.jozefniemiec.langninja.ui.main.send;
 
-public class SendPresenterImpl implements SendFragmentContract.Presenter {
+public class SendPresenter implements SendFragmentContract.Presenter {
 
     private SendFragmentContract.View view;
 
-    SendPresenterImpl(SendFragmentContract.View view) {
+    SendPresenter(SendFragmentContract.View view) {
         this.view = view;
     }
 

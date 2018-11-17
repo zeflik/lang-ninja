@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.languageslist;
+package pl.jozefniemiec.langninja.ui.creator.languageslist;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,14 +9,14 @@ import java.util.Arrays;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseLanguagesListFragment;
 
-public class LanguagesList extends BaseLanguagesListFragment {
+public class LanguagesListFragment extends BaseLanguagesListFragment {
 
     private static final String LISTENER_ERROR_MESSAGE = "Parent activity should implement LanguagesListListener";
     private LanguagesListListener listener;
 
-    public static LanguagesList newInstance() {
+    public static LanguagesListFragment newInstance() {
         Bundle args = new Bundle();
-        LanguagesList fragment = new LanguagesList();
+        LanguagesListFragment fragment = new LanguagesListFragment();
         fragment.setArguments(args);
         return fragment;
     }

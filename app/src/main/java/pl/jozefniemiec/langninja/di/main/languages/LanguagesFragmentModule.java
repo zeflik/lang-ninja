@@ -9,7 +9,7 @@ import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentContract;
-import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentPresenterImpl;
+import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentPresenter;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 @Module
@@ -29,7 +29,7 @@ public abstract class LanguagesFragmentModule {
     @Binds
     @LanguagesFragmentScope
     abstract LanguagesFragmentContract.Presenter
-    provideHomeFragmentPresenter(LanguagesFragmentPresenterImpl presenter);
+    provideHomeFragmentPresenter(LanguagesFragmentPresenter presenter);
 
     @Binds
     @LanguagesFragmentScope

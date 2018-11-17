@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.languageslist;
+package pl.jozefniemiec.langninja.ui.creator.languageslist;
 
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 
