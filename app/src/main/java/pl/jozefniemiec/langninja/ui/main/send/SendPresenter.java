@@ -1,9 +1,15 @@
 package pl.jozefniemiec.langninja.ui.main.send;
 
+import javax.inject.Inject;
+
+import pl.jozefniemiec.langninja.di.main.send.SendFragmentScope;
+
+@SendFragmentScope
 public class SendPresenter implements SendFragmentContract.Presenter {
 
     private SendFragmentContract.View view;
 
+    @Inject
     SendPresenter(SendFragmentContract.View view) {
         this.view = view;
     }

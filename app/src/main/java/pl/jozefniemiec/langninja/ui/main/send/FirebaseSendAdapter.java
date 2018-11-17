@@ -10,14 +10,13 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
-import pl.jozefniemiec.langninja.data.resources.AndroidResourceManager;
+import pl.jozefniemiec.langninja.utils.Utility;
 
 class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> {
-    private SendFragment sendFragment;
 
-    public FirebaseSendAdapter(SendFragment sendFragment, FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions) {
+
+    FirebaseSendAdapter(FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions) {
         super(recyclerOptions);
-        this.sendFragment = sendFragment;
     }
 
     @NonNull
@@ -30,7 +29,7 @@ class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, Sen
 
     @Override
     protected void onBindViewHolder(@NonNull SentenceRowHolder holder, int position, @NonNull SentenceCandidate model) {
-        holder.setFlag(new AndroidResourceManager(sendFragment.getResources()).getFlagId(model.getLanguageCode()));
+        holder.setFlag(Utility.getLanguageFlagUri(holder.flag.getContext(), model.getLanguageCode()));
         holder.setSentence(model.getSentence());
     }
 }

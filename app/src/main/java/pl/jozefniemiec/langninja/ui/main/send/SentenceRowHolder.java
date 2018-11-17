@@ -1,5 +1,6 @@
 package pl.jozefniemiec.langninja.ui.main.send;
 
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,10 +25,10 @@ public class SentenceRowHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void setFlag(int id) {
+    public void setFlag(Uri uri) {
         Picasso
                 .with(itemView.getContext())
-                .load(id)
+                .load(uri)
                 .into(flag);
     }
 

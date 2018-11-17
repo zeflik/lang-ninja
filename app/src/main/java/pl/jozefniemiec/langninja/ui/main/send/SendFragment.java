@@ -24,6 +24,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.Arrays;
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -56,9 +58,11 @@ public class SendFragment extends Fragment implements SendFragmentContract.View 
     @BindView(R.id.logoffButton)
     Button logoffButton;
 
+    @Inject
+    SendFragmentContract.Presenter presenter;
+
     private Unbinder unbinder;
     private FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> adapter;
-    private SendFragmentContract.Presenter presenter;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -76,7 +80,6 @@ public class SendFragment extends Fragment implements SendFragmentContract.View 
                                           Bundle savedInstanceState) {
         android.view.View view = inflater.inflate(R.layout.fragment_send, container, false);
         unbinder = ButterKnife.bind(this, view);
-        presenter = new SendPresenter(this);
         return view;
     }
 
@@ -103,7 +106,7 @@ public class SendFragment extends Fragment implements SendFragmentContract.View 
         FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions = new FirebaseRecyclerOptions.Builder<SentenceCandidate>()
                 .setQuery(dbSentencesRef.child(auth.getUid()), SentenceCandidate.class)
                 .build();
-        adapter = new FirebaseSendAdapter(this, recyclerOptions);
+        adapter = new FirebaseSendAdapter(recyclerOptions);
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
