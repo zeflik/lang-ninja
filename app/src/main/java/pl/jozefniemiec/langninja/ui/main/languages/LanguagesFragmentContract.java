@@ -12,17 +12,13 @@ public interface LanguagesFragmentContract {
 
         void showLanguageDetails(String languageCode);
 
-        void showError(String message);
+        void showErrorMessage(String message);
     }
 
     interface Presenter {
 
-        void loadLanguages();
+        void onViewCreated();
 
-        void onLanguageItemClicked(int position);
-
-        void onBindLanguageItemViewAtPosition(int position, LanguageItemView itemView);
-
-        int getLanguageItemsCount();
+        void onLanguageItemClicked(Language language);
     }
 }

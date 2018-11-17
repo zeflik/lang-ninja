@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -20,24 +20,29 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.utils.Utility;
 
-public abstract class BaseLanguagesListFragment extends Fragment implements View.OnClickListener {
+public abstract class BaseLanguagesListFragment extends DaggerFragment implements View.OnClickListener {
 
     @BindView(R.id.rvNumbers)
     RecyclerView recyclerView;
 
     BaseLanguagesListAdapter adapter = new BaseLanguagesListAdapter(this);
-    private List<Language> data;
+    private List<Language> languages;
     private Unbinder unbinder;
 
-    protected abstract void onItemClicked(Language position);
+    protected abstract void onItemClicked(Language language);
 
     public void showLanguages(List<Language> languageList) {
         adapter.setData(languageList);
         recyclerView.setAdapter(adapter);
+    }
+
+    public void showErrorMessage(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Nullable
@@ -66,7 +71,7 @@ public abstract class BaseLanguagesListFragment extends Fragment implements View
     @Override
     public void onClick(View view) {
         int index = recyclerView.getChildLayoutPosition(view);
-        onItemClicked(data.get(index));
+        onItemClicked(languages.get(index));
     }
 
     class BaseLanguagesViewHolder extends RecyclerView.ViewHolder {
@@ -118,18 +123,20 @@ public abstract class BaseLanguagesListFragment extends Fragment implements View
 
         @Override
         public void onBindViewHolder(@NonNull BaseLanguagesViewHolder holder, int position) {
-            holder.setLanguageName(data.get(position).getCode());
-            holder.setLanguageNativeName(data.get(position).getNativeName());
-            holder.setLanguageFlag(Utility.getLanguageFlagUri(requireContext(), data.get(position).getCode()));
+            holder.setLanguageName(languages.get(position).getCode());
+            holder.setLanguageNativeName(languages.get(position).getNativeName());
+            holder.setLanguageFlag(
+                    Utility.getLanguageFlagUri(requireContext(), languages.get(position).getCode())
+            );
         }
 
         @Override
         public int getItemCount() {
-            return data.size();
+            return languages.size();
         }
 
         public void setData(List<Language> languageList) {
-            data = languageList;
+            languages = languageList;
         }
     }
 }

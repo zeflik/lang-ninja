@@ -7,7 +7,7 @@ import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListFragment;
 @Module
 public abstract class LanguagesListFragmentProvider {
 
-    @ContributesAndroidInjector
+    @ContributesAndroidInjector(modules = LanguagesListFragmentModule.class)
     @LanguagesListFragmentScope
     abstract LanguagesListFragment provideHomeFragment();
 }

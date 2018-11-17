@@ -36,7 +36,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.sentences.speech.SpeechRecognitionListener;
 import pl.jozefniemiec.langninja.utils.AppUtils;
 
-import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE;
+import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 
 public class SentenceCard extends DaggerAppCompatActivity
         implements
@@ -103,7 +103,7 @@ public class SentenceCard extends DaggerAppCompatActivity
         layoutNoAnswerSet.clone(layout);
         layoutWithAnswerSet.clone(this, R.layout.activity_sentence_card_w_spoken_text);
 
-        presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE));
+        presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE_KEY));
     }
 
     @Override

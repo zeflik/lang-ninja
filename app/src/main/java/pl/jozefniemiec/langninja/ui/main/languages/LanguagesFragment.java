@@ -4,44 +4,20 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-import dagger.android.support.DaggerFragment;
-import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.ui.base.BaseLanguagesListFragment;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
 
-public class LanguagesFragment extends DaggerFragment
-        implements LanguagesFragmentContract.View, View.OnClickListener {
+public class LanguagesFragment extends BaseLanguagesListFragment implements LanguagesFragmentContract.View {
 
-    private static final String TAG = "LanguagesFragment";
-    public static final String LANGUAGE_CODE = "Language Code";
-
-    @BindView(R.id.rvNumbers)
-    RecyclerView recyclerView;
+    public static final String LANGUAGE_CODE_KEY = "Language Code";
 
     @Inject
-    LanguagesFragmentContract.Presenter languagesFragmentPresenter;
-
-    @Inject
-    GridLayoutManager gridLayoutManager;
-
-    @Inject
-    LanguagesViewAdapter adapter;
-
-    private Unbinder unbinder;
+    LanguagesFragmentContract.Presenter presenter;
 
     public static LanguagesFragment newInstance() {
         Bundle args = new Bundle();
@@ -50,46 +26,22 @@ public class LanguagesFragment extends DaggerFragment
         return fragment;
     }
 
-    @Nullable
     @Override
-    public android.view.View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        android.view.View view = inflater.inflate(R.layout.fragment_languages_list, container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull android.view.View view, @Nullable Bundle savedInstanceState) {
-        recyclerView.setLayoutManager(gridLayoutManager);
-        languagesFragmentPresenter.loadLanguages();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-    @Override
-    public void showLanguages(List<Language> languageList) {
-        recyclerView.setAdapter(adapter);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        presenter.onViewCreated();
     }
 
     @Override
     public void showLanguageDetails(String languageCode) {
         Intent intent = new Intent(requireContext(), SentenceCard.class);
-        intent.putExtra(LANGUAGE_CODE, languageCode);
+        intent.putExtra(LANGUAGE_CODE_KEY, languageCode);
         startActivity(intent);
     }
 
     @Override
-    public void showError(String message) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onClick(android.view.View view) {
-        languagesFragmentPresenter.onLanguageItemClicked(recyclerView.getChildLayoutPosition(view));
+    protected void onItemClicked(Language language) {
+        presenter.onLanguageItemClicked(language);
     }
 }
 

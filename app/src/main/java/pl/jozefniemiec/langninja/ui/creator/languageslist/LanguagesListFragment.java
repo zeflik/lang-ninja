@@ -6,13 +6,19 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseLanguagesListFragment;
 
-public class LanguagesListFragment extends BaseLanguagesListFragment {
+public class LanguagesListFragment extends BaseLanguagesListFragment
+        implements LanguagesListContract.View {
 
     private static final String LISTENER_ERROR_MESSAGE = "Parent activity should implement LanguagesListListener";
     private LanguagesListListener listener;
+
+    @Inject
+    LanguagesListPresenter presenter;
 
     public static LanguagesListFragment newInstance() {
         Bundle args = new Bundle();
