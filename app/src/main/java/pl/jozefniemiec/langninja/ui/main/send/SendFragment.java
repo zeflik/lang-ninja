@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +28,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
@@ -36,7 +36,7 @@ import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class SendFragment extends Fragment implements SendFragmentContract.View {
+public class SendFragment extends DaggerFragment implements SendFragmentContract.View {
 
     private static final String TAG = SendFragment.class.getSimpleName();
     private static final String ANONYMOUS = "anonymous";

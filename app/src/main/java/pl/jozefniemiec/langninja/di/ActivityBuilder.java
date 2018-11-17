@@ -8,6 +8,7 @@ import pl.jozefniemiec.langninja.di.creator.languageslist.LanguagesListFragmentP
 import pl.jozefniemiec.langninja.di.main.MainActivityModule;
 import pl.jozefniemiec.langninja.di.main.MainActivityScope;
 import pl.jozefniemiec.langninja.di.main.languages.LanguagesFragmentProvider;
+import pl.jozefniemiec.langninja.di.main.send.SendFragmentProvider;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardModule;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardScope;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
@@ -17,7 +18,11 @@ import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
 @Module
 abstract class ActivityBuilder {
 
-    @ContributesAndroidInjector(modules = {MainActivityModule.class, LanguagesFragmentProvider.class})
+    @ContributesAndroidInjector(modules = {
+            MainActivityModule.class,
+            LanguagesFragmentProvider.class,
+            SendFragmentProvider.class
+    })
     @MainActivityScope
     abstract MainActivity bindMainActivity();
 

@@ -7,7 +7,7 @@ import pl.jozefniemiec.langninja.ui.main.send.SendFragmentContract;
 import pl.jozefniemiec.langninja.ui.main.send.SendPresenter;
 
 @Module
-abstract class SendFragmentModule {
+public abstract class SendFragmentModule {
 
     @Binds
     @SendFragmentScope

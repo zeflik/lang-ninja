@@ -2,9 +2,9 @@ package pl.jozefniemiec.langninja.ui.creator.languageslist;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import java.util.ArrayList;
-import java.util.Arrays;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ public class LanguagesListFragment extends BaseLanguagesListFragment
     private LanguagesListListener listener;
 
     @Inject
-    LanguagesListPresenter presenter;
+    LanguagesListContract.Presenter presenter;
 
     public static LanguagesListFragment newInstance() {
         Bundle args = new Bundle();
@@ -38,9 +38,14 @@ public class LanguagesListFragment extends BaseLanguagesListFragment
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        presenter.onViewCreated();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        showLanguages(new ArrayList<>(Arrays.asList(new Language("th_TH", "Thai"))));
     }
 
     @Override

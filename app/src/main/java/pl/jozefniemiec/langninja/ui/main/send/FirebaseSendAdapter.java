@@ -14,7 +14,6 @@ import pl.jozefniemiec.langninja.utils.Utility;
 
 class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> {
 
-
     FirebaseSendAdapter(FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions) {
         super(recyclerOptions);
     }
