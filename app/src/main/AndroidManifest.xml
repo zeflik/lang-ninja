@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.sentences.SentenceCard" />
-        <activity android:name=".ui.main.send.creator.SentenceCreator" />
+        <activity android:name=".ui.creator.SentenceCreator" />
     </application>
 
 </manifest>

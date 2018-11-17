@@ -9,17 +9,17 @@ import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 
-public class LanguagesFragmentPresenterImpl implements LanguagesFragmentPresenter {
+public class LanguagesFragmentPresenterImpl implements LanguagesFragmentContract.Presenter {
 
-    private final LanguagesFragmentView view;
+    private final LanguagesFragmentContract.View view;
     private final LanguageRepository languageRepository;
     private List<Language> languages = new ArrayList<>();
     private final ResourcesManager resourcesManager;
 
     @Inject
-    public LanguagesFragmentPresenterImpl(LanguagesFragmentView view,
-                                          LanguageRepository languageRepository,
-                                          ResourcesManager resourcesManager) {
+    LanguagesFragmentPresenterImpl(LanguagesFragmentContract.View view,
+                                   LanguageRepository languageRepository,
+                                   ResourcesManager resourcesManager) {
         this.view = view;
         this.languageRepository = languageRepository;
         this.resourcesManager = resourcesManager;

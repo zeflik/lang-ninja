@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences.di;
+package pl.jozefniemiec.langninja.di.sentences;
 
 import android.content.Context;
 import android.speech.SpeechRecognizer;
@@ -11,9 +11,8 @@ import dagger.Provides;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenterImpl;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardView;
 import pl.jozefniemiec.langninja.ui.sentences.SentencesPageAdapter;
 import pl.jozefniemiec.langninja.ui.sentences.tts.OnInitListener;
 import pl.jozefniemiec.langninja.ui.sentences.tts.OnUtteranceProgressListener;
@@ -24,14 +23,14 @@ public abstract class SentenceCardModule {
     @Provides
     @SentenceCardScope
     static SentencesPageAdapter
-    provideLanguagePageAdapter(SentenceCard activity, SentenceCardPresenter presenter) {
+    provideLanguagePageAdapter(SentenceCard activity, SentenceCardContract.Presenter presenter) {
         return new SentencesPageAdapter(activity, presenter);
     }
 
     @Provides
     @SentenceCardScope
-    static SentenceCardPresenter
-    provideLanguageCardPresenter(SentenceCardView view,
+    static SentenceCardContract.Presenter
+    provideLanguageCardPresenter(SentenceCardContract.View view,
                                  ResourcesManager resourcesManager,
                                  SentenceRepository sentenceRepository) {
         return new SentenceCardPresenterImpl(view, resourcesManager, sentenceRepository);
@@ -51,7 +50,7 @@ public abstract class SentenceCardModule {
 
     @Binds
     @SentenceCardScope
-    abstract SentenceCardView bindLanguageCardView(SentenceCard sentenceCard);
+    abstract SentenceCardContract.View bindLanguageCardView(SentenceCard sentenceCard);
 
     @Binds
     @SentenceCardScope

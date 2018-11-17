@@ -4,14 +4,15 @@ import android.speech.tts.TextToSpeech;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
+
 
 public class OnInitListener implements TextToSpeech.OnInitListener {
 
-    public final SentenceCardPresenter presenter;
+    public final SentenceCardContract.Presenter presenter;
 
     @Inject
-    OnInitListener(SentenceCardPresenter presenter) {
+    OnInitListener(SentenceCardContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

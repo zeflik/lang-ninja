@@ -1,10 +1,10 @@
-package pl.jozefniemiec.langninja.ui.main.send.creator.di;
+package pl.jozefniemiec.langninja.di.creator;
 
 import dagger.Binds;
 import dagger.Module;
-import pl.jozefniemiec.langninja.ui.main.send.creator.SentenceCreator;
-import pl.jozefniemiec.langninja.ui.main.send.creator.SentenceCreatorContract;
-import pl.jozefniemiec.langninja.ui.main.send.creator.SentenceCreatorPresenter;
+import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
+import pl.jozefniemiec.langninja.ui.creator.SentenceCreatorContract;
+import pl.jozefniemiec.langninja.ui.creator.SentenceCreatorPresenter;
 
 @Module
 public abstract class SentenceCreatorModule {

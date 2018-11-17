@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.languageslist;
+package pl.jozefniemiec.langninja.ui.languageslist;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,7 +34,7 @@ public class LanguagesList extends BaseLanguagesListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        showLanguages(new ArrayList<>(Arrays.asList(new Language("th_TH", "dupa"))));
+        showLanguages(new ArrayList<>(Arrays.asList(new Language("th_TH", "Thai"))));
     }
 
     @Override

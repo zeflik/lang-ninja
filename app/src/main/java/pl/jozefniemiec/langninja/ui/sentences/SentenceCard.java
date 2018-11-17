@@ -40,7 +40,7 @@ import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANG
 
 public class SentenceCard extends DaggerAppCompatActivity
         implements
-        SentenceCardView,
+        SentenceCardContract.View,
         ViewPager.OnPageChangeListener {
 
     public static final int HIGHLIGHT_BUTTON_COLOR = Color.GREEN;
@@ -52,7 +52,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     SentencesPageAdapter languagePageAdapter;
 
     @Inject
-    SentenceCardPresenter presenter;
+    SentenceCardContract.Presenter presenter;
 
     @Inject
     TextToSpeech textToSpeech;

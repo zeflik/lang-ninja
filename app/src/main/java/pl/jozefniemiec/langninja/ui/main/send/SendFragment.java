@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -30,12 +29,12 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
-import pl.jozefniemiec.langninja.ui.main.send.creator.SentenceCreator;
+import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class SendFragment extends Fragment implements SendFragmentView {
+public class SendFragment extends Fragment implements SendFragmentContract.View {
 
     private static final String TAG = SendFragment.class.getSimpleName();
     private static final String ANONYMOUS = "anonymous";
@@ -59,7 +58,7 @@ public class SendFragment extends Fragment implements SendFragmentView {
 
     private Unbinder unbinder;
     private FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> adapter;
-    private SendPresenter presenter;
+    private SendFragmentContract.Presenter presenter;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -73,16 +72,16 @@ public class SendFragment extends Fragment implements SendFragmentView {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_send, container, false);
+    public android.view.View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                                          Bundle savedInstanceState) {
+        android.view.View view = inflater.inflate(R.layout.fragment_send, container, false);
         unbinder = ButterKnife.bind(this, view);
         presenter = new SendPresenterImpl(this);
         return view;
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull android.view.View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         floatingActionButton.setOnClickListener(v -> openNewSentencePage());
@@ -123,14 +122,14 @@ public class SendFragment extends Fragment implements SendFragmentView {
 
     @Override
     public void showLoginInfo() {
-        floatingActionButton.setVisibility(View.GONE);
-        loginPage.setVisibility(View.VISIBLE);
+        floatingActionButton.setVisibility(android.view.View.GONE);
+        loginPage.setVisibility(android.view.View.VISIBLE);
     }
 
     @Override
     public void hideLoginInfo() {
-        floatingActionButton.setVisibility(View.VISIBLE);
-        loginPage.setVisibility(View.GONE);
+        floatingActionButton.setVisibility(android.view.View.VISIBLE);
+        loginPage.setVisibility(android.view.View.GONE);
     }
 
     @Override

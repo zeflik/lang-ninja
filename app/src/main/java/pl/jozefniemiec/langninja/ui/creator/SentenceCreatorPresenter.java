@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.send.creator;
+package pl.jozefniemiec.langninja.ui.creator;
 
 import android.util.Log;
 
@@ -7,8 +7,8 @@ import javax.inject.Inject;
 import pl.jozefniemiec.langninja.data.repository.SentenceCandidateRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
+import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
 import pl.jozefniemiec.langninja.service.AuthService;
-import pl.jozefniemiec.langninja.ui.main.send.creator.di.SentenceCreatorScope;
 
 @SentenceCreatorScope
 public class SentenceCreatorPresenter implements SentenceCreatorContract.Presenter {
@@ -60,7 +60,8 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
 
     @Override
     public void onLanguagePicked(Language language) {
-        view.showKeyboard();
+        view.hideLanguagesListWindow();
         view.showLanguageData(language);
+        view.showKeyboard();
     }
 }

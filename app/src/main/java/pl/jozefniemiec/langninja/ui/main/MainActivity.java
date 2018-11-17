@@ -13,7 +13,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
 import pl.jozefniemiec.langninja.ui.main.send.SendFragment;
 
-public class MainActivity extends DaggerAppCompatActivity implements MainView {
+public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
 
     @BindView(R.id.language_view_pager)
     ViewPager viewPager;
@@ -25,7 +25,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainView {
     SectionPageAdapter sectionPageAdapter;
 
     @Inject
-    MainPresenter mainPresenter;
+    MainContract.Presenter mainPresenter;
 
 
     @Override

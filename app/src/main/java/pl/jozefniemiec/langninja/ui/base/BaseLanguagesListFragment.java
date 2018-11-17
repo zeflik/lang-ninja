@@ -33,12 +33,12 @@ public abstract class BaseLanguagesListFragment extends Fragment implements View
     private List<Language> data;
     private Unbinder unbinder;
 
+    protected abstract void onItemClicked(Language position);
+
     public void showLanguages(List<Language> languageList) {
         adapter.setData(languageList);
         recyclerView.setAdapter(adapter);
     }
-
-    protected abstract void onItemClicked(Language position);
 
     @Nullable
     @Override

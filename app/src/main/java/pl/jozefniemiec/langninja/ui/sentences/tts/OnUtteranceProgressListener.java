@@ -5,16 +5,16 @@ import android.util.Log;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
 
 public class OnUtteranceProgressListener extends UtteranceProgressListener {
 
     private static final String TAG = "TTS ProgressListener";
 
-    public final SentenceCardPresenter presenter;
+    public final SentenceCardContract.Presenter presenter;
 
     @Inject
-    OnUtteranceProgressListener(SentenceCardPresenter presenter) {
+    OnUtteranceProgressListener(SentenceCardContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

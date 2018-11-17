@@ -18,7 +18,7 @@ import pl.jozefniemiec.langninja.R;
 public class SentencesPageAdapter extends PagerAdapter implements SentencesItemView {
 
     private final Context context;
-    private final SentenceCardPresenter presenter;
+    private final SentenceCardContract.Presenter presenter;
 
     @BindView(R.id.languagePageSentence)
     TextView sentence;
@@ -26,7 +26,7 @@ public class SentencesPageAdapter extends PagerAdapter implements SentencesItemV
     @BindView(R.id.ivFlagOnCard)
     ImageView flag;
 
-    public SentencesPageAdapter(Context context, SentenceCardPresenter presenter) {
+    public SentencesPageAdapter(Context context, SentenceCardContract.Presenter presenter) {
         this.context = context;
         this.presenter = presenter;
     }

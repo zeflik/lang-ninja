@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.send.creator;
+package pl.jozefniemiec.langninja.ui.creator;
 
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 

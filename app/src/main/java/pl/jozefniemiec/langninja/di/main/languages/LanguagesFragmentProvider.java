@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.languages.di;
+package pl.jozefniemiec.langninja.di.main.languages;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

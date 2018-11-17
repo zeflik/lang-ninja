@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.languages.di;
+package pl.jozefniemiec.langninja.di.main.languages;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,9 +8,8 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
-import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentPresenter;
+import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentContract;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentPresenterImpl;
-import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentView;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 @Module
@@ -29,10 +28,10 @@ public abstract class LanguagesFragmentModule {
 
     @Binds
     @LanguagesFragmentScope
-    abstract LanguagesFragmentPresenter
+    abstract LanguagesFragmentContract.Presenter
     provideHomeFragmentPresenter(LanguagesFragmentPresenterImpl presenter);
 
     @Binds
     @LanguagesFragmentScope
-    abstract LanguagesFragmentView provideHomeFragmentView(LanguagesFragment homeFragment);
+    abstract LanguagesFragmentContract.View provideHomeFragmentView(LanguagesFragment homeFragment);
 }

@@ -9,18 +9,18 @@ import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.utils.Utility;
 
-public class SentenceCardPresenterImpl implements SentenceCardPresenter {
+public class SentenceCardPresenterImpl implements SentenceCardContract.Presenter {
 
     private final int NUMBERING_SHIFT = 1;
 
-    private final SentenceCardView view;
+    private final SentenceCardContract.View view;
     private final ResourcesManager resourcesManager;
     private final SentenceRepository sentenceRepository;
     private String languageCode;
     private List<Sentence> sentences;
     private int currentPosition;
 
-    public SentenceCardPresenterImpl(SentenceCardView view,
+    public SentenceCardPresenterImpl(SentenceCardContract.View view,
                                      ResourcesManager resourcesManager,
                                      SentenceRepository sentenceRepository) {
         this.view = view;

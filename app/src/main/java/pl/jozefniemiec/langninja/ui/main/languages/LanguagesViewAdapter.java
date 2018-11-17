@@ -15,11 +15,12 @@ import static android.view.View.OnClickListener;
 
 public class LanguagesViewAdapter extends RecyclerView.Adapter<ViewHolder> {
 
-    private final LanguagesFragmentPresenter presenter;
+    private final LanguagesFragmentContract.Presenter presenter;
     private final OnClickListener onClickListener;
 
     @Inject
-    public LanguagesViewAdapter(LanguagesFragmentPresenter presenter, OnClickListener onClickListener) {
+    public LanguagesViewAdapter(LanguagesFragmentContract.Presenter presenter,
+                                OnClickListener onClickListener) {
         this.presenter = presenter;
         this.onClickListener = onClickListener;
     }

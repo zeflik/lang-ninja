@@ -7,15 +7,15 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
 
 public class SpeechRecognitionListener implements RecognitionListener {
 
-    private final SentenceCardPresenter presenter;
+    private final SentenceCardContract.Presenter presenter;
     private boolean listeningSpeech;
 
     @Inject
-    public SpeechRecognitionListener(SentenceCardPresenter presenter) {
+    public SpeechRecognitionListener(SentenceCardContract.Presenter presenter) {
         this.presenter = presenter;
     }
 
