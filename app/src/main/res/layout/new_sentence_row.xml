@@ -25,7 +25,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/shape_background_stroke"
+        android:background="@drawable/shape_flag_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/sentenceRowTextView"
         app:layout_constraintHorizontal_bias="0.0"

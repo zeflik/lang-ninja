@@ -24,7 +24,7 @@ abstract class ActivityBuilder {
     @SentenceCardScope
     abstract SentenceCard bindLanguageCard();
 
-    @ContributesAndroidInjector(modules = SentenceCreatorModule.class)
+    @ContributesAndroidInjector(modules = {SentenceCreatorModule.class, LanguagesFragmentProvider.class})
     @SentenceCreatorScope
     abstract SentenceCreator bindSentenceCreator();
 }

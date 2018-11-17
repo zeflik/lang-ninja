@@ -27,7 +27,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:adjustViewBounds="true"
-                android:background="@drawable/shape_background_stroke"
+                android:background="@drawable/shape_flag_background"
                 android:contentDescription="@string/language_flag_description"
                 android:scaleType="fitXY"
                 card_view:layout_constraintBottom_toTopOf="@+id/languagePageSentence"

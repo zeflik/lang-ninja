@@ -5,6 +5,7 @@ import android.util.Log;
 import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.SentenceCandidateRepository;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
 import pl.jozefniemiec.langninja.service.AuthService;
 import pl.jozefniemiec.langninja.ui.main.send.creator.di.SentenceCreatorScope;
@@ -37,9 +38,29 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
 
     @Override
     public void createButtonClicked(String langCode, String sentence) {
-        SentenceCandidate sentenceCandidate = new SentenceCandidate(langCode, sentence);
+        if (langCode == null) {
+            view.showErrorMessage("Wybierz język!");
+            return;
+        }
+        if (sentence.trim().isEmpty()) {
+            view.showErrorMessage("Wprowadź tekst!");
+            return;
+        }
+        SentenceCandidate sentenceCandidate = new SentenceCandidate(sentence, langCode);
         String currentUserUid = authService.getCurrentUserUid();
         sentenceCandidateRepository.insertByUserUid(currentUserUid, sentenceCandidate);
         view.close();
+    }
+
+    @Override
+    public void onImageButtonClicked() {
+        view.hideKeyboard();
+        view.showLanguagesListWindow();
+    }
+
+    @Override
+    public void onLanguagePicked(Language language) {
+        view.showKeyboard();
+        view.showLanguageData(language);
     }
 }
