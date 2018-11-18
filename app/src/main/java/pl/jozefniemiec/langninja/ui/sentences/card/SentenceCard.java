@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences;
+package pl.jozefniemiec.langninja.ui.sentences.card;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -13,13 +13,17 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.transition.TransitionManager;
-import android.view.MenuItem;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,14 +35,15 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerAppCompatActivity;
+import butterknife.Unbinder;
+import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.sentences.speech.SpeechRecognitionListener;
+import pl.jozefniemiec.langninja.ui.sentences.card.speech.SpeechRecognitionListener;
 import pl.jozefniemiec.langninja.utils.AppUtils;
 
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 
-public class SentenceCard extends DaggerAppCompatActivity
+public class SentenceCard extends DaggerFragment
         implements
         SentenceCardContract.View,
         ViewPager.OnPageChangeListener {
@@ -86,24 +91,32 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     private ConstraintSet layoutNoAnswerSet = new ConstraintSet();
     private ConstraintSet layoutWithAnswerSet = new ConstraintSet();
-    private ActionBar supportActionBar;
+    private Unbinder unbinder;
+
+    public static SentenceCard newInstance(String languageCode) {
+        SentenceCard fragment = new SentenceCard();
+        Bundle args = new Bundle();
+        args.putString(LANGUAGE_CODE_KEY, languageCode);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        android.view.View view = inflater.inflate(R.layout.activity_sentence_card, container, false);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sentence_card);
-        ButterKnife.bind(this);
-
-        supportActionBar = getSupportActionBar();
-        supportActionBar.setDisplayHomeAsUpEnabled(true);
-
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        presenter.loadData(getArguments().getString(LANGUAGE_CODE_KEY));
         activateSpeechRecognizer();
         textToSpeech.setOnUtteranceProgressListener(utteranceProgressListener);
-
         layoutNoAnswerSet.clone(layout);
-        layoutWithAnswerSet.clone(this, R.layout.activity_sentence_card_w_spoken_text);
-
-        presenter.loadData(getIntent().getStringExtra(LANGUAGE_CODE_KEY));
+        layoutWithAnswerSet.clone(requireContext(), R.layout.activity_sentence_card_w_spoken_text);
     }
 
     @Override
@@ -122,11 +135,6 @@ public class SentenceCard extends DaggerAppCompatActivity
     }
 
     @Override
-    public void setTitle(String string) {
-        supportActionBar.setTitle(string);
-    }
-
-    @Override
     public void showData() {
         viewPager.setAdapter(languagePageAdapter);
         viewPager.addOnPageChangeListener(this);
@@ -142,6 +150,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     public void activateReadButton() {
         readButton.setOnClickListener(x -> presenter.readButtonClicked());
         showButton(readButton);
+        Log.d(TAG, "activateReadButton: ");
     }
 
     @Override
@@ -188,7 +197,7 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     public void activateSpeechRecognizer() {
         speechRecognizer.setRecognitionListener(speechRecognitionListener);
-        boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(this);
+        boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(requireContext());
         presenter.onSpeechRecognizerInit(recognitionAvailable);
     }
 
@@ -219,7 +228,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     public void startListening(String languageCode) {
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, languageCode);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, requireActivity().getPackageName());
         speechRecognizer.startListening(intent);
     }
 
@@ -275,15 +284,15 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void showErrorMessage(String message) {
-        runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+        requireActivity().runOnUiThread(() -> Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show());
     }
 
     @Override
     public void showSpeechRecognizerInstallDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.agree_to_install_google)
                 .setPositiveButton(R.string.button_ok, (dialog, id) ->
-                        AppUtils.openPlayStoreForSpeechRecognizer(this)
+                        AppUtils.openPlayStoreForSpeechRecognizer(requireActivity())
                 )
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> {
                 });
@@ -292,10 +301,10 @@ public class SentenceCard extends DaggerAppCompatActivity
 
     @Override
     public void showTTSInstallDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.agree_to_install_tts)
                 .setPositiveButton(R.string.button_ok, (dialog, id) ->
-                        AppUtils.openPlayStoreForTTS(this)
+                        AppUtils.openPlayStoreForTTS(requireActivity())
                 )
                 .setNegativeButton(R.string.button_cancel, (dialog, id) -> {
                 });
@@ -305,7 +314,7 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public boolean isReaderAvailable() {
         return AppUtils.checkForApplication(
-                getApplicationContext(),
+                requireContext(),
                 getString(R.string.google_tts_package_name)
         );
     }
@@ -313,30 +322,20 @@ public class SentenceCard extends DaggerAppCompatActivity
     @Override
     public boolean isSpeechRecognizerAvailable() {
         return AppUtils.checkForApplication(
-                getApplicationContext(),
+                requireContext(),
                 getString(R.string.google_speech_package_name)
         );
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                super.onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    protected void onPause() {
+    public void onPause() {
         presenter.onViewPause();
         super.onPause();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroyView() {
+        unbinder.unbind();
         presenter.onViewDestroy();
         if (speechRecognizer != null) {
             speechRecognizer.destroy();
@@ -344,29 +343,29 @@ public class SentenceCard extends DaggerAppCompatActivity
         if (textToSpeech != null) {
             textToSpeech.shutdown();
         }
-        super.onDestroy();
+        super.onDestroyView();
     }
 
     private void grayOutButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().setColorFilter(INACTIVE_BUTTON_COLOR, PorterDuff.Mode.SRC_ATOP));
+        getActivity().runOnUiThread(() -> imageButton.getBackground().setColorFilter(INACTIVE_BUTTON_COLOR, PorterDuff.Mode.SRC_ATOP));
     }
 
     private void showButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
+        getActivity().runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
     }
 
     private void highlightButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().setColorFilter(HIGHLIGHT_BUTTON_COLOR, PorterDuff.Mode.SRC_ATOP));
+        getActivity().runOnUiThread(() -> imageButton.getBackground().setColorFilter(HIGHLIGHT_BUTTON_COLOR, PorterDuff.Mode.SRC_ATOP));
     }
 
     private void unHighlightButton(ImageButton imageButton) {
-        runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
+        getActivity().runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
     }
 
     @Override
     public void findSpeechSupportedLanguages() {
         Intent detailsIntent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
-        sendOrderedBroadcast(
+        requireActivity().sendOrderedBroadcast(
                 detailsIntent, null, new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {

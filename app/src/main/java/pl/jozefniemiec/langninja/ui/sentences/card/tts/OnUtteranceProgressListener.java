@@ -1,11 +1,11 @@
-package pl.jozefniemiec.langninja.ui.sentences.tts;
+package pl.jozefniemiec.langninja.ui.sentences.card.tts;
 
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
+import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardContract;
 
 public class OnUtteranceProgressListener extends UtteranceProgressListener {
 

@@ -9,11 +9,12 @@ import pl.jozefniemiec.langninja.di.main.MainActivityModule;
 import pl.jozefniemiec.langninja.di.main.MainActivityScope;
 import pl.jozefniemiec.langninja.di.main.languages.LanguagesFragmentProvider;
 import pl.jozefniemiec.langninja.di.main.send.SendFragmentProvider;
-import pl.jozefniemiec.langninja.di.sentences.SentenceCardModule;
-import pl.jozefniemiec.langninja.di.sentences.SentenceCardScope;
+import pl.jozefniemiec.langninja.di.sentences.SentenceViewerActivityModule;
+import pl.jozefniemiec.langninja.di.sentences.SentenceViewerActivityScope;
+import pl.jozefniemiec.langninja.di.sentences.card.SentenceCardProvider;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.main.MainActivity;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceViewerActivity;
 
 @Module
 abstract class ActivityBuilder {
@@ -26,9 +27,12 @@ abstract class ActivityBuilder {
     @MainActivityScope
     abstract MainActivity bindMainActivity();
 
-    @ContributesAndroidInjector(modules = SentenceCardModule.class)
-    @SentenceCardScope
-    abstract SentenceCard bindLanguageCard();
+    @ContributesAndroidInjector(modules = {
+            SentenceViewerActivityModule.class,
+            SentenceCardProvider.class
+    })
+    @SentenceViewerActivityScope
+    abstract SentenceViewerActivity bindSentenceViewer();
 
     @ContributesAndroidInjector(modules = {
             SentenceCreatorModule.class,

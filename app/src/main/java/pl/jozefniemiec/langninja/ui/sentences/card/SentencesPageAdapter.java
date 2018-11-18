@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences;
+package pl.jozefniemiec.langninja.ui.sentences.card;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

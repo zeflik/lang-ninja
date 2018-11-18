@@ -1,4 +1,6 @@
-package pl.jozefniemiec.langninja.ui.sentences;
+package pl.jozefniemiec.langninja.ui.sentences.card;
+
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import pl.jozefniemiec.langninja.utils.Utility;
 public class SentenceCardPresenter implements SentenceCardContract.Presenter {
 
     private final int NUMBERING_SHIFT = 1;
+    private final String TAG = SentenceCardPresenter.class.getSimpleName();
 
     private final SentenceCardContract.View view;
     private final ResourcesManager resourcesManager;
@@ -34,7 +37,7 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
         sentences = sentenceRepository.getLanguageSentences(languageCode);
         view.showData();
         view.showNumbering(NUMBERING_SHIFT, getPageCount());
-        view.setTitle(resourcesManager.getLanguageName(languageCode));
+        Log.d(TAG, "loadData: " + languageCode);
     }
 
     @Override
@@ -61,6 +64,7 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
     public void readButtonClicked() {
         cancelSpeechListening();
         view.read(sentences.get(currentPosition).getSentence());
+        Log.d(TAG, "readButtonClicked: " + sentences.get(currentPosition).getSentence());
     }
 
     @Override
@@ -68,8 +72,10 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
         cancelSpeechListening();
         if (!view.isReaderAvailable()) {
             view.showTTSInstallDialog();
+            Log.d(TAG, "deactivatedReadButtonClicked: install");
         } else {
             view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
+            Log.d(TAG, "deactivatedReadButtonClicked: lang not supported");
         }
     }
 
@@ -77,35 +83,42 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
     public void onReaderInit(boolean isWorking) {
         if (isWorking && view.setReaderLanguage(new Locale(languageCode))) {
             view.activateReadButton();
+            Log.d(TAG, "onReaderInit: working: " + languageCode);
         } else {
             view.deactivateReadButton();
+            Log.d(TAG, "onReaderInit: deactivating");
         }
     }
 
     @Override
     public void onStartOfRead() {
         view.highlightReadButton();
+        Log.d(TAG, "onStartOfRead: reading");
     }
 
     @Override
     public void onEndOfRead() {
         view.unHighlightReadButton();
+        Log.d(TAG, "onEndOfRead: stop reading");
     }
 
     @Override
     public void onReadError() {
         view.unHighlightReadButton();
         view.showErrorMessage(resourcesManager.getNeedInternetConnectionMessage());
+        Log.d(TAG, "onReadError: ");
     }
 
     @Override
     public void onReadyForSpeech() {
         view.highlightSpeechButton();
+        Log.d(TAG, "onReadyForSpeech: ");
     }
 
     @Override
     public void onSpeechEnded() {
         view.unHighlightSpeechButton();
+        Log.d(TAG, "onSpeechEnded: ");
     }
 
     @Override
@@ -117,6 +130,7 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
         } else {
             view.showWrongSpokenText(firstResult);
         }
+        Log.d(TAG, "onSpeechResults: " + firstResult);
     }
 
     @Override
@@ -124,6 +138,7 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
         view.unHighlightSpeechButton();
         String message = resourcesManager.findOnSpeechErrorMessage(errorCode);
         view.showErrorMessage(message);
+        Log.d(TAG, "onSpeechError: " + message);
     }
 
     @Override
@@ -132,20 +147,24 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
         if (view.isSpeechRecognizerAvailable()) {
             view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
             view.activateSpeechRecognizer();
+            Log.d(TAG, "deactivatedSpeechButtonClicked: activating Speech");
         } else {
             view.showSpeechRecognizerInstallDialog();
+            Log.d(TAG, "deactivatedSpeechButtonClicked: installing");
         }
     }
 
     @Override
     public void highlightedSpeechButtonClicked() {
         view.stopSpeechListening();
+        Log.d(TAG, "highlightedSpeechButtonClicked: ");
     }
 
     @Override
     public void speechRecognizerButtonClicked() {
         stopReading();
         view.startListening(languageCode);
+        Log.d(TAG, "speechRecognizerButtonClicked: start listening " + languageCode);
     }
 
     @Override
@@ -155,6 +174,7 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
         } else {
             view.deactivateSpeechButton();
         }
+        Log.d(TAG, "onSpeechRecognizerInit: recognition available: " + recognitionAvailable);
     }
 
     @Override
@@ -175,6 +195,7 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
         } else {
             view.deactivateSpeechButton();
         }
+        Log.d(TAG, "onSpeechSupportedLanguages: ");
     }
 
     private void stopReading() {

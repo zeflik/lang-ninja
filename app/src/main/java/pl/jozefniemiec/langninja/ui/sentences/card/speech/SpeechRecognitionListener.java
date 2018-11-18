@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences.speech;
+package pl.jozefniemiec.langninja.ui.sentences.card.speech;
 
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
+import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardContract;
 
 public class SpeechRecognitionListener implements RecognitionListener {
 

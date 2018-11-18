@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.di.sentences;
+package pl.jozefniemiec.langninja.di.sentences.card;
 
 import android.content.Context;
 import android.speech.SpeechRecognizer;
@@ -10,12 +10,12 @@ import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCard;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardContract;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceCardPresenter;
-import pl.jozefniemiec.langninja.ui.sentences.SentencesPageAdapter;
-import pl.jozefniemiec.langninja.ui.sentences.tts.OnInitListener;
-import pl.jozefniemiec.langninja.ui.sentences.tts.OnUtteranceProgressListener;
+import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCard;
+import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardContract;
+import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardPresenter;
+import pl.jozefniemiec.langninja.ui.sentences.card.SentencesPageAdapter;
+import pl.jozefniemiec.langninja.ui.sentences.card.tts.OnInitListener;
+import pl.jozefniemiec.langninja.ui.sentences.card.tts.OnUtteranceProgressListener;
 
 @Module
 public abstract class SentenceCardModule {
@@ -24,7 +24,7 @@ public abstract class SentenceCardModule {
     @SentenceCardScope
     static SentencesPageAdapter
     provideLanguagePageAdapter(SentenceCard activity, SentenceCardContract.Presenter presenter) {
-        return new SentencesPageAdapter(activity, presenter);
+        return new SentencesPageAdapter(activity.requireContext(), presenter);
     }
 
     @Provides

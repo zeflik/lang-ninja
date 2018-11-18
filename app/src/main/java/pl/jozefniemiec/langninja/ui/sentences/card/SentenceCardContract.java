@@ -1,14 +1,12 @@
-package pl.jozefniemiec.langninja.ui.sentences;
+package pl.jozefniemiec.langninja.ui.sentences.card;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class SentenceCardContract {
+public interface SentenceCardContract {
 
-    public interface View {
-
-        void setTitle(String string);
+    interface View {
 
         void showData();
 
@@ -67,7 +65,7 @@ public class SentenceCardContract {
         void findSpeechSupportedLanguages();
     }
 
-    public interface Presenter {
+    interface Presenter {
 
         void loadData(String languageCode);
 

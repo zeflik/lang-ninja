@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     app:layout_constraintHorizontal_weight="1"
-    tools:context=".ui.sentences.SentenceCard">
+    tools:context=".ui.sentences.card.SentenceCard">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/language_card_view_pager"
