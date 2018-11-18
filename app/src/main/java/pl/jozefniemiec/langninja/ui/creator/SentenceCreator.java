@@ -154,8 +154,8 @@ public class SentenceCreator extends DaggerAppCompatActivity
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onPause() {
+        super.onPause();
         hideKeyboard();
-        super.onDestroy();
     }
 }
