@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences.card.speech;
+package pl.jozefniemiec.langninja.ui.sentences.speech;
 
 import android.os.Bundle;
 import android.speech.RecognitionListener;

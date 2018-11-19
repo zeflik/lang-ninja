@@ -1,20 +1,20 @@
-package pl.jozefniemiec.langninja.ui.sentences.card.tts;
+package pl.jozefniemiec.langninja.ui.sentences.reader;
 
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardContract;
+import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentScope;
 
+@ReaderFragmentScope
 public class OnUtteranceProgressListener extends UtteranceProgressListener {
 
     private static final String TAG = "TTS ProgressListener";
-
-    public final SentenceCardContract.Presenter presenter;
+    private final ReaderFragmentContract.Presenter presenter;
 
     @Inject
-    OnUtteranceProgressListener(SentenceCardContract.Presenter presenter) {
+    OnUtteranceProgressListener(ReaderFragmentContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

@@ -2,7 +2,6 @@ package pl.jozefniemiec.langninja.ui.sentences.card;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public interface SentenceCardContract {
 
@@ -11,22 +10,6 @@ public interface SentenceCardContract {
         void showData();
 
         void showNumbering(int currentPage, int pageCount);
-
-        void activateReadButton();
-
-        void deactivateReadButton();
-
-        void highlightReadButton();
-
-        void unHighlightReadButton();
-
-        boolean setReaderLanguage(Locale locale);
-
-        void read(String sentence);
-
-        boolean isReading();
-
-        void stopReading();
 
         boolean isSpeechRecognizerAvailable();
 
@@ -58,10 +41,6 @@ public interface SentenceCardContract {
 
         void showSpeechRecognizerInstallDialog();
 
-        void showTTSInstallDialog();
-
-        boolean isReaderAvailable();
-
         void findSpeechSupportedLanguages();
     }
 
@@ -73,19 +52,9 @@ public interface SentenceCardContract {
 
         int getPageCount();
 
+        String getCurrentSentence();
+
         void pageChanged(int newPosition);
-
-        void readButtonClicked();
-
-        void deactivatedReadButtonClicked();
-
-        void onReaderInit(boolean isWorking);
-
-        void onStartOfRead();
-
-        void onEndOfRead();
-
-        void onReadError();
 
         void speechRecognizerButtonClicked();
 

@@ -2,8 +2,6 @@ package pl.jozefniemiec.langninja.di.sentences.card;
 
 import android.content.Context;
 import android.speech.SpeechRecognizer;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.UtteranceProgressListener;
 
 import dagger.Binds;
 import dagger.Module;
@@ -14,8 +12,6 @@ import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCard;
 import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardContract;
 import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardPresenter;
 import pl.jozefniemiec.langninja.ui.sentences.card.SentencesPageAdapter;
-import pl.jozefniemiec.langninja.ui.sentences.card.tts.OnInitListener;
-import pl.jozefniemiec.langninja.ui.sentences.card.tts.OnUtteranceProgressListener;
 
 @Module
 public abstract class SentenceCardModule {
@@ -42,22 +38,7 @@ public abstract class SentenceCardModule {
         return SpeechRecognizer.createSpeechRecognizer(context);
     }
 
-    @Provides
-    @SentenceCardScope
-    static TextToSpeech providesTextToSpeech(Context context, TextToSpeech.OnInitListener listener) {
-        return new TextToSpeech(context, listener);
-    }
-
     @Binds
     @SentenceCardScope
     abstract SentenceCardContract.View bindLanguageCardView(SentenceCard sentenceCard);
-
-    @Binds
-    @SentenceCardScope
-    abstract TextToSpeech.OnInitListener bindTextToSpeechOnInitListener(OnInitListener listener);
-
-    @Binds
-    @SentenceCardScope
-    abstract UtteranceProgressListener bindUtteranceProgressListener(OnUtteranceProgressListener listener);
-
 }

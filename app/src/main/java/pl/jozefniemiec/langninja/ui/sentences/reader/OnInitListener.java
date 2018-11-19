@@ -1,18 +1,18 @@
-package pl.jozefniemiec.langninja.ui.sentences.card.tts;
+package pl.jozefniemiec.langninja.ui.sentences.reader;
 
 import android.speech.tts.TextToSpeech;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardContract;
+import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentScope;
 
-
+@ReaderFragmentScope
 public class OnInitListener implements TextToSpeech.OnInitListener {
 
-    public final SentenceCardContract.Presenter presenter;
+    private final ReaderFragmentContract.Presenter presenter;
 
     @Inject
-    OnInitListener(SentenceCardContract.Presenter presenter) {
+    OnInitListener(ReaderFragmentContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

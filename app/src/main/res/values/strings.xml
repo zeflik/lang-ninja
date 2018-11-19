@@ -63,6 +63,7 @@
     <string name="flag">Flaga</string>
     <string name="send_button">WYŚLIJ</string>
     <string name="text_hint">Wprowadź tekst…</string>
+    <string name="pick_language">Wybierz język…</string>
 
     <!--play store-->
     <string name="app_market_link">"market://details?id="</string>
@@ -70,5 +71,4 @@
     <string name="app_package_name">pl.jozefniemiec.langninja</string>
     <string name="google_speech_package_name">com.google.android.googlequicksearchbox</string>
     <string name="google_tts_package_name">com.google.android.tts</string>
-    <string name="pick_language">Wybierz język...</string>
 </resources>
