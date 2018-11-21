@@ -21,16 +21,20 @@ public interface SentenceCreatorContract {
         void hideLanguagesListWindow();
 
         void showLanguageData(Language language);
+
+        void showSentenceCard(String langCode, String sentence);
     }
 
     interface Presenter {
 
         void onViewCreated();
 
-        void createButtonClicked(String langCode, String sentence);
+        void onCreateButtonClicked(String langCode, String sentence);
 
-        void onImageButtonClicked();
+        void onFlagImageButtonClicked();
 
         void onLanguagePicked(Language language);
+
+        void onTestButtonClicked(String langCode, String sentence);
     }
 }

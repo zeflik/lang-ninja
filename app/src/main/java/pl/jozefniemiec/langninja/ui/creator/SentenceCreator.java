@@ -1,6 +1,7 @@
 package pl.jozefniemiec.langninja.ui.creator;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
@@ -25,7 +26,10 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListFragment;
 import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListListener;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 import pl.jozefniemiec.langninja.utils.Utility;
+
+import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 
 public class SentenceCreator extends DaggerAppCompatActivity
         implements SentenceCreatorContract.View, LanguagesListListener {
@@ -39,8 +43,11 @@ public class SentenceCreator extends DaggerAppCompatActivity
     @BindView(R.id.sentenceCandidateSendButton)
     Button sentenceCreateButton;
 
+    @BindView(R.id.sentenceCandidateTestButton)
+    Button sentenceTestButton;
+
     @BindView(R.id.sentenceCandidateFlag)
-    ImageButton imageButton;
+    ImageButton flagImageButton;
 
     @BindView(R.id.sentenceCandidateFragmentContainer)
     FrameLayout frameLayout;
@@ -68,11 +75,13 @@ public class SentenceCreator extends DaggerAppCompatActivity
     }
 
     private void attachListeners() {
-        imageButton.setOnClickListener(v -> presenter.onImageButtonClicked());
-        sentenceCreateButton.setOnClickListener(v -> {
-            String sentence = sentenceTextInput.getText().toString();
-            presenter.createButtonClicked(langCode, sentence);
-        });
+        flagImageButton.setOnClickListener(v -> presenter.onFlagImageButtonClicked());
+        sentenceCreateButton.setOnClickListener(v ->
+                presenter.onCreateButtonClicked(langCode, sentenceTextInput.getText().toString())
+        );
+        sentenceTestButton.setOnClickListener(v ->
+                presenter.onTestButtonClicked(langCode, sentenceTextInput.getText().toString())
+        );
     }
 
     @Override
@@ -112,6 +121,13 @@ public class SentenceCreator extends DaggerAppCompatActivity
         setFlag(Utility.getLanguageFlagUri(this, langCode));
     }
 
+    @Override
+    public void showSentenceCard(String langCode, String sentence) {
+        Intent intent = new Intent(this, SentenceCardViewerActivity.class);
+        intent.putExtra(LANGUAGE_CODE_KEY, langCode);
+        startActivity(intent);
+    }
+
     private void setLangName(String name) {
         langNameTextView.setText(name);
     }
@@ -121,8 +137,8 @@ public class SentenceCreator extends DaggerAppCompatActivity
                 .with(this)
                 .load(uri)
                 .centerCrop()
-                .resize(imageButton.getMeasuredWidth(), imageButton.getMeasuredHeight())
-                .into(imageButton);
+                .resize(flagImageButton.getMeasuredWidth(), flagImageButton.getMeasuredHeight())
+                .into(flagImageButton);
     }
 
     @Override

@@ -37,7 +37,7 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
     }
 
     @Override
-    public void createButtonClicked(String langCode, String sentence) {
+    public void onCreateButtonClicked(String langCode, String sentence) {
         if (langCode == null) {
             view.showErrorMessage("Wybierz język!");
             return;
@@ -53,7 +53,7 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
     }
 
     @Override
-    public void onImageButtonClicked() {
+    public void onFlagImageButtonClicked() {
         view.hideKeyboard();
         view.showLanguagesListWindow();
     }
@@ -63,5 +63,18 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
         view.hideLanguagesListWindow();
         view.showLanguageData(language);
         view.showKeyboard();
+    }
+
+    @Override
+    public void onTestButtonClicked(String langCode, String sentence) {
+        if (langCode == null) {
+            view.showErrorMessage("Wybierz język!");
+            return;
+        }
+        if (sentence.trim().isEmpty()) {
+            view.showErrorMessage("Wprowadź tekst!");
+            return;
+        }
+        view.showSentenceCard(langCode, sentence);
     }
 }
