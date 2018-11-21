@@ -117,7 +117,7 @@ public class ReaderFragment extends DaggerFragment implements ReaderFragmentCont
 
     @Override
     public String getCurrentSentence() {
-        return onReaderFragmentInteractionListener.getCurrentSentence();
+        return onReaderFragmentInteractionListener.getSentenceToRead();
     }
 
     @Override

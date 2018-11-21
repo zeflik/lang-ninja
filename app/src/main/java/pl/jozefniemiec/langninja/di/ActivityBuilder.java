@@ -13,6 +13,7 @@ import pl.jozefniemiec.langninja.di.sentences.SentenceViewerActivityModule;
 import pl.jozefniemiec.langninja.di.sentences.SentenceViewerActivityScope;
 import pl.jozefniemiec.langninja.di.sentences.card.SentenceCardProvider;
 import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentProvider;
+import pl.jozefniemiec.langninja.di.sentences.speech.SpeechRecognizerFragmentProvider;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.main.MainActivity;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceViewerActivity;
@@ -31,7 +32,8 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = {
             SentenceViewerActivityModule.class,
             SentenceCardProvider.class,
-            ReaderFragmentProvider.class
+            ReaderFragmentProvider.class,
+            SpeechRecognizerFragmentProvider.class
     })
     @SentenceViewerActivityScope
     abstract SentenceViewerActivity bindSentenceViewer();
