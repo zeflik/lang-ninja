@@ -17,12 +17,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.ui.reader.OnReaderFragmentInteractionListener;
+import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
 import pl.jozefniemiec.langninja.ui.sentences.card.OnSentenceCardFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardFragment;
-import pl.jozefniemiec.langninja.ui.sentences.reader.OnReaderFragmentInteractionListener;
-import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderFragment;
-import pl.jozefniemiec.langninja.ui.sentences.speech.OnSpeechRecognitionFragmentInteractionListener;
-import pl.jozefniemiec.langninja.ui.sentences.speech.SpeechRecognizerFragment;
+import pl.jozefniemiec.langninja.ui.speech.OnSpeechRecognitionFragmentInteractionListener;
+import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
 
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 

@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.di.sentences.speech;
+package pl.jozefniemiec.langninja.di.speech;
 
 import android.content.Context;
 import android.speech.SpeechRecognizer;
@@ -6,12 +6,12 @@ import android.speech.SpeechRecognizer;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import pl.jozefniemiec.langninja.ui.sentences.speech.SpeechRecognizerContract;
-import pl.jozefniemiec.langninja.ui.sentences.speech.SpeechRecognizerFragment;
-import pl.jozefniemiec.langninja.ui.sentences.speech.SpeechRecognizerPresenter;
+import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerContract;
+import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
+import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerPresenter;
 
 @Module
-abstract class SpeechRecognizerFragmentModule {
+public abstract class SpeechRecognizerFragmentModule {
 
     @Binds
     @SpeechRecognizerFragmentScope

@@ -1,8 +1,8 @@
-package pl.jozefniemiec.langninja.di.sentences.reader;
+package pl.jozefniemiec.langninja.di.reader;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderFragment;
+import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
 
 @Module
 public abstract class ReaderFragmentProvider {

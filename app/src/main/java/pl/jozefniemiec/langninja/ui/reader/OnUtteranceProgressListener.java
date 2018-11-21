@@ -1,11 +1,11 @@
-package pl.jozefniemiec.langninja.ui.sentences.reader;
+package pl.jozefniemiec.langninja.ui.reader;
 
 import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentScope;
+import pl.jozefniemiec.langninja.di.reader.ReaderFragmentScope;
 
 @ReaderFragmentScope
 public class OnUtteranceProgressListener extends UtteranceProgressListener {

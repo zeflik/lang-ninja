@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.di.sentences.reader;
+package pl.jozefniemiec.langninja.di.reader;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

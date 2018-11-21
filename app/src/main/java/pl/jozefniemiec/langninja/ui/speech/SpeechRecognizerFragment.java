@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences.speech;
+package pl.jozefniemiec.langninja.ui.speech;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

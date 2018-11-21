@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences.speech;
+package pl.jozefniemiec.langninja.ui.speech;
 
 import android.util.Log;
 
@@ -8,7 +8,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
-import pl.jozefniemiec.langninja.di.sentences.speech.SpeechRecognizerFragmentScope;
+import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentScope;
 
 @SpeechRecognizerFragmentScope
 public class SpeechRecognizerPresenter implements SpeechRecognizerContract.Presenter {

@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.di.sentences.reader;
+package pl.jozefniemiec.langninja.di.reader;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
@@ -7,11 +7,11 @@ import android.speech.tts.UtteranceProgressListener;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
-import pl.jozefniemiec.langninja.ui.sentences.reader.OnInitListener;
-import pl.jozefniemiec.langninja.ui.sentences.reader.OnUtteranceProgressListener;
-import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderContract;
-import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderFragment;
-import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderPresenter;
+import pl.jozefniemiec.langninja.ui.reader.OnInitListener;
+import pl.jozefniemiec.langninja.ui.reader.OnUtteranceProgressListener;
+import pl.jozefniemiec.langninja.ui.reader.ReaderContract;
+import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
+import pl.jozefniemiec.langninja.ui.reader.ReaderPresenter;
 
 @Module
 abstract class ReaderFragmentModule {

@@ -9,14 +9,16 @@ import pl.jozefniemiec.langninja.di.main.MainActivityModule;
 import pl.jozefniemiec.langninja.di.main.MainActivityScope;
 import pl.jozefniemiec.langninja.di.main.languages.LanguagesFragmentProvider;
 import pl.jozefniemiec.langninja.di.main.send.SendFragmentProvider;
+import pl.jozefniemiec.langninja.di.reader.ReaderFragmentProvider;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardViewerActivityModule;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardViewerActivityScope;
 import pl.jozefniemiec.langninja.di.sentences.card.SentenceCardProvider;
-import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentProvider;
-import pl.jozefniemiec.langninja.di.sentences.speech.SpeechRecognizerFragmentProvider;
+import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentModule;
+import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentScope;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.main.MainActivity;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
+import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
 
 @Module
 abstract class ActivityBuilder {
@@ -33,7 +35,6 @@ abstract class ActivityBuilder {
             SentenceCardViewerActivityModule.class,
             SentenceCardProvider.class,
             ReaderFragmentProvider.class,
-            SpeechRecognizerFragmentProvider.class
     })
     @SentenceCardViewerActivityScope
     abstract SentenceCardViewerActivity bindSentenceViewer();
@@ -44,4 +45,9 @@ abstract class ActivityBuilder {
             LanguagesListFragmentProvider.class})
     @SentenceCreatorScope
     abstract SentenceCreator bindSentenceCreator();
+
+    @ContributesAndroidInjector(modules = SpeechRecognizerFragmentModule.class)
+    @SpeechRecognizerFragmentScope
+    abstract SpeechRecognizerFragment bindSpeechRecognizerFragment();
+
 }

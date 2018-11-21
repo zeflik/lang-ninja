@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.sentences.speech;
+package pl.jozefniemiec.langninja.ui.speech;
 
 import java.util.ArrayList;
 import java.util.List;

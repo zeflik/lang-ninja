@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.di.sentences.speech;
+package pl.jozefniemiec.langninja.di.speech;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
