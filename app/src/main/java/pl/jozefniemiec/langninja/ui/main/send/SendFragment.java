@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,9 +31,12 @@ import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
+import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
 
 public class SendFragment extends DaggerFragment implements SendFragmentContract.View {
 
@@ -62,7 +64,7 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     SendFragmentContract.Presenter presenter;
 
     private Unbinder unbinder;
-    private FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> adapter;
+    private FirebaseSendAdapter adapter;
     private FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
@@ -107,6 +109,12 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
                 .setQuery(dbSentencesRef.child(auth.getUid()), SentenceCandidate.class)
                 .build();
         adapter = new FirebaseSendAdapter(recyclerOptions);
+        adapter.setListener(sentenceCandidate -> {
+            Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
+            intent.putExtra(LANGUAGE_CODE_KEY, sentenceCandidate.getLanguageCode());
+            intent.putExtra(SENTENCE_KEY, sentenceCandidate.getSentence());
+            startActivity(intent);
+        });
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }

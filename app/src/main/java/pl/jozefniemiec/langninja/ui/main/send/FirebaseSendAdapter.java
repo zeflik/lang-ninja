@@ -14,6 +14,10 @@ import pl.jozefniemiec.langninja.utils.Utility;
 
 class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> {
 
+    private static final String TAG = FirebaseSendAdapter.class.getSimpleName();
+
+    private OnClickListener listener;
+
     FirebaseSendAdapter(FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions) {
         super(recyclerOptions);
     }
@@ -30,5 +34,15 @@ class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, Sen
     protected void onBindViewHolder(@NonNull SentenceRowHolder holder, int position, @NonNull SentenceCandidate model) {
         holder.setFlag(Utility.getLanguageFlagUri(holder.flag.getContext(), model.getLanguageCode()));
         holder.setSentence(model.getSentence());
+        model.setId(getRef(position).getKey());
+        holder.itemView.setOnClickListener(v -> listener.onItemClicked(model));
+    }
+
+    public void setListener(OnClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnClickListener {
+        void onItemClicked(SentenceCandidate sentenceRowHolder);
     }
 }
