@@ -34,6 +34,7 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
         OnSentenceCardFragmentInteractionListener {
 
     private static final long ANIMATION_DELAY_MILIS = 500;
+    public static final String SENTENCE_KEY = "Sentence key";
 
     @BindView(R.id.sentencePageCount)
     TextView sentencePageCountTextView;
@@ -51,6 +52,7 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
     private ReaderFragment reader;
     private SpeechRecognizerFragment speechRecognizer;
     private String languageCode;
+    private String sentence;
 
     private ConstraintSet layoutNoSpokenTextSet = new ConstraintSet();
     private ConstraintSet layoutWithSpokenTextSet = new ConstraintSet();
@@ -65,13 +67,14 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
             throw new RuntimeException(this.toString()
                     + ": language code missing in intent");
         }
+        sentence = getIntent().getStringExtra(SENTENCE_KEY);
         attachFragments();
         presenter.onViewCreated();
     }
 
     private void attachFragments() {
         reader = ReaderFragment.newInstance(languageCode);
-        sentenceCard = SentenceCardFragment.newInstance(languageCode);
+        sentenceCard = SentenceCardFragment.newInstance(languageCode, sentence);
         speechRecognizer = SpeechRecognizerFragment.newInstance(languageCode);
         getSupportFragmentManager()
                 .beginTransaction()

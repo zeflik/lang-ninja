@@ -30,6 +30,7 @@ import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
 
 public class SentenceCreator extends DaggerAppCompatActivity
         implements SentenceCreatorContract.View, LanguagesListListener {
@@ -125,6 +126,7 @@ public class SentenceCreator extends DaggerAppCompatActivity
     public void showSentenceCard(String langCode, String sentence) {
         Intent intent = new Intent(this, SentenceCardViewerActivity.class);
         intent.putExtra(LANGUAGE_CODE_KEY, langCode);
+        intent.putExtra(SENTENCE_KEY, sentence);
         startActivity(intent);
     }
 

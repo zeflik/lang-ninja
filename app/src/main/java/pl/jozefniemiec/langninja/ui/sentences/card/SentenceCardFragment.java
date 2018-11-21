@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
 
 public class SentenceCardFragment extends DaggerFragment
         implements
@@ -39,11 +41,15 @@ public class SentenceCardFragment extends DaggerFragment
     private Unbinder unbinder;
     private OnSentenceCardFragmentInteractionListener listener;
     private String languageCode;
+    private String sentence;
 
-    public static SentenceCardFragment newInstance(String languageCode) {
+    public static SentenceCardFragment newInstance(String languageCode, String sentence) {
         SentenceCardFragment fragment = new SentenceCardFragment();
         Bundle args = new Bundle();
         args.putString(LANGUAGE_CODE_KEY, languageCode);
+        if (sentence != null) {
+            args.putString(SENTENCE_KEY, sentence);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,6 +74,7 @@ public class SentenceCardFragment extends DaggerFragment
             throw new RuntimeException(requireContext().toString()
                     + " must pass valid language code");
         }
+        sentence = getArguments().getString(SENTENCE_KEY);
     }
 
     @Nullable
@@ -81,7 +88,8 @@ public class SentenceCardFragment extends DaggerFragment
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.loadData(languageCode);
+        presenter.loadData(languageCode, sentence);
+        Log.d(TAG, "onViewCreated: " + sentence);
     }
 
     @Override

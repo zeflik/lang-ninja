@@ -1,7 +1,7 @@
 package pl.jozefniemiec.langninja.ui.sentences.card;
 
-import android.util.Log;
-
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
@@ -29,12 +29,15 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
     }
 
     @Override
-    public void loadData(String languageCode) {
+    public void loadData(String languageCode, String sentence) {
         this.languageCode = languageCode;
-        sentences = sentenceRepository.getLanguageSentences(languageCode);
+        if (sentence == null) {
+            sentences = sentenceRepository.getLanguageSentences(languageCode);
+        } else {
+            sentences = new ArrayList<>(Collections.singletonList(new Sentence(sentence, languageCode)));
+        }
         view.showData();
         view.showNumbering(NUMBERING_SHIFT, getPageCount());
-        Log.d(TAG, "loadData: " + languageCode);
     }
 
     @Override

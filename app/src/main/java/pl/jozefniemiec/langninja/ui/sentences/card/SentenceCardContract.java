@@ -21,7 +21,7 @@ public interface SentenceCardContract {
 
     interface Presenter {
 
-        void loadData(String languageCode);
+        void loadData(String languageCode, String sentence);
 
         void loadPageDataAtPosition(int position, SentencesItemView itemView);
 
