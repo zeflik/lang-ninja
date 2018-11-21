@@ -9,8 +9,8 @@ import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.ui.sentences.reader.OnInitListener;
 import pl.jozefniemiec.langninja.ui.sentences.reader.OnUtteranceProgressListener;
+import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderContract;
 import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderFragment;
-import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderFragmentContract;
 import pl.jozefniemiec.langninja.ui.sentences.reader.ReaderPresenter;
 
 @Module
@@ -24,11 +24,11 @@ abstract class ReaderFragmentModule {
 
     @Binds
     @ReaderFragmentScope
-    abstract ReaderFragmentContract.View bindView(ReaderFragment fragment);
+    abstract ReaderContract.View bindView(ReaderFragment fragment);
 
     @Binds
     @ReaderFragmentScope
-    abstract ReaderFragmentContract.Presenter bindPresenter(ReaderPresenter presenter);
+    abstract ReaderContract.Presenter bindPresenter(ReaderPresenter presenter);
 
     @Binds
     @ReaderFragmentScope

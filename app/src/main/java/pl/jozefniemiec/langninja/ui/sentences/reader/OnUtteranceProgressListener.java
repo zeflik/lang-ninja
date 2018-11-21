@@ -11,10 +11,10 @@ import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentScope;
 public class OnUtteranceProgressListener extends UtteranceProgressListener {
 
     private static final String TAG = "TTS ProgressListener";
-    private final ReaderFragmentContract.Presenter presenter;
+    private final ReaderContract.Presenter presenter;
 
     @Inject
-    OnUtteranceProgressListener(ReaderFragmentContract.Presenter presenter) {
+    OnUtteranceProgressListener(ReaderContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

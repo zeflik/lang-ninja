@@ -9,10 +9,10 @@ import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentScope;
 @ReaderFragmentScope
 public class OnInitListener implements TextToSpeech.OnInitListener {
 
-    private final ReaderFragmentContract.Presenter presenter;
+    private final ReaderContract.Presenter presenter;
 
     @Inject
-    OnInitListener(ReaderFragmentContract.Presenter presenter) {
+    OnInitListener(ReaderContract.Presenter presenter) {
         this.presenter = presenter;
     }
 

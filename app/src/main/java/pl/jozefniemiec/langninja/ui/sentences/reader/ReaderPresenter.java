@@ -7,14 +7,14 @@ import javax.inject.Inject;
 import pl.jozefniemiec.langninja.di.sentences.reader.ReaderFragmentScope;
 
 @ReaderFragmentScope
-public class ReaderPresenter implements ReaderFragmentContract.Presenter {
+public class ReaderPresenter implements ReaderContract.Presenter {
 
     private static final String TAG = ReaderPresenter.class.getSimpleName();
-    private final ReaderFragmentContract.View view;
+    private final ReaderContract.View view;
     private String languageCode;
 
     @Inject
-    ReaderPresenter(ReaderFragmentContract.View view) {
+    ReaderPresenter(ReaderContract.View view) {
         this.view = view;
     }
 

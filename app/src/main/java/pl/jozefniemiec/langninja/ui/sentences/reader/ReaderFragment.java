@@ -28,7 +28,7 @@ import pl.jozefniemiec.langninja.utils.Utility;
 
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 
-public class ReaderFragment extends DaggerFragment implements ReaderFragmentContract.View {
+public class ReaderFragment extends DaggerFragment implements ReaderContract.View {
 
     @Inject
     TextToSpeech textToSpeech;
@@ -37,7 +37,7 @@ public class ReaderFragment extends DaggerFragment implements ReaderFragmentCont
     UtteranceProgressListener utteranceProgressListener;
 
     @Inject
-    ReaderFragmentContract.Presenter presenter;
+    ReaderContract.Presenter presenter;
 
     @BindView(R.id.language_card_read_button)
     ImageButton readButton;
@@ -117,7 +117,7 @@ public class ReaderFragment extends DaggerFragment implements ReaderFragmentCont
 
     @Override
     public String getCurrentSentence() {
-        return onReaderFragmentInteractionListener.getSentenceToRead();
+        return onReaderFragmentInteractionListener.getCurrentSentence();
     }
 
     @Override

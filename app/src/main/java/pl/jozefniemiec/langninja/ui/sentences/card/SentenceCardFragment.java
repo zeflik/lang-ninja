@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +26,6 @@ public class SentenceCardFragment extends DaggerFragment
         ViewPager.OnPageChangeListener {
 
     private static final String TAG = SentenceCardFragment.class.getSimpleName();
-    private static final long ANIMATION_DELAY_MILIS = 500;
 
     @Inject
     SentencesPageAdapter languagePageAdapter;
@@ -39,11 +36,6 @@ public class SentenceCardFragment extends DaggerFragment
     @BindView(R.id.language_card_view_pager)
     ViewPager viewPager;
 
-    @BindView(R.id.language_layout_without_spoken_text)
-    ConstraintLayout layout;
-
-    private ConstraintSet layoutNoAnswerSet = new ConstraintSet();
-    private ConstraintSet layoutWithAnswerSet = new ConstraintSet();
     private Unbinder unbinder;
     private OnSentenceCardFragmentInteractionListener listener;
     private String languageCode;
@@ -90,8 +82,6 @@ public class SentenceCardFragment extends DaggerFragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.loadData(languageCode);
-        layoutNoAnswerSet.clone(layout);
-        layoutWithAnswerSet.clone(requireContext(), R.layout.activity_sentence_card_w_spoken_text);
     }
 
     @Override

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseLanguagesListFragment;
-import pl.jozefniemiec.langninja.ui.sentences.SentenceViewerActivity;
+import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
 public class LanguagesFragment extends BaseLanguagesListFragment implements LanguagesFragmentContract.View {
 
@@ -34,7 +34,7 @@ public class LanguagesFragment extends BaseLanguagesListFragment implements Lang
 
     @Override
     public void showLanguageDetails(String languageCode) {
-        Intent intent = new Intent(requireContext(), SentenceViewerActivity.class);
+        Intent intent = new Intent(requireContext(), SentenceCardViewerActivity.class);
         intent.putExtra(LANGUAGE_CODE_KEY, languageCode);
         startActivity(intent);
     }

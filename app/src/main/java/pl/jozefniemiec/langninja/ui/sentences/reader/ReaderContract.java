@@ -2,7 +2,7 @@ package pl.jozefniemiec.langninja.ui.sentences.reader;
 
 import java.util.Locale;
 
-public interface ReaderFragmentContract {
+public interface ReaderContract {
 
     interface View {
 
