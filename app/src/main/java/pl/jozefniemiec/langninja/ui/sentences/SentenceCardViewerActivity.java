@@ -125,7 +125,7 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
     @Override
     public void updateNumbering(int position, int pageCount) {
         String pageCountFormat = getResources().getString(R.string.page_count);
-        sentencePageAnswerTextView.setText(String.format(pageCountFormat, position, pageCount));
+        sentencePageCountTextView.setText(String.format(pageCountFormat, position, pageCount));
     }
 
     private void applyConstraintSetToLayout(ConstraintSet constraintSet) {
