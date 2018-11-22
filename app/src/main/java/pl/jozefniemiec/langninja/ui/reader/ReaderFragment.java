@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -41,6 +42,9 @@ public class ReaderFragment extends DaggerFragment implements ReaderContract.Vie
 
     @BindView(R.id.language_card_read_button)
     ImageButton readButton;
+
+    @BindView(R.id.readerProgressBar)
+    ProgressBar progressBar;
 
     private Unbinder unbinder;
     private String languageCode;
@@ -121,6 +125,16 @@ public class ReaderFragment extends DaggerFragment implements ReaderContract.Vie
     }
 
     @Override
+    public void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgressBar() {
+        getActivity().runOnUiThread(() -> progressBar.setVisibility(View.GONE));
+    }
+
+    @Override
     public boolean isReaderAvailable() {
         return AppUtils.checkForApplication(
                 requireContext(),
@@ -152,7 +166,7 @@ public class ReaderFragment extends DaggerFragment implements ReaderContract.Vie
 
     @Override
     public void showErrorMessage(String message) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+        getActivity().runOnUiThread(() -> Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show());
     }
 
     @Override

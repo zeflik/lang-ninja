@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".ui.reader.ReaderFragment">
 
+    <ProgressBar
+        android:id="@+id/readerProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
     <ImageButton
         android:id="@+id/language_card_read_button"
         android:layout_width="60dp"

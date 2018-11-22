@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.di.reader.ReaderFragmentScope;
 
 @ReaderFragmentScope
@@ -11,11 +12,13 @@ public class ReaderPresenter implements ReaderContract.Presenter {
 
     private static final String TAG = ReaderPresenter.class.getSimpleName();
     private final ReaderContract.View view;
+    private final ResourcesManager resourcesManager;
     private String languageCode;
 
     @Inject
-    ReaderPresenter(ReaderContract.View view) {
+    ReaderPresenter(ReaderContract.View view, ResourcesManager resourcesManager) {
         this.view = view;
+        this.resourcesManager = resourcesManager;
     }
 
     @Override
@@ -34,12 +37,14 @@ public class ReaderPresenter implements ReaderContract.Presenter {
 
     @Override
     public void readButtonClicked() {
+        view.showProgressBar();
         view.read(view.getCurrentSentence());
     }
 
     @Override
     public void onStartOfRead() {
         view.highlightReadButton();
+        view.hideProgressBar();
     }
 
     @Override
@@ -49,8 +54,9 @@ public class ReaderPresenter implements ReaderContract.Presenter {
 
     @Override
     public void onReadError() {
+        view.showErrorMessage(resourcesManager.getNeedInternetConnectionMessage());
         view.unHighlightReadButton();
-        view.showErrorMessage("Error");//resourcesManager.getNeedInternetConnectionMessage());
+        view.hideProgressBar();
     }
 
     @Override
