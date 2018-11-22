@@ -25,6 +25,10 @@ public interface ReaderContract {
         void showTTSInstallDialog();
 
         String getCurrentSentence();
+
+        void showProgressBar();
+
+        void hideProgressBar();
     }
 
     interface Presenter {
