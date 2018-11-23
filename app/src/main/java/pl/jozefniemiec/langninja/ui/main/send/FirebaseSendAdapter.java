@@ -7,18 +7,21 @@ import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
+import pl.jozefniemiec.langninja.data.repository.model.UserSentence;
 import pl.jozefniemiec.langninja.utils.Utility;
 
-class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, SentenceRowHolder> {
+class FirebaseSendAdapter extends FirebaseRecyclerAdapter<UserSentence, SentenceRowHolder> {
 
     private static final String TAG = FirebaseSendAdapter.class.getSimpleName();
 
     private OnClickListener listener;
 
-    FirebaseSendAdapter(FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions) {
+    FirebaseSendAdapter(FirebaseRecyclerOptions<UserSentence> recyclerOptions) {
         super(recyclerOptions);
     }
 
@@ -31,10 +34,20 @@ class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, Sen
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull SentenceRowHolder holder, int position, @NonNull SentenceCandidate model) {
+    protected void onBindViewHolder(@NonNull SentenceRowHolder holder, int position, @NonNull UserSentence model) {
         holder.setFlag(Utility.getLanguageFlagUri(holder.flag.getContext(), model.getLanguageCode()));
         holder.setSentence(model.getSentence());
-        model.setId(getRef(position).getKey());
+        getRef(position).getRoot().child("users/" + model.getCreatedBy() + "/name").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                holder.setAuthor(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         holder.itemView.setOnClickListener(v -> listener.onItemClicked(model));
     }
 
@@ -43,6 +56,6 @@ class FirebaseSendAdapter extends FirebaseRecyclerAdapter<SentenceCandidate, Sen
     }
 
     public interface OnClickListener {
-        void onItemClicked(SentenceCandidate sentenceRowHolder);
+        void onItemClicked(UserSentence sentenceRowHolder);
     }
 }

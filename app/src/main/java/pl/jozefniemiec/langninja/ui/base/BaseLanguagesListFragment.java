@@ -96,6 +96,7 @@ public abstract class BaseLanguagesListFragment extends DaggerFragment implement
             Picasso
                     .with(requireContext())
                     .load(uri)
+                    .noFade()
                     .into(languageFlag);
         }
 

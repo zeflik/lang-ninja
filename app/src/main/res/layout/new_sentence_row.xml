@@ -2,37 +2,121 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
 
     <TextView
-        android:id="@+id/sentenceRowTextView"
+        android:id="@+id/sentenceRowSentenceTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/sentenceRowImageView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/sentenceRowImageView"
-        app:layout_constraintTop_toTopOf="@+id/sentenceRowImageView" />
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:text="sentence"
+        android:textSize="13sp"
+        app:layout_constraintEnd_toStartOf="@+id/sentenceRowImageView"
+        app:layout_constraintStart_toEndOf="@+id/newSentenceRowUserPhoto"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/sentenceRowAuthorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:text="Author"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/sentenceRowImageView"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/sentenceRowSentenceTextView"
+        app:layout_constraintTop_toBottomOf="@+id/sentenceRowSentenceTextView" />
 
     <ImageView
         android:id="@+id/sentenceRowImageView"
-        android:layout_width="60dp"
-        android:layout_height="40dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_width="55dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/shape_flag_background"
+        android:contentDescription="@string/flag"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/sentenceRowTextView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bg_bg" />
+
+    <ImageView
+        android:id="@+id/newSentenceRowUserPhoto"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:background="@drawable/shape_user_photo_background"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bg_bg"
-        android:contentDescription="@string/flag" />
+        app:layout_constraintVertical_bias="0.25" />
+
+    <ImageView
+        android:id="@+id/newSentenceRowCalendarIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_calendar"
+        app:layout_constraintBottom_toBottomOf="@+id/newSentenceRowCommentTextView"
+        app:layout_constraintStart_toEndOf="@+id/newSentenceRowCommentTextView"
+        app:layout_constraintTop_toTopOf="@+id/newSentenceRowCommentTextView" />
+
+    <TextView
+        android:id="@+id/newSentenceRowCalendarTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="15"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        app:layout_constraintBottom_toBottomOf="@+id/newSentenceRowCalendarIcon"
+        app:layout_constraintStart_toEndOf="@+id/newSentenceRowCalendarIcon"
+        app:layout_constraintTop_toTopOf="@+id/newSentenceRowCalendarIcon" />
+
+    <ImageView
+        android:id="@+id/newSentenceRowCommentIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_comment"
+        app:layout_constraintBottom_toBottomOf="@+id/newSentenceRowThumbsTextView"
+        app:layout_constraintStart_toEndOf="@+id/newSentenceRowThumbsTextView"
+        app:layout_constraintTop_toTopOf="@+id/newSentenceRowThumbsTextView" />
+
+    <TextView
+        android:id="@+id/newSentenceRowCommentTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="15"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        app:layout_constraintBottom_toBottomOf="@+id/newSentenceRowCommentIcon"
+        app:layout_constraintStart_toEndOf="@+id/newSentenceRowCommentIcon"
+        app:layout_constraintTop_toTopOf="@+id/newSentenceRowCommentIcon" />
+
+    <ImageView
+        android:id="@+id/newSentenceRowThumbsIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:src="@drawable/ic_thumbs_up_down"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/sentenceRowAuthorTextView"
+        app:layout_constraintTop_toBottomOf="@+id/sentenceRowAuthorTextView" />
+
+    <TextView
+        android:id="@+id/newSentenceRowThumbsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="15"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        app:layout_constraintBottom_toBottomOf="@+id/newSentenceRowThumbsIcon"
+        app:layout_constraintStart_toEndOf="@+id/newSentenceRowThumbsIcon"
+        app:layout_constraintTop_toTopOf="@+id/newSentenceRowThumbsIcon" />
 
 </android.support.constraint.ConstraintLayout>

@@ -6,7 +6,7 @@ import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.SentenceCandidateRepository;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
-import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
+import pl.jozefniemiec.langninja.data.repository.model.UserSentence;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
 import pl.jozefniemiec.langninja.service.AuthService;
 
@@ -46,9 +46,9 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
             view.showErrorMessage("Wprowadź tekst!");
             return;
         }
-        SentenceCandidate sentenceCandidate = new SentenceCandidate(sentence, langCode);
         String currentUserUid = authService.getCurrentUserUid();
-        sentenceCandidateRepository.insertByUserUid(currentUserUid, sentenceCandidate);
+        UserSentence sentenceCandidate = new UserSentence(sentence, langCode, currentUserUid);
+        sentenceCandidateRepository.insert(sentenceCandidate);
         view.close();
     }
 

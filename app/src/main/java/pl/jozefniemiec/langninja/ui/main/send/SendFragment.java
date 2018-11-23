@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,7 +30,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
+import pl.jozefniemiec.langninja.data.repository.model.UserSentence;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
@@ -88,6 +89,9 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     @Override
     public void onViewCreated(@NonNull android.view.View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.addItemDecoration(
+                new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+        );
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         floatingActionButton.setOnClickListener(v -> openNewSentencePage());
         auth = FirebaseAuth.getInstance();
@@ -105,8 +109,8 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     }
 
     public void showData() {
-        FirebaseRecyclerOptions<SentenceCandidate> recyclerOptions = new FirebaseRecyclerOptions.Builder<SentenceCandidate>()
-                .setQuery(dbSentencesRef.child(auth.getUid()), SentenceCandidate.class)
+        FirebaseRecyclerOptions<UserSentence> recyclerOptions = new FirebaseRecyclerOptions.Builder<UserSentence>()
+                .setQuery(dbSentencesRef, UserSentence.class)
                 .build();
         adapter = new FirebaseSendAdapter(recyclerOptions);
         adapter.setListener(sentenceCandidate -> {

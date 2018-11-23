@@ -6,7 +6,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.SentenceCandidateRepository;
-import pl.jozefniemiec.langninja.data.repository.model.SentenceCandidate;
+import pl.jozefniemiec.langninja.data.repository.model.UserSentence;
 
 public class FirebaseRealtimeDatabaseService implements SentenceCandidateRepository {
 
@@ -18,7 +18,12 @@ public class FirebaseRealtimeDatabaseService implements SentenceCandidateReposit
     }
 
     @Override
-    public void insertByUserUid(String userUid, SentenceCandidate sentenceCandidate) {
+    public void insertByUserUid(String userUid, UserSentence sentenceCandidate) {
         databaseReference.child(userUid).push().setValue(sentenceCandidate);
+    }
+
+    @Override
+    public void insert(UserSentence sentenceCandidate) {
+        databaseReference.push().setValue(sentenceCandidate);
     }
 }

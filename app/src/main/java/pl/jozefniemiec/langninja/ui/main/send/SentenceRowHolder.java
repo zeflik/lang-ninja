@@ -17,8 +17,11 @@ public class SentenceRowHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.sentenceRowImageView)
     ImageView flag;
 
-    @BindView(R.id.sentenceRowTextView)
+    @BindView(R.id.sentenceRowSentenceTextView)
     TextView sentenceTextView;
+
+    @BindView(R.id.sentenceRowAuthorTextView)
+    TextView authorTextView;
 
     SentenceRowHolder(View itemView) {
         super(itemView);
@@ -34,5 +37,9 @@ public class SentenceRowHolder extends RecyclerView.ViewHolder {
 
     public void setSentence(String sentence) {
         this.sentenceTextView.setText(sentence);
+    }
+
+    public void setAuthor(String name) {
+        authorTextView.setText(name);
     }
 }
