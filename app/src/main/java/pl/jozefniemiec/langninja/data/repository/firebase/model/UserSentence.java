@@ -1,9 +1,11 @@
-package pl.jozefniemiec.langninja.data.repository.model;
+package pl.jozefniemiec.langninja.data.repository.firebase.model;
 
 import android.support.annotation.NonNull;
 
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
+
+import pl.jozefniemiec.langninja.data.repository.model.Sentence;
 
 public class UserSentence extends Sentence {
 
@@ -85,5 +87,18 @@ public class UserSentence extends Sentence {
 
     public void setDateCreated(Object dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    @Override
+    public String toString() {
+        return "UserSentence{" +
+                "key='" + key + '\'' +
+                ", createdBy='" + createdBy + '\'' +
+                ", publicVisibility=" + publicVisibility +
+                ", dateEdited='" + dateEdited + '\'' +
+                ", dateCreated=" + dateCreated +
+                ", likes=" + likes +
+                ", comments=" + comments +
+                '}';
     }
 }

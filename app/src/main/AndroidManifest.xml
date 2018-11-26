@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:name=".LangNinjaApplication"
         android:allowBackup="true"
@@ -22,6 +27,9 @@
         </activity>
         <activity android:name=".ui.creator.SentenceCreator" />
         <activity android:name=".ui.sentences.SentenceCardViewerActivity" />
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:label="@string/title_activity_login" />
     </application>
 
 </manifest>

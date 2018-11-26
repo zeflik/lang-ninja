@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 
-public class SentenceRowHolder extends RecyclerView.ViewHolder {
+public class SentenceRowHolder extends RecyclerView.ViewHolder implements UserSentenceItemView {
 
     @BindView(R.id.sentenceRowImageView)
     ImageView flag;

@@ -65,12 +65,23 @@
     <string name="text_hint">Wprowadź tekst…</string>
     <string name="pick_language">Wybierz język…</string>
     <string name="test">Testuj</string>
-
     <!--play store-->
     <string name="app_market_link">"market://details?id="</string>
     <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
     <string name="app_package_name">pl.jozefniemiec.langninja</string>
     <string name="google_speech_package_name">com.google.android.googlequicksearchbox</string>
     <string name="google_tts_package_name">com.google.android.tts</string>
+    <string name="title_activity_login">Sign in</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">e-mail</string>
+    <string name="prompt_password">Hasło</string>
+    <string name="action_sign_in">Rejestracja lub logowanie</string>
+    <string name="action_sign_in_short">Logowanie</string>
+    <string name="error_invalid_email">Niewłaściwy adres e-mail</string>
+    <string name="error_invalid_password">Hasło jest za krótkie</string>
+    <string name="error_incorrect_password">Niewłaściwe hasło</string>
+    <string name="error_field_required">To pole jest wymagane</string>
+    <string name="login">Zaloguj</string>
+    <string name="button_different_login_options">Pozostałe opcje logowania</string>
 
 </resources>

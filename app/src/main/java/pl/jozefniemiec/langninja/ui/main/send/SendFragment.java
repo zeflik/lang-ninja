@@ -4,24 +4,21 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -30,33 +27,23 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.data.repository.model.UserSentence;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
 
 public class SendFragment extends DaggerFragment implements SendFragmentContract.View {
 
     private static final String TAG = SendFragment.class.getSimpleName();
-    private static final String ANONYMOUS = "anonymous";
     private static final int RC_SIGN_IN = 1;
-    public static final String USER_UID = "User UID";
 
     @BindView(R.id.floatingActionButtonAddSentence)
     FloatingActionButton floatingActionButton;
 
     @BindView(R.id.sendSentencesRecyclerView)
     RecyclerView recyclerView;
-
-    @BindView(R.id.loginPage)
-    ConstraintLayout loginPage;
-
-    @BindView(R.id.loginButton)
-    Button loginButton;
 
     @BindView(R.id.logoffButton)
     Button logoffButton;
@@ -65,9 +52,8 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     SendFragmentContract.Presenter presenter;
 
     private Unbinder unbinder;
-    private FirebaseSendAdapter adapter;
+    private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
     private FirebaseAuth auth;
-    private FirebaseAuth.AuthStateListener authStateListener;
 
     private DatabaseReference dbSentencesRef = FirebaseDatabase.getInstance().getReference("sentence");
 
@@ -83,81 +69,42 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
                                           Bundle savedInstanceState) {
         android.view.View view = inflater.inflate(R.layout.fragment_send, container, false);
         unbinder = ButterKnife.bind(this, view);
+        adapter.setListener(userSentence -> {
+            Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
+            intent.putExtra(LANGUAGE_CODE_KEY, userSentence.getLanguageCode());
+            intent.putExtra(SENTENCE_KEY, userSentence.getSentence());
+            startActivity(intent);
+        });
+        presenter.loadData(null);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull android.view.View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         );
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(adapter);
         floatingActionButton.setOnClickListener(v -> openNewSentencePage());
         auth = FirebaseAuth.getInstance();
-        loginButton.setOnClickListener(v -> presenter.loginButtonClicked());
-        authStateListener = firebaseAuth -> {
-            FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user != null) {
-                presenter.onLoginSucceed(auth.getCurrentUser().getDisplayName());
-            } else {
-                presenter.onLoginFailed();
-            }
-        };
-        auth.addAuthStateListener(authStateListener);
         logoffButton.setOnClickListener(v -> auth.signOut());
     }
 
-    public void showData() {
-        FirebaseRecyclerOptions<UserSentence> recyclerOptions = new FirebaseRecyclerOptions.Builder<UserSentence>()
-                .setQuery(dbSentencesRef, UserSentence.class)
-                .build();
-        adapter = new FirebaseSendAdapter(recyclerOptions);
-        adapter.setListener(sentenceCandidate -> {
-            Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
-            intent.putExtra(LANGUAGE_CODE_KEY, sentenceCandidate.getLanguageCode());
-            intent.putExtra(SENTENCE_KEY, sentenceCandidate.getSentence());
-            startActivity(intent);
-        });
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
-    }
-
-    public void listenForNewData() {
-        if (adapter != null) {
-            adapter.startListening();
-        }
-    }
-
-    public void stopListenForNewData() {
-        if (adapter != null) {
-            adapter.stopListening();
-        }
+    public void showData(List<UserSentence> userSentences) {
+        Log.d(TAG, "onDataChange called form view" + userSentences);
+        adapter.addUserSententes(userSentences);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
-    public void showLoginInfo() {
-        floatingActionButton.setVisibility(android.view.View.GONE);
-        loginPage.setVisibility(android.view.View.VISIBLE);
-    }
-
-    @Override
-    public void hideLoginInfo() {
-        floatingActionButton.setVisibility(android.view.View.VISIBLE);
-        loginPage.setVisibility(android.view.View.GONE);
-    }
-
-    @Override
-    public void showLoginPage() {
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(Arrays.asList(
-                                new AuthUI.IdpConfig.EmailBuilder().build(),
-                                new AuthUI.IdpConfig.GoogleBuilder().build()
-                        ))
-                        .build(),
-                RC_SIGN_IN);
+    public void addData(UserSentence userSentence) {
+        adapter.addUserSentente(userSentence);
     }
 
     private void openNewSentencePage() {
@@ -168,16 +115,12 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     @Override
     public void onResume() {
         super.onResume();
-        auth.addAuthStateListener(authStateListener);
         presenter.onViewVisible();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (authStateListener != null) {
-            auth.removeAuthStateListener(authStateListener);
-        }
         presenter.onViewInvisible();
     }
 
@@ -185,17 +128,5 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            if (resultCode == RESULT_OK) {
-                presenter.onLoginSucceed(Objects.requireNonNull(auth.getCurrentUser().getDisplayName()));
-            } else if (resultCode == RESULT_CANCELED) {
-                presenter.onLoginFailed();
-            }
-        }
     }
 }

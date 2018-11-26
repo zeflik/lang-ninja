@@ -1,12 +1,10 @@
 package pl.jozefniemiec.langninja.ui.creator;
 
-import android.util.Log;
-
 import javax.inject.Inject;
 
-import pl.jozefniemiec.langninja.data.repository.SentenceCandidateRepository;
+import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
-import pl.jozefniemiec.langninja.data.repository.model.UserSentence;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
 import pl.jozefniemiec.langninja.service.AuthService;
 
@@ -17,12 +15,12 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
     private final static String AUTH_ERROR_MESSAGE = "Creating sentence candidates only for authenticated users.";
     private final SentenceCreatorContract.View view;
     private final AuthService authService;
-    private final SentenceCandidateRepository sentenceCandidateRepository;
+    private final UserSentenceRepository sentenceCandidateRepository;
 
     @Inject
     SentenceCreatorPresenter(SentenceCreatorContract.View view,
                              AuthService authService,
-                             SentenceCandidateRepository sentenceCandidateRepository) {
+                             UserSentenceRepository sentenceCandidateRepository) {
         this.view = view;
         this.authService = authService;
         this.sentenceCandidateRepository = sentenceCandidateRepository;
@@ -30,10 +28,7 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
 
     @Override
     public void onViewCreated() {
-        if (!authService.checkSignInStatus()) {
-            Log.e(TAG, AUTH_ERROR_MESSAGE);
-            view.close();
-        }
+
     }
 
     @Override

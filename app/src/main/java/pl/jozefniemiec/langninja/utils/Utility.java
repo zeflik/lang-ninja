@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.util.DisplayMetrics;
 import android.widget.ImageButton;
@@ -46,5 +48,14 @@ public class Utility {
 
     public static void unHighlightButton(Activity activity, ImageButton imageButton) {
         activity.runOnUiThread(() -> imageButton.getBackground().clearColorFilter());
+    }
+
+    public static boolean isNetworkAvailable(Context context) {
+        if (context == null) {
+            return false;
+        }
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

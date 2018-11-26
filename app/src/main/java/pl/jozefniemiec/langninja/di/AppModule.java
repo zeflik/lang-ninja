@@ -8,8 +8,8 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
-import pl.jozefniemiec.langninja.data.repository.SentenceCandidateRepository;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.FirebaseRealtimeDatabaseService;
 import pl.jozefniemiec.langninja.data.repository.room.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.room.RoomSentenceRepository;
@@ -36,7 +36,7 @@ abstract class AppModule {
     abstract SentenceRepository bindSentenceRepository(RoomSentenceRepository repository);
 
     @Binds
-    abstract SentenceCandidateRepository bindSentenceCandidateRepository(FirebaseRealtimeDatabaseService db);
+    abstract UserSentenceRepository bindSentenceCandidateRepository(FirebaseRealtimeDatabaseService db);
 
     @Binds
     abstract AuthService bindAuthService(FirebaseAuthService authService);

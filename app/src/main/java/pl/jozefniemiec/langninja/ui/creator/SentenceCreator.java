@@ -21,9 +21,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
 import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListFragment;
 import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListListener;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
@@ -32,7 +32,7 @@ import pl.jozefniemiec.langninja.utils.Utility;
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
 
-public class SentenceCreator extends DaggerAppCompatActivity
+public class SentenceCreator extends BaseSecuredActivity
         implements SentenceCreatorContract.View, LanguagesListListener {
 
     @BindView(R.id.sentenceCandidateLangNameTextView)
@@ -86,7 +86,7 @@ public class SentenceCreator extends DaggerAppCompatActivity
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
     }
@@ -161,7 +161,11 @@ public class SentenceCreator extends DaggerAppCompatActivity
 
     @Override
     public void close() {
-        hideKeyboard();
+        try {
+            hideKeyboard();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         finish();
     }
 
@@ -172,7 +176,7 @@ public class SentenceCreator extends DaggerAppCompatActivity
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         hideKeyboard();
     }

@@ -1,20 +1,16 @@
 package pl.jozefniemiec.langninja.ui.main.send;
 
+import java.util.List;
+
+import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+
 public interface SendFragmentContract {
 
     interface View {
 
-        void showData();
+        void showData(List<UserSentence> userSentences);
 
-        void listenForNewData();
-
-        void stopListenForNewData();
-
-        void showLoginInfo();
-
-        void hideLoginInfo();
-
-        void showLoginPage();
+        void addData(UserSentence userSentence);
     }
 
     interface Presenter {
@@ -23,11 +19,7 @@ public interface SendFragmentContract {
 
         void onViewInvisible();
 
-        void loginButtonClicked();
-
-        void onLoginSucceed(String firebaseUserName);
-
-        void onLoginFailed();
+        void loadData(String userUid);
     }
 
 }
