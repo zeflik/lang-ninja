@@ -2,7 +2,6 @@ package pl.jozefniemiec.langninja.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 
 import com.firebase.ui.auth.AuthUI;
@@ -14,9 +13,10 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
 
-public class LoginActivity extends AppCompatActivity implements LoginActivityContract.View {
+public class LoginActivity extends DaggerAppCompatActivity implements LoginActivityContract.View {
 
     private static final int RC_SIGN_IN = 1;
 

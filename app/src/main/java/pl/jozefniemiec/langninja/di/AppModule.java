@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -24,6 +26,11 @@ abstract class AppModule {
     @Provides
     static Resources provideResources(Application application) {
         return application.getResources();
+    }
+
+    @Provides
+    static FirebaseAuth providesFirebaseAuth() {
+        return FirebaseAuth.getInstance();
     }
 
     @Binds
