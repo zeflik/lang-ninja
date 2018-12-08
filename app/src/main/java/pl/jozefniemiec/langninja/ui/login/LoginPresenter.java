@@ -19,10 +19,11 @@ public class LoginPresenter implements LoginActivityContract.Presenter {
 
     @Override
     public void onCreate() {
-        //TODO add internet connection check
         authStateListener = firebaseAuth -> {
             FirebaseUser user = firebaseAuth.getCurrentUser();
-            if (user != null) {
+            if (user == null) {
+                view.login();
+            } else {
                 view.close();
             }
         };
@@ -41,23 +42,23 @@ public class LoginPresenter implements LoginActivityContract.Presenter {
     }
 
     @Override
-    public void onEmailSignInClicked() {
-        //TODO
-        view.close();
-    }
-
-    @Override
-    public void onAutoSignInClicked() {
-        view.showAutoSignInPage();
-    }
-
-    @Override
     public void onLoginSucceed() {
         view.close();
     }
 
     @Override
     public void onLoginFailed() {
-        //TODO
+        view.showLoginErrorMessage();
+        view.login();
+    }
+
+    @Override
+    public void onMissingInternetConnection() {
+        view.showNeedInternetDialog();
+    }
+
+    @Override
+    public void refreshInternetButtonClicked() {
+        view.login();
     }
 }

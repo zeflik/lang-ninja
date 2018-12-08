@@ -1,12 +1,18 @@
 package pl.jozefniemiec.langninja.ui.login;
 
+import pl.jozefniemiec.langninja.ui.base.BaseContract;
+
 public interface LoginActivityContract {
 
-    interface View {
+    interface View extends BaseContract.view {
+
+        void login();
 
         void close();
 
-        void showAutoSignInPage();
+        void showNeedInternetDialog();
+
+        void showLoginErrorMessage();
     }
 
     interface Presenter {
@@ -17,12 +23,12 @@ public interface LoginActivityContract {
 
         void onPause();
 
-        void onEmailSignInClicked();
-
-        void onAutoSignInClicked();
-
         void onLoginSucceed();
 
         void onLoginFailed();
+
+        void onMissingInternetConnection();
+
+        void refreshInternetButtonClicked();
     }
 }
