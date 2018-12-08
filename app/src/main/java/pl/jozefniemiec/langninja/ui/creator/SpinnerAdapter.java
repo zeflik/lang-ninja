@@ -36,13 +36,13 @@ public class SpinnerAdapter extends ArrayAdapter<Language> {
         return initView(position, convertView, parent);
     }
 
-    private View initView(int position, View convertView, ViewGroup parent){
+    private View initView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.languages_spinner_row, parent, false);
         }
         SpinnerRowHolder holder = new SpinnerRowHolder(convertView);
-        holder.setFlag(Utility.getLanguageFlagUri(getContext(),Objects.requireNonNull(getItem(position)).getCode()));
+        holder.setFlag(Utility.getLanguageFlagUri(getContext(), Objects.requireNonNull(getItem(position)).getCode()));
         holder.setLangName(Objects.requireNonNull(getItem(position)).getNativeName());
         return convertView;
     }

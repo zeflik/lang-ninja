@@ -1,4 +1,3 @@
-
 package pl.jozefniemiec.langninja.utils;
 
 import android.content.Context;
