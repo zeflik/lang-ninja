@@ -2,7 +2,6 @@ package pl.jozefniemiec.langninja.di.main.languages;
 
 import android.content.Context;
 import android.support.v7.widget.GridLayoutManager;
-import android.view.View;
 
 import dagger.Binds;
 import dagger.Module;
@@ -13,7 +12,7 @@ import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragmentPresenter;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 @Module
-public abstract class LanguagesFragmentModule {
+abstract class LanguagesFragmentModule {
 
     @Provides
     @LanguagesFragmentScope
@@ -21,10 +20,6 @@ public abstract class LanguagesFragmentModule {
         int numberOfColumns = Utility.calculateNoOfColumns(context);
         return new GridLayoutManager(context, numberOfColumns);
     }
-
-    @Binds
-    @LanguagesFragmentScope
-    abstract View.OnClickListener provideOnClickListener(LanguagesFragment homeFragment);
 
     @Binds
     @LanguagesFragmentScope

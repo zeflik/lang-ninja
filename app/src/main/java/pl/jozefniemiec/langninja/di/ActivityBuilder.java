@@ -4,7 +4,6 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorModule;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
-import pl.jozefniemiec.langninja.di.creator.languageslist.LanguagesListFragmentProvider;
 import pl.jozefniemiec.langninja.di.login.LoginActivityModule;
 import pl.jozefniemiec.langninja.di.login.LoginActivityScope;
 import pl.jozefniemiec.langninja.di.main.MainActivityModule;
@@ -44,8 +43,7 @@ abstract class ActivityBuilder {
 
     @ContributesAndroidInjector(modules = {
             SentenceCreatorModule.class,
-            LanguagesFragmentProvider.class,
-            LanguagesListFragmentProvider.class})
+            LanguagesFragmentProvider.class})
     @SentenceCreatorScope
     abstract SentenceCreator bindSentenceCreator();
 
