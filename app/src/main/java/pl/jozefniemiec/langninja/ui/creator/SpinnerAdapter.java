@@ -10,12 +10,17 @@ import android.widget.ArrayAdapter;
 
 import java.util.Objects;
 
+import javax.inject.Inject;
+
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
 import pl.jozefniemiec.langninja.utils.Utility;
 
+@SentenceCreatorScope
 public class SpinnerAdapter extends ArrayAdapter<Language> {
 
+    @Inject
     SpinnerAdapter(@NonNull Context context) {
         super(context, 0);
     }
@@ -31,7 +36,7 @@ public class SpinnerAdapter extends ArrayAdapter<Language> {
         return initView(position, convertView, parent);
     }
 
-    private View initView(int position, View convertView,ViewGroup parent){
+    private View initView(int position, View convertView, ViewGroup parent){
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.languages_spinner_row, parent, false);

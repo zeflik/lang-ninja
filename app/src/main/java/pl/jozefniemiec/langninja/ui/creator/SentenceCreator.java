@@ -43,6 +43,7 @@ public class SentenceCreator extends BaseSecuredActivity
     @Inject
     SentenceCreatorContract.Presenter presenter;
 
+    @Inject
     SpinnerAdapter spinnerAdapter;
 
     private InputMethodManager imm;
@@ -59,7 +60,6 @@ public class SentenceCreator extends BaseSecuredActivity
 
     @Override
     public void initializeSpinner(List<Language> languages) {
-        spinnerAdapter = new SpinnerAdapter(this);
         spinnerAdapter.addAll(languages);
         languagesSpinner.setAdapter(spinnerAdapter);
     }
