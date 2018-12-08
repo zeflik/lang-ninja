@@ -19,8 +19,8 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 
-import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
-import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
 public class SentenceCardFragment extends DaggerFragment
         implements

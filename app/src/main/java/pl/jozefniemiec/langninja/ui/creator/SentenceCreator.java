@@ -2,25 +2,15 @@ package pl.jozefniemiec.langninja.ui.creator;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,8 +22,8 @@ import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
-import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
-import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
 public class SentenceCreator extends BaseSecuredActivity
         implements SentenceCreatorContract.View {

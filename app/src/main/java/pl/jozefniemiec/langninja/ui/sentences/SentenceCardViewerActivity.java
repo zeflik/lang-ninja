@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.ui.base.Constants;
 import pl.jozefniemiec.langninja.ui.reader.OnReaderFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
 import pl.jozefniemiec.langninja.ui.sentences.card.OnSentenceCardFragmentInteractionListener;
@@ -24,7 +25,7 @@ import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardFragment;
 import pl.jozefniemiec.langninja.ui.speech.OnSpeechRecognitionFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
 
-import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 
 public class SentenceCardViewerActivity extends DaggerAppCompatActivity
         implements
@@ -32,9 +33,6 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
         OnReaderFragmentInteractionListener,
         OnSpeechRecognitionFragmentInteractionListener,
         OnSentenceCardFragmentInteractionListener {
-
-    private static final long ANIMATION_DELAY_MILIS = 500;
-    public static final String SENTENCE_KEY = "Sentence key";
 
     @BindView(R.id.sentencePageCount)
     TextView sentencePageCountTextView;
@@ -67,7 +65,7 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
             throw new RuntimeException(this.toString()
                     + ": language code missing in intent");
         }
-        sentence = getIntent().getStringExtra(SENTENCE_KEY);
+        sentence = getIntent().getStringExtra(Constants.SENTENCE_KEY);
         attachFragments();
         presenter.onViewCreated();
     }
@@ -135,7 +133,7 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
         new Handler().postDelayed(() -> {
             TransitionManager.beginDelayedTransition(layout);
             constraintSet.applyTo(layout);
-        }, ANIMATION_DELAY_MILIS);
+        }, Constants.ANIMATION_DELAY_MILIS);
     }
 
     private void changeTextViewBackground(TextView textView, int color) {

@@ -27,7 +27,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.utils.AppUtils;
 import pl.jozefniemiec.langninja.utils.Utility;
 
-import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 
 public class ReaderFragment extends DaggerFragment implements ReaderContract.View {
 

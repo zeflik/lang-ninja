@@ -24,9 +24,10 @@ import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 import pl.jozefniemiec.langninja.utils.Utility;
 
+import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
+
 public class LanguagesFragment extends DaggerFragment implements LanguagesFragmentContract.View {
 
-    public static final String LANGUAGE_CODE_KEY = "Language Code";
     private Unbinder unbinder;
 
     @BindView(R.id.rvNumbers)
