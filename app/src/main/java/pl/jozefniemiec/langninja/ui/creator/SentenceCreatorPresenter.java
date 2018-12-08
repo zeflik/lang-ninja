@@ -2,6 +2,7 @@ package pl.jozefniemiec.langninja.ui.creator;
 
 import javax.inject.Inject;
 
+import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
@@ -12,28 +13,29 @@ import pl.jozefniemiec.langninja.service.AuthService;
 public class SentenceCreatorPresenter implements SentenceCreatorContract.Presenter {
 
     private final static String TAG = SentenceCreatorPresenter.class.getSimpleName();
-    private final static String AUTH_ERROR_MESSAGE = "Creating sentence candidates only for authenticated users.";
     private final SentenceCreatorContract.View view;
     private final AuthService authService;
     private final UserSentenceRepository sentenceCandidateRepository;
+    private final LanguageRepository languageRepository;
 
     @Inject
     SentenceCreatorPresenter(SentenceCreatorContract.View view,
                              AuthService authService,
-                             UserSentenceRepository sentenceCandidateRepository) {
+                             UserSentenceRepository sentenceCandidateRepository, LanguageRepository languageRepository) {
         this.view = view;
         this.authService = authService;
         this.sentenceCandidateRepository = sentenceCandidateRepository;
+        this.languageRepository = languageRepository;
     }
 
     @Override
     public void onViewCreated() {
-
+        view.initializeSpinner(languageRepository.getAll());
     }
 
     @Override
-    public void onCreateButtonClicked(String langCode, String sentence) {
-        if (langCode == null) {
+    public void onCreateButtonClicked(Language language, String sentence) {
+        if (language == null) {
             view.showErrorMessage("Wybierz język!");
             return;
         }
@@ -42,27 +44,14 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
             return;
         }
         String currentUserUid = authService.getCurrentUserUid();
-        UserSentence sentenceCandidate = new UserSentence(sentence, langCode, currentUserUid);
+        UserSentence sentenceCandidate = new UserSentence(sentence, language.getCode(), currentUserUid);
         sentenceCandidateRepository.insert(sentenceCandidate);
         view.close();
     }
 
     @Override
-    public void onFlagImageButtonClicked() {
-        view.hideKeyboard();
-        view.showLanguagesListWindow();
-    }
-
-    @Override
-    public void onLanguagePicked(Language language) {
-        view.hideLanguagesListWindow();
-        view.showLanguageData(language);
-        view.showKeyboard();
-    }
-
-    @Override
-    public void onTestButtonClicked(String langCode, String sentence) {
-        if (langCode == null) {
+    public void onTestButtonClicked(Language language, String sentence) {
+        if (language == null) {
             view.showErrorMessage("Wybierz język!");
             return;
         }
@@ -70,6 +59,6 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
             view.showErrorMessage("Wprowadź tekst!");
             return;
         }
-        view.showSentenceCard(langCode, sentence);
+        view.showSentenceCard(language.getCode(), sentence);
     }
 }

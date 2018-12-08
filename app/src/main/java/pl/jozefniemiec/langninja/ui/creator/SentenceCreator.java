@@ -8,14 +8,20 @@ import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -24,19 +30,13 @@ import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
-import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListFragment;
-import pl.jozefniemiec.langninja.ui.creator.languageslist.LanguagesListListener;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
-import pl.jozefniemiec.langninja.utils.Utility;
 
 import static pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity.SENTENCE_KEY;
 
 public class SentenceCreator extends BaseSecuredActivity
-        implements SentenceCreatorContract.View, LanguagesListListener {
-
-    @BindView(R.id.sentenceCandidateLangNameTextView)
-    TextView langNameTextView;
+        implements SentenceCreatorContract.View {
 
     @BindView(R.id.sentenceCandidateTextInput)
     EditText sentenceTextInput;
@@ -47,18 +47,15 @@ public class SentenceCreator extends BaseSecuredActivity
     @BindView(R.id.sentenceCandidateTestButton)
     Button sentenceTestButton;
 
-    @BindView(R.id.sentenceCandidateFlag)
-    ImageButton flagImageButton;
-
-    @BindView(R.id.sentenceCandidateFragmentContainer)
-    FrameLayout frameLayout;
+    @BindView(R.id.languages_spinner)
+    Spinner languagesSpinner;
 
     @Inject
     SentenceCreatorContract.Presenter presenter;
 
-    private String langCode;
-    private InputMethodManager imm;
+    SpinnerAdapter spinnerAdapter;
 
+    private InputMethodManager imm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,18 +67,30 @@ public class SentenceCreator extends BaseSecuredActivity
         presenter.onViewCreated();
     }
 
+    @Override
+    public void initializeSpinner(List<Language> languages) {
+        spinnerAdapter = new SpinnerAdapter(this);
+        spinnerAdapter.addAll(languages);
+        languagesSpinner.setAdapter(spinnerAdapter);
+    }
+
     private void enableDoneButtonForMultilineEditText() {
         sentenceTextInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
         sentenceTextInput.setRawInputType(InputType.TYPE_CLASS_TEXT);
     }
 
     private void attachListeners() {
-        flagImageButton.setOnClickListener(v -> presenter.onFlagImageButtonClicked());
         sentenceCreateButton.setOnClickListener(v ->
-                presenter.onCreateButtonClicked(langCode, sentenceTextInput.getText().toString())
+                presenter.onCreateButtonClicked(
+                        (Language) languagesSpinner.getSelectedItem(),
+                        sentenceTextInput.getText().toString()
+                )
         );
         sentenceTestButton.setOnClickListener(v ->
-                presenter.onTestButtonClicked(langCode, sentenceTextInput.getText().toString())
+                presenter.onTestButtonClicked(
+                        (Language) languagesSpinner.getSelectedItem(),
+                        sentenceTextInput.getText().toString()
+                )
         );
     }
 
@@ -92,55 +101,11 @@ public class SentenceCreator extends BaseSecuredActivity
     }
 
     @Override
-    public void showLanguagesListWindow() {
-        frameLayout.setVisibility(View.VISIBLE);
-        startLanguagesListForResult();
-    }
-
-    public void startLanguagesListForResult() {
-        LanguagesListFragment languagesFragment = LanguagesListFragment.newInstance();
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.sentenceCandidateFragmentContainer, languagesFragment)
-                .addToBackStack(this.getClass().getSimpleName())
-                .commit();
-    }
-
-    public void hideLanguagesListWindow() {
-        frameLayout.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onLanguagesListResult(Language language) {
-        presenter.onLanguagePicked(language);
-    }
-
-    @Override
-    public void showLanguageData(Language language) {
-        langCode = language.getCode();
-        setLangName(language.getNativeName());
-        setFlag(Utility.getLanguageFlagUri(this, langCode));
-    }
-
-    @Override
     public void showSentenceCard(String langCode, String sentence) {
         Intent intent = new Intent(this, SentenceCardViewerActivity.class);
         intent.putExtra(LANGUAGE_CODE_KEY, langCode);
         intent.putExtra(SENTENCE_KEY, sentence);
         startActivity(intent);
-    }
-
-    private void setLangName(String name) {
-        langNameTextView.setText(name);
-    }
-
-    private void setFlag(Uri uri) {
-        Picasso
-                .with(this)
-                .load(uri)
-                .centerCrop()
-                .resize(flagImageButton.getMeasuredWidth(), flagImageButton.getMeasuredHeight())
-                .into(flagImageButton);
     }
 
     @Override
@@ -167,12 +132,6 @@ public class SentenceCreator extends BaseSecuredActivity
             e.printStackTrace();
         }
         finish();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        hideLanguagesListWindow();
     }
 
     @Override

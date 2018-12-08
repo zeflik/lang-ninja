@@ -6,69 +6,57 @@
     android:layout_height="match_parent"
     tools:context=".ui.creator.SentenceCreator">
 
-
-    <ImageButton
-        android:id="@+id/sentenceCandidateFlag"
-        android:layout_width="100dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/shape_flag_background"
-        android:contentDescription="@string/flag"
-        android:cropToPadding="false"
-        android:src="@android:drawable/ic_input_add"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/sentenceCandidateLangNameTextView"
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/languages_spinner"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="@string/pick_language"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/sentenceCandidateTextInput"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sentenceCandidateFlag" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <EditText
         android:id="@+id/sentenceCandidateTextInput"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_margin="16dp"
         android:background="@drawable/shape_textinput_background"
         android:hint="@string/text_hint"
         android:inputType="textMultiLine"
         android:minEms="10"
+        app:layout_constraintBottom_toTopOf="@+id/sentenceCandidateSendButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sentenceCandidateLangNameTextView" />
+        app:layout_constraintTop_toBottomOf="@+id/languages_spinner" />
 
     <Button
         android:id="@+id/sentenceCandidateSendButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="24dp"
         android:background="@color/colorPrimary"
         android:text="@string/send_button"
         android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/sentenceCandidateTestButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sentenceCandidateTextInput"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/sentenceCandidateTextInput" />
 
     <Button
         android:id="@+id/sentenceCandidateTestButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="24dp"
         android:background="@color/colorPrimary"
         android:text="@string/test"
         android:textColor="@android:color/white"
@@ -76,16 +64,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sentenceCandidateSendButton"
-        app:layout_constraintVertical_bias="0.0" />
-
-
-    <FrameLayout
-        android:id="@+id/sentenceCandidateFragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:elevation="2dp"
-        android:visibility="gone" />
+        app:layout_constraintTop_toBottomOf="@+id/sentenceCandidateSendButton" />
 
 </android.support.constraint.ConstraintLayout>
