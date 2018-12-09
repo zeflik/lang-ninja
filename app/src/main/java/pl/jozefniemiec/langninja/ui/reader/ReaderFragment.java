@@ -28,6 +28,7 @@ import pl.jozefniemiec.langninja.utils.AppUtils;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.READER_PACKAGE;
 
 public class ReaderFragment extends DaggerFragment implements ReaderContract.View {
 
@@ -136,10 +137,7 @@ public class ReaderFragment extends DaggerFragment implements ReaderContract.Vie
 
     @Override
     public boolean isReaderAvailable() {
-        return AppUtils.checkForApplication(
-                requireContext(),
-                getString(R.string.google_tts_package_name)
-        );
+        return AppUtils.checkForApplication(requireContext(), READER_PACKAGE);
     }
 
     @Override

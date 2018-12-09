@@ -11,6 +11,8 @@ import pl.jozefniemiec.langninja.service.LocalDatabaseManager;
 
 public class LangNinjaApplication extends DaggerApplication {
 
+    public static String APP_PACKAGE_NAME;
+
     @Override
     protected AndroidInjector<? extends DaggerApplication> applicationInjector() {
         AppComponent appComponent = DaggerAppComponent.builder()
@@ -23,6 +25,7 @@ public class LangNinjaApplication extends DaggerApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        APP_PACKAGE_NAME = this.getPackageName();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         firebaseDatabase.setPersistenceEnabled(true);
         DatabaseReference sentencesReference = firebaseDatabase.getReference("data");

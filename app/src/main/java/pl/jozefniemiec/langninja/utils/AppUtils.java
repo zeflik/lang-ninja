@@ -6,29 +6,26 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 
-import pl.jozefniemiec.langninja.R;
+import static pl.jozefniemiec.langninja.ui.base.Constants.APP_MARKET_LINK;
+import static pl.jozefniemiec.langninja.ui.base.Constants.PLAY_STORE_PATH;
+import static pl.jozefniemiec.langninja.ui.base.Constants.READER_PACKAGE;
+import static pl.jozefniemiec.langninja.ui.base.Constants.SPEECH_RECOGNIZER_PACKAGE;
 
 public final class AppUtils {
 
     public static void openPlayStoreForSpeechRecognizer(Context context) {
-        openPlayStoreForApp(context, context.getResources().getString(R.string.google_speech_package_name));
+        openPlayStoreForApp(context, SPEECH_RECOGNIZER_PACKAGE);
     }
 
     public static void openPlayStoreForTTS(Context context) {
-        openPlayStoreForApp(context, context.getResources().getString(R.string.google_tts_package_name));
+        openPlayStoreForApp(context, READER_PACKAGE);
     }
 
     private static void openPlayStoreForApp(Context context, String appPackageName) {
         try {
-            context.startActivity(new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(context
-                            .getResources()
-                            .getString(R.string.app_market_link) + appPackageName)));
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(APP_MARKET_LINK + appPackageName)));
         } catch (android.content.ActivityNotFoundException e) {
-            context.startActivity(new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(context
-                            .getResources()
-                            .getString(R.string.app_google_play_store_link) + appPackageName)));
+            context.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_PATH)));
         }
     }
 

@@ -8,4 +8,11 @@ public class Constants {
 
     public static final long ANIMATION_DELAY_MILIS = 500;
 
+    public static final String SPEECH_RECOGNIZER_PACKAGE = "com.google.android.googlequicksearchbox";
+
+    public static final String APP_MARKET_LINK = "market://details?id=";
+
+    public static final String PLAY_STORE_PATH = "https://play.google.com/store/apps/details?id=";
+
+    public static final String READER_PACKAGE = "com.google.android.tts";
 }

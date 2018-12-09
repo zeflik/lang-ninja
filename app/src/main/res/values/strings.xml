@@ -65,14 +65,6 @@
     <string name="text_hint">Wprowadź tekst…</string>
     <string name="pick_language">Wybierz język…</string>
     <string name="test">Testuj</string>
-    <!--play store-->
-    <string name="app_market_link">"market://details?id="</string>
-    <string name="app_google_play_store_link">"https://play.google.com/store/apps/details?id="</string>
-    <string name="app_package_name">pl.jozefniemiec.langninja</string>
-    <string name="google_speech_package_name">com.google.android.googlequicksearchbox</string>
-    <string name="google_tts_package_name">com.google.android.tts</string>
-    <string name="title_activity_login">Sign in</string>
-    <!-- Strings related to login -->
     <string name="prompt_email">e-mail</string>
     <string name="prompt_password">Hasło</string>
     <string name="action_sign_in">Rejestracja lub logowanie</string>
@@ -87,5 +79,5 @@
     <string name="missing_internet_connection">Brak połączenia z internetem</string>
     <string name="message_connect_to_internet_and_refresh">Nawiąż połączenie i spróbuj ponownie</string>
     <string name="message_login_error">Błąd logowania</string>
-
+    <string name="title_activity_login">Sign in</string>
 </resources>

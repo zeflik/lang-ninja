@@ -7,6 +7,8 @@ import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.R;
 
+import static pl.jozefniemiec.langninja.LangNinjaApplication.APP_PACKAGE_NAME;
+
 public class AndroidResourceManager implements ResourcesManager {
 
     private static final String TAG = AndroidResourceManager.class.getSimpleName();
@@ -14,24 +16,22 @@ public class AndroidResourceManager implements ResourcesManager {
     private static final String RESOURCE_TYPE_STRING = "string";
     private static final String RESOURCE_TYPE_DRAWABLE = "drawable";
     private final Resources resources;
-    private final String packageName;
 
     @Inject
-    public AndroidResourceManager(Resources resources) {
+    AndroidResourceManager(Resources resources) {
         this.resources = resources;
-        packageName = resources.getString(R.string.app_package_name);
     }
 
     @Override
     public String getLanguageName(String languageCode) {
         String resourceName = resources.getString(R.string.language_name_prefix) + languageCode;
-        int id = findResourceId(resourceName, RESOURCE_TYPE_STRING, packageName);
+        int id = findResourceId(resourceName, RESOURCE_TYPE_STRING, APP_PACKAGE_NAME);
         return resources.getString(id);
     }
 
     @Override
     public int getFlagId(String languageCode) {
-        return findResourceId(languageCode.toLowerCase(), RESOURCE_TYPE_DRAWABLE, packageName);
+        return findResourceId(languageCode.toLowerCase(), RESOURCE_TYPE_DRAWABLE, APP_PACKAGE_NAME);
     }
 
     private int findResourceId(String resourceName, String resourceType, String packageName) {

@@ -1,7 +1,6 @@
 package pl.jozefniemiec.langninja.ui.speech;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +28,7 @@ import pl.jozefniemiec.langninja.utils.AppUtils;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.SPEECH_RECOGNIZER_PACKAGE;
 
 public class SpeechRecognizerFragment extends DaggerFragment implements SpeechRecognizerContract.View {
 
@@ -178,27 +178,16 @@ public class SpeechRecognizerFragment extends DaggerFragment implements SpeechRe
 
     @Override
     public boolean isSpeechRecognizerAvailable() {
-        return AppUtils.checkForApplication(
-                requireContext(),
-                getString(R.string.google_speech_package_name)
-        );
+        return AppUtils.checkForApplication(requireContext(), SPEECH_RECOGNIZER_PACKAGE);
     }
 
     @Override
     public void findSpeechSupportedLanguages() {
         Intent detailsIntent = new Intent(RecognizerIntent.ACTION_GET_LANGUAGE_DETAILS);
+        detailsIntent.setPackage(SPEECH_RECOGNIZER_PACKAGE);
         requireActivity().sendOrderedBroadcast(
-                detailsIntent, null, new BroadcastReceiver() {
-                    @Override
-                    public void onReceive(Context context, Intent intent) {
-                        Bundle results = getResultExtras(true);
-                        if (results.containsKey(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)) {
-                            presenter.onSpeechSupportedLanguages(
-                                    results.getStringArrayList(RecognizerIntent.EXTRA_SUPPORTED_LANGUAGES)
-                            );
-                        }
-                    }
-                }, null, Activity.RESULT_OK, null, null);
+                detailsIntent, null, new SpeechBroadcastReceiver(presenter), null, Activity.RESULT_OK, null, null
+        );
     }
 
     @Override
