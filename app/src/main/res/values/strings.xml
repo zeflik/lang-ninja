@@ -80,4 +80,6 @@
     <string name="message_connect_to_internet_and_refresh">Nawiąż połączenie i spróbuj ponownie</string>
     <string name="message_login_error">Błąd logowania</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="dialog_insufficient_permissions">Niewystarczające uprawnienia</string>
+    <string name="message_open_app_settings">Przejdź do ustawień i ręcznie przyznaj uprawnienia do używania mikrofonu przez aplikację Lang Ninja</string>
 </resources>

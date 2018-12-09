@@ -1,13 +1,19 @@
 package pl.jozefniemiec.langninja.ui.speech;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,10 +33,18 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.utils.AppUtils;
 import pl.jozefniemiec.langninja.utils.Utility;
 
+import static pl.jozefniemiec.langninja.LangNinjaApplication.APP_PACKAGE_NAME;
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SPEECH_RECOGNIZER_PACKAGE;
 
 public class SpeechRecognizerFragment extends DaggerFragment implements SpeechRecognizerContract.View {
+
+    private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
+    private static final int SHOW_APPLICATION_SETTINGS_REQUEST_CODE = 2;
+    private static final String MESSAGE_MUST_PASS_VALID_LANGUAGE_CODE = "%s must pass valid language code";
+    private static final String URI_SCHEME = "package";
+    private static final String MESSAGE_MUST_IMPLEMENT_INTERACTION_LISTENER =
+            "%s must implement SpeechRecognitionFragmentInteractionListener";
 
     private static String TAG = SpeechRecognizerFragment.class.getSimpleName();
 
@@ -67,8 +81,9 @@ public class SpeechRecognizerFragment extends DaggerFragment implements SpeechRe
         if (getArguments() != null && getArguments().containsKey(LANGUAGE_CODE_KEY)) {
             languageCode = getArguments().getString(LANGUAGE_CODE_KEY);
         } else {
-            throw new RuntimeException(requireContext().toString()
-                    + " must pass valid language code");
+            throw new RuntimeException(
+                    String.format(MESSAGE_MUST_PASS_VALID_LANGUAGE_CODE, requireContext().toString())
+            );
         }
     }
 
@@ -78,8 +93,9 @@ public class SpeechRecognizerFragment extends DaggerFragment implements SpeechRe
         if (context instanceof OnSpeechRecognitionFragmentInteractionListener) {
             listener = (OnSpeechRecognitionFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement SpeechRecognitionFragmentInteractionListener");
+            throw new RuntimeException(
+                    String.format(MESSAGE_MUST_IMPLEMENT_INTERACTION_LISTENER, context.toString())
+            );
         }
     }
 
@@ -95,17 +111,76 @@ public class SpeechRecognizerFragment extends DaggerFragment implements SpeechRe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.onViewCreated(languageCode);
-        activateSpeechRecognizer();
     }
 
+    @Override
     public void activateSpeechRecognizer() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+                && (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO)
+                != PackageManager.PERMISSION_GRANTED)) {
+            presenter.onSpeechRecognizerInsufficientPermission();
+        } else {
+            initializeSpeechRecognizer();
+        }
+    }
+
+    private void initializeSpeechRecognizer() {
         speechRecognizer.setRecognitionListener(speechRecognitionListener);
         boolean recognitionAvailable = SpeechRecognizer.isRecognitionAvailable(requireContext());
         presenter.onSpeechRecognizerInit(recognitionAvailable);
     }
 
     @Override
+    public void askForSpeechPermissions() {
+        requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+                PERMISSIONS_REQUEST_RECORD_AUDIO);
+    }
+
+    @Override
+    public void showSpeechInsufficientPermissionButton() {
+        speechButton.setOnClickListener(x -> presenter.speechRecognizerButtonClickedWithNoPermissions());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_RECORD_AUDIO: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    presenter.onSpeechPermissionGranted();
+                } else {
+                    if (ContextCompat.checkSelfPermission(requireActivity(),
+                            Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_DENIED
+                            && !shouldShowRequestPermissionRationale(permissions[0])) {
+                        presenter.speechRecognizerButtonClickedWithNoPermissionsPermanently();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void showInsufficientPermissionDialog() {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.dialog_insufficient_permissions)
+                .setMessage(R.string.message_open_app_settings)
+                .setPositiveButton(R.string.button_ok, (dialog, id) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                    Uri uri = Uri.fromParts(URI_SCHEME, APP_PACKAGE_NAME, null);
+                    intent.setData(uri);
+                    startActivityForResult(intent, SHOW_APPLICATION_SETTINGS_REQUEST_CODE);
+                })
+                .setNegativeButton(R.string.button_cancel, (dialog, i) -> dialog.dismiss())
+                .create()
+                .show();
+    }
+
+
+    @Override
     public void activateSpeechButton() {
+        speechButton.setBackgroundResource(R.drawable.microphone);
         speechButton.setOnClickListener(x -> presenter.speechRecognizerButtonClicked());
     }
 

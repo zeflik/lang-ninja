@@ -1,7 +1,5 @@
 package pl.jozefniemiec.langninja.ui.speech;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,13 +25,11 @@ public class SpeechRecognizerPresenter implements SpeechRecognizerContract.Prese
     @Override
     public void onReadyForSpeech() {
         view.highlightSpeechButton();
-        Log.d(TAG, "onReadyForSpeech: ");
     }
 
     @Override
     public void onSpeechEnded() {
         view.unHighlightSpeechButton();
-        Log.d(TAG, "onSpeechEnded: ");
     }
 
     @Override
@@ -46,30 +42,25 @@ public class SpeechRecognizerPresenter implements SpeechRecognizerContract.Prese
         view.unHighlightSpeechButton();
         String message = resourcesManager.findOnSpeechErrorMessage(errorCode);
         view.showErrorMessage(message);
-        Log.d(TAG, "onSpeechError: " + message);
     }
 
     @Override
     public void deactivatedSpeechButtonClicked() {
         if (view.isSpeechRecognizerAvailable()) {
             view.showErrorMessage(resourcesManager.getLanguageNotSupportedMessage());
-            Log.d(TAG, "deactivatedSpeechButtonClicked: activating Speech");
         } else {
             view.showSpeechRecognizerInstallDialog();
-            Log.d(TAG, "deactivatedSpeechButtonClicked: installing");
         }
     }
 
     @Override
     public void highlightedSpeechButtonClicked() {
         view.stopSpeechListening();
-        Log.d(TAG, "highlightedSpeechButtonClicked: ");
     }
 
     @Override
     public void speechRecognizerButtonClicked() {
         view.startListening(languageCode);
-        Log.d(TAG, "speechRecognizerButtonClicked: start listening " + languageCode);
     }
 
     @Override
@@ -79,7 +70,6 @@ public class SpeechRecognizerPresenter implements SpeechRecognizerContract.Prese
         } else {
             view.deactivateSpeechButton();
         }
-        Log.d(TAG, "onSpeechRecognizerInit: recognition available: " + recognitionAvailable);
     }
 
     @Override
@@ -89,7 +79,6 @@ public class SpeechRecognizerPresenter implements SpeechRecognizerContract.Prese
         } else {
             view.deactivateSpeechButton();
         }
-        Log.d(TAG, "onSpeechSupportedLanguages: ");
     }
 
     @Override
@@ -100,6 +89,27 @@ public class SpeechRecognizerPresenter implements SpeechRecognizerContract.Prese
     @Override
     public void onViewCreated(String languageCode) {
         this.languageCode = languageCode;
+        view.activateSpeechRecognizer();
+    }
+
+    @Override
+    public void onSpeechRecognizerInsufficientPermission() {
+        view.showSpeechInsufficientPermissionButton();
+    }
+
+    @Override
+    public void onSpeechPermissionGranted() {
+        view.activateSpeechRecognizer();
+    }
+
+    @Override
+    public void speechRecognizerButtonClickedWithNoPermissions() {
+        view.askForSpeechPermissions();
+    }
+
+    @Override
+    public void speechRecognizerButtonClickedWithNoPermissionsPermanently() {
+        view.showInsufficientPermissionDialog();
     }
 
     private void cancelSpeechListening() {

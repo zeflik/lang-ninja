@@ -7,6 +7,8 @@ public interface SpeechRecognizerContract {
 
     interface View {
 
+        void activateSpeechRecognizer();
+
         void activateSpeechButton();
 
         void deactivateSpeechButton();
@@ -32,6 +34,13 @@ public interface SpeechRecognizerContract {
         void showErrorMessage(String message);
 
         void onSpeechResult(ArrayList<String> spokenTextsList);
+
+        void askForSpeechPermissions();
+
+        void showSpeechInsufficientPermissionButton();
+
+        void showInsufficientPermissionDialog();
+
     }
 
     interface Presenter {
@@ -57,5 +66,13 @@ public interface SpeechRecognizerContract {
         void onViewPause();
 
         void onViewCreated(String languageCode);
+
+        void speechRecognizerButtonClickedWithNoPermissions();
+
+        void onSpeechRecognizerInsufficientPermission();
+
+        void onSpeechPermissionGranted();
+
+        void speechRecognizerButtonClickedWithNoPermissionsPermanently();
     }
 }
