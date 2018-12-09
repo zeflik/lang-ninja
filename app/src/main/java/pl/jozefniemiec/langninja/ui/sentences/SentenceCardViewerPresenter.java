@@ -10,7 +10,7 @@ import pl.jozefniemiec.langninja.utils.Utility;
 @SentenceCardViewerActivityScope
 public class SentenceCardViewerPresenter implements SentenceCardViewerContract.Presenter {
 
-    public final SentenceCardViewerContract.View view;
+    private final SentenceCardViewerContract.View view;
 
     @Inject
     SentenceCardViewerPresenter(SentenceCardViewerContract.View view) {

@@ -66,7 +66,7 @@ public class SpeechRecognitionListener implements RecognitionListener {
 
     }
 
-    public boolean isListeningSpeech() {
+    boolean isListeningSpeech() {
         return listeningSpeech;
     }
 }

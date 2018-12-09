@@ -5,7 +5,18 @@
     android:id="@+id/languageCardViewerWithSpokenTextLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/margin"
     tools:context=".ui.sentences.SentenceCardViewerActivity">
+
+    <FrameLayout
+        android:id="@+id/sentenceCommunityFragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/sentenceCardFragmentContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <FrameLayout
         android:id="@+id/sentenceCardFragmentContainer"
@@ -15,21 +26,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/sentenceCommunityFragmentContainer" />
 
     <TextView
         android:id="@+id/sentencePageAnswerTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin"
-        android:layout_marginEnd="@dimen/margin"
-        android:layout_marginStart="8dp"
         android:background="@drawable/shape_speak_bubble"
         android:padding="12dp"
         android:text="@string/answer"
         android:textAlignment="textEnd"
         android:textStyle="bold"
-        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/guideline2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
