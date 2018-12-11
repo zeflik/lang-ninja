@@ -15,4 +15,6 @@ public class Constants {
     public static final String PLAY_STORE_PATH = "https://play.google.com/store/apps/details?id=";
 
     public static final String READER_PACKAGE = "com.google.android.tts";
+
+    public static final String SENTENCE_ID_KEY = "Sentence id key";
 }

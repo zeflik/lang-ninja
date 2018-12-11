@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.transition.TransitionManager;
+import android.support.v4.app.FragmentManager;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,10 +23,13 @@ import pl.jozefniemiec.langninja.ui.reader.OnReaderFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
 import pl.jozefniemiec.langninja.ui.sentences.card.OnSentenceCardFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardFragment;
+import pl.jozefniemiec.langninja.ui.sentences.community.CommunityFeedbackFragment;
 import pl.jozefniemiec.langninja.ui.speech.OnSpeechRecognitionFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
 public class SentenceCardViewerActivity extends DaggerAppCompatActivity
         implements
@@ -49,6 +53,7 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
     private SentenceCardFragment sentenceCard;
     private ReaderFragment reader;
     private SpeechRecognizerFragment speechRecognizer;
+    private CommunityFeedbackFragment communityFeedbackFragment;
     private String languageCode;
     private String sentence;
 
@@ -65,7 +70,7 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
             throw new RuntimeException(this.toString()
                     + ": language code missing in intent");
         }
-        sentence = getIntent().getStringExtra(Constants.SENTENCE_KEY);
+        sentence = getIntent().getStringExtra(SENTENCE_KEY);
         attachFragments();
         presenter.onViewCreated();
     }
@@ -74,12 +79,24 @@ public class SentenceCardViewerActivity extends DaggerAppCompatActivity
         reader = ReaderFragment.newInstance(languageCode);
         sentenceCard = SentenceCardFragment.newInstance(languageCode, sentence);
         speechRecognizer = SpeechRecognizerFragment.newInstance(languageCode);
-        getSupportFragmentManager()
+
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        supportFragmentManager
                 .beginTransaction()
                 .add(R.id.sentenceCardFragmentContainer, sentenceCard)
                 .add(R.id.readerFragmentContainer, reader)
                 .add(R.id.speechRecognizerFragmentContainer, speechRecognizer)
                 .commit();
+
+        String sentenceId = getIntent().getStringExtra(SENTENCE_ID_KEY);
+        if (sentenceId != null) {
+            communityFeedbackFragment = CommunityFeedbackFragment.newInstance(sentenceId);
+            supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.sentenceCommunityFragmentContainer, communityFeedbackFragment)
+                    .commit();
+        }
+
     }
 
     @Override

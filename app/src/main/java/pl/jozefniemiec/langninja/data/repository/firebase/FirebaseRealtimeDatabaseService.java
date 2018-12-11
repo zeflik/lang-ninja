@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -112,16 +113,19 @@ public class FirebaseRealtimeDatabaseService implements UserSentenceRepository {
         return Observable.create(subscriber -> {
             publicSentenceReference
                     .orderByChild("public").equalTo(1)
+                    .limitToFirst(100)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                                 sentenceReference
-                                        .child(snapshot.getKey())
+                                        .child(Objects.requireNonNull(snapshot.getKey()))
                                         .addListenerForSingleValueEvent(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
-                                                subscriber.onNext(dataSnapshot2.getValue(UserSentence.class));
+                                                UserSentence userSentence = dataSnapshot2.getValue(UserSentence.class);
+                                                userSentence.setKey(dataSnapshot2.getKey());
+                                                subscriber.onNext(userSentence);
                                             }
 
                                             @Override

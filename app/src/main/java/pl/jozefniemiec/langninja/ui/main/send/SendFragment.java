@@ -32,6 +32,7 @@ import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
+import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
 public class SendFragment extends DaggerFragment implements SendFragmentContract.View {
@@ -73,6 +74,7 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
             Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
             intent.putExtra(LANGUAGE_CODE_KEY, userSentence.getLanguageCode());
             intent.putExtra(SENTENCE_KEY, userSentence.getSentence());
+            intent.putExtra(SENTENCE_ID_KEY, userSentence.getKey());
             startActivity(intent);
         });
         presenter.loadData(null);
