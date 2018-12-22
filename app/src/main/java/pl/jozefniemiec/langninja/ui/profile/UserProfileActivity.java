@@ -12,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -25,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
+import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
 public class UserProfileActivity extends BaseSecuredActivity implements UserProfileContract.View {
@@ -35,6 +37,9 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
 
     @Inject
     UserProfileContract.Presenter presenter;
+
+    @Inject
+    Picasso picasso;
 
     @BindView(R.id.userProfilePhotoCaption)
     TextView userProfilePhotoCaption;
@@ -80,9 +85,9 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
     public void setPhoto(Uri uri) {
         imageProgressBar.setVisibility(View.VISIBLE);
         imageHolderUri = uri;
-        Picasso
-                .with(this)
+        picasso
                 .load(imageHolderUri)
+                .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
                 .transform(new CircleTransform())
                 .into(userProfilePhoto, new Callback() {
@@ -93,7 +98,27 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
 
                     @Override
                     public void onError() {
-                        hideProgress();
+                        if (Utility.isNetworkAvailable(UserProfileActivity.this)) {
+                            picasso
+                                    .load(imageHolderUri)
+                                    .fit()
+                                    .transform(new CircleTransform())
+                                    .into(userProfilePhoto, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+                                            hideProgress();
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                            hideProgress();
+                                            showErrorMessage("Nieokreślony błąd");
+                                        }
+                                    });
+                        } else {
+                            showNeedInternetDialog();
+                        }
+
                     }
                 });
     }
@@ -171,9 +196,7 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
                 .setTitle(R.string.missing_internet_connection)
                 .setMessage(R.string.message_connect_to_internet_and_refresh)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(R.string.button_ok, (dialog, whichButton) -> {
-                    dialog.dismiss();
-                })
+                .setPositiveButton(R.string.button_ok, (dialog, whichButton) -> dialog.dismiss())
                 .show();
     }
 }

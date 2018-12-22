@@ -5,10 +5,15 @@ import android.content.Context;
 import android.content.res.Resources;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.picasso.Picasso;
+
+import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
+import pl.jozefniemiec.langninja.BuildConfig;
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.UserRepository;
@@ -33,7 +38,26 @@ abstract class AppModule {
     }
 
     @Provides
-    static FirebaseAuth providesFirebaseAuth() {
+    @Singleton
+    static OkHttp3Downloader provideOkHttp3Downloader(Context context) {
+        return new OkHttp3Downloader(context, Integer.MAX_VALUE);
+    }
+
+    @Provides
+    @Singleton
+    static Picasso providesPicasso(Context context, OkHttp3Downloader okHttp3Downloader) {
+        Picasso build = new Picasso.Builder(context)
+                .downloader(okHttp3Downloader)
+                .build();
+        if (BuildConfig.DEBUG) {
+            build.setIndicatorsEnabled(true);
+            build.setLoggingEnabled(true);
+        }
+        return build;
+    }
+
+    @Provides
+    static FirebaseAuth provideFirebaseAuth() {
         return FirebaseAuth.getInstance();
     }
 

@@ -72,7 +72,6 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
         }
     }
 
-
     @Override
     public void onSaveUserProfileButtonClicked(String userNameField, Uri imageUri) {
         if (imageUri != null
@@ -84,10 +83,13 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
-                            photoDownloadUri -> saveUser(
-                                    userNameField,
-                                    auth.getCurrentUserEmail(),
-                                    photoDownloadUri.toString()),
+                            photoDownloadUri -> {
+                                view.setPhoto(photoDownloadUri);
+                                saveUser(
+                                        userNameField,
+                                        auth.getCurrentUserEmail(),
+                                        photoDownloadUri.toString());
+                            },
                             this::onError);
         } else {
             saveUser(userNameField, auth.getCurrentUserEmail(), null);
