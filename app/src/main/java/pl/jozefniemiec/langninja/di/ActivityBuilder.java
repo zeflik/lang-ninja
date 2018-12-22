@@ -10,6 +10,8 @@ import pl.jozefniemiec.langninja.di.main.MainActivityModule;
 import pl.jozefniemiec.langninja.di.main.MainActivityScope;
 import pl.jozefniemiec.langninja.di.main.languages.LanguagesFragmentProvider;
 import pl.jozefniemiec.langninja.di.main.send.SendFragmentProvider;
+import pl.jozefniemiec.langninja.di.profile.UserProfileActivityModule;
+import pl.jozefniemiec.langninja.di.profile.UserProfileActivityScope;
 import pl.jozefniemiec.langninja.di.reader.ReaderFragmentProvider;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardViewerActivityModule;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardViewerActivityScope;
@@ -19,6 +21,7 @@ import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentScope;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.login.LoginActivity;
 import pl.jozefniemiec.langninja.ui.main.MainActivity;
+import pl.jozefniemiec.langninja.ui.profile.UserProfileActivity;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
 
@@ -54,4 +57,8 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = LoginActivityModule.class)
     @LoginActivityScope
     abstract LoginActivity bindLoginActivity();
+
+    @ContributesAndroidInjector(modules = UserProfileActivityModule.class)
+    @UserProfileActivityScope
+    abstract UserProfileActivity bindUserProfileActivity();
 }

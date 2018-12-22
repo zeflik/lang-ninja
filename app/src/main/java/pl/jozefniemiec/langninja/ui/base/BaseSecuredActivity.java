@@ -14,7 +14,7 @@ import pl.jozefniemiec.langninja.ui.login.LoginActivity;
 
 public abstract class BaseSecuredActivity extends BaseActivity {
 
-    private FirebaseAuth auth;
+    protected FirebaseAuth auth;
     private FirebaseAuth.AuthStateListener authStateListener;
     private Context context;
 

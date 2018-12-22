@@ -4,7 +4,7 @@ import pl.jozefniemiec.langninja.ui.base.BaseContract;
 
 public interface LoginActivityContract {
 
-    interface View extends BaseContract.view {
+    interface View extends BaseContract.View {
 
         void login();
 

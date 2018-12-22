@@ -88,4 +88,9 @@ public class AndroidResourceManager implements ResourcesManager {
     public String getLanguageNotSupportedMessage() {
         return resources.getString(R.string.language_not_supported);
     }
+
+    @Override
+    public String getUnknownErrorMessage() {
+        return resources.getString(R.string.message_unknown_upload_error);
+    }
 }

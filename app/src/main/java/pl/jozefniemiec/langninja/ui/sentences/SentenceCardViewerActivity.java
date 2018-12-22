@@ -16,8 +16,8 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.ui.base.BaseActivity;
 import pl.jozefniemiec.langninja.ui.base.Constants;
 import pl.jozefniemiec.langninja.ui.reader.OnReaderFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
@@ -31,7 +31,7 @@ import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
-public class SentenceCardViewerActivity extends DaggerAppCompatActivity
+public class SentenceCardViewerActivity extends BaseActivity
         implements
         SentenceCardViewerContract.View,
         OnReaderFragmentInteractionListener,

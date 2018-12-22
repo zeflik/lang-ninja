@@ -19,7 +19,17 @@ public class FirebaseAuthService implements AuthService {
     }
 
     @Override
-    public String getCurrentUserUid() throws NullPointerException {
+    public String getCurrentUserUid() {
         return instance.getCurrentUser().getUid();
+    }
+
+    @Override
+    public String getCurrentUserName() {
+        return instance.getCurrentUser().getDisplayName();
+    }
+
+    @Override
+    public String getCurrentUserEmail() {
+        return instance.getCurrentUser().getEmail();
     }
 }

@@ -2,7 +2,11 @@ package pl.jozefniemiec.langninja.ui.base;
 
 public interface BaseContract {
 
-    interface view {
+    interface View {
         void showErrorMessage(String error);
+    }
+
+    interface Presenter {
+
     }
 }

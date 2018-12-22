@@ -11,4 +11,6 @@ public interface ResourcesManager {
     String getNeedInternetConnectionMessage();
 
     String getLanguageNotSupportedMessage();
+
+    String getUnknownErrorMessage();
 }

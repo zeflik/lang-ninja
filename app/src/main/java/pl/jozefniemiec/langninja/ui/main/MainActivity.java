@@ -1,8 +1,12 @@
 package pl.jozefniemiec.langninja.ui.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Toast;
 
 import javax.inject.Inject;
 
@@ -12,6 +16,7 @@ import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
 import pl.jozefniemiec.langninja.ui.main.send.SendFragment;
+import pl.jozefniemiec.langninja.ui.profile.UserProfileActivity;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
 
@@ -48,5 +53,27 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
         );
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setAdapter(sectionPageAdapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.profile:
+                Intent intent = new Intent(this, UserProfileActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.settings:
+                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

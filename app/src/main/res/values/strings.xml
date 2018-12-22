@@ -82,7 +82,11 @@
     <string name="title_activity_login">Sign in</string>
     <string name="dialog_insufficient_permissions">Niewystarczające uprawnienia</string>
     <string name="message_open_app_settings">Przejdź do ustawień i ręcznie przyznaj uprawnienia do używania mikrofonu przez aplikację Lang Ninja</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_profile">Profil</string>
+    <string name="menu_settings">Ustawienia</string>
+    <string name="button_save">Zapisz</string>
+    <string name="change_avatar">ZMIEŃ ZDJĘCIE</string>
+    <string name="hint_user_name">Imię…</string>
+    <string name="label_name_input">IMIĘ</string>
+    <string name="message_unknown_upload_error">Nieznany błąd, zdjęcie nie zostało zapisane.</string>
 </resources>

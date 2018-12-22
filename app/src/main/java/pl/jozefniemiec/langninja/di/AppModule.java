@@ -11,14 +11,18 @@ import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.FirebaseRealtimeDatabaseService;
+import pl.jozefniemiec.langninja.data.repository.firebase.UserRepositoryImpl;
 import pl.jozefniemiec.langninja.data.repository.room.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.room.RoomSentenceRepository;
 import pl.jozefniemiec.langninja.data.resources.AndroidResourceManager;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.service.AuthService;
 import pl.jozefniemiec.langninja.service.FirebaseAuthService;
+import pl.jozefniemiec.langninja.storage.ImagesStorage;
+import pl.jozefniemiec.langninja.storage.ImagesStorageImpl;
 
 @Module
 abstract class AppModule {
@@ -50,4 +54,10 @@ abstract class AppModule {
 
     @Binds
     abstract Context bindContext(Application application);
+
+    @Binds
+    abstract UserRepository bindUserRepository(UserRepositoryImpl userRepository);
+
+    @Binds
+    abstract ImagesStorage bindImagesStorage(ImagesStorageImpl storage);
 }
