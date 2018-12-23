@@ -74,7 +74,7 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
             Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
             intent.putExtra(LANGUAGE_CODE_KEY, userSentence.getLanguageCode());
             intent.putExtra(SENTENCE_KEY, userSentence.getSentence());
-            intent.putExtra(SENTENCE_ID_KEY, userSentence.getKey());
+            intent.putExtra(SENTENCE_ID_KEY, userSentence.getId());
             startActivity(intent);
         });
         presenter.loadData(null);

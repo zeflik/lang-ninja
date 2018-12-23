@@ -12,6 +12,8 @@ public interface UserSentenceRepository {
 
     void insert(UserSentence userSentence);
 
+    void insertPublic(UserSentence userSentence);
+
     Observable<UserSentence> getUserSentences(String uid);
 
     Single<List<UserSentence>> getUserListSentences(String uid);

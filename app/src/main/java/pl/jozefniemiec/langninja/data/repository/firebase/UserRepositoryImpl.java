@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -50,7 +51,9 @@ public class UserRepositoryImpl implements UserRepository {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-                                    subscriber.onSuccess(dataSnapshot.getValue(User.class));
+                                    User user = dataSnapshot.getValue(User.class);
+                                    Objects.requireNonNull(user).setUid(uid);
+                                    subscriber.onSuccess(user);
                                 } else {
                                     subscriber.onError(new RuntimeException("User " + uid + " data does not exist"));
 

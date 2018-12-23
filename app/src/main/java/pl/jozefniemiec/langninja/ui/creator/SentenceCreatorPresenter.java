@@ -3,7 +3,9 @@ package pl.jozefniemiec.langninja.ui.creator;
 import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
+import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.Author;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
@@ -15,17 +17,21 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
     private final static String TAG = SentenceCreatorPresenter.class.getSimpleName();
     private final SentenceCreatorContract.View view;
     private final AuthService authService;
-    private final UserSentenceRepository sentenceCandidateRepository;
+    private final UserSentenceRepository userSentenceRepository;
     private final LanguageRepository languageRepository;
+    private final UserRepository userRepository;
 
     @Inject
     SentenceCreatorPresenter(SentenceCreatorContract.View view,
                              AuthService authService,
-                             UserSentenceRepository sentenceCandidateRepository, LanguageRepository languageRepository) {
+                             UserSentenceRepository sentenceCandidateRepository,
+                             LanguageRepository languageRepository,
+                             UserRepository userRepository) {
         this.view = view;
         this.authService = authService;
-        this.sentenceCandidateRepository = sentenceCandidateRepository;
+        this.userSentenceRepository = sentenceCandidateRepository;
         this.languageRepository = languageRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -43,10 +49,13 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
             view.showErrorMessage("Wprowadź tekst!");
             return;
         }
-        String currentUserUid = authService.getCurrentUserUid();
-        UserSentence sentenceCandidate = new UserSentence(sentence, language.getCode(), currentUserUid);
-        sentenceCandidateRepository.insert(sentenceCandidate);
-        view.close();
+        userRepository.getUser(authService.getCurrentUserUid())
+                .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
+                .map(author -> new UserSentence(null, sentence, language.getCode(), author))
+                .subscribe(userSentence -> {
+                    userSentenceRepository.insertPublic(userSentence);
+                    view.close();
+                });
     }
 
     @Override

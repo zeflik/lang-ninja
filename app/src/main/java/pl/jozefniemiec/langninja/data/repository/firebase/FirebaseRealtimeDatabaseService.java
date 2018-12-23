@@ -12,7 +12,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -29,6 +28,7 @@ public class FirebaseRealtimeDatabaseService implements UserSentenceRepository {
     private DatabaseReference sentenceReference = firebaseDatabase.getReference("sentence");
     private DatabaseReference userReference = firebaseDatabase.getReference("users");
     private DatabaseReference publicSentenceReference = firebaseDatabase.getReference("sentence_public_list");
+    private DatabaseReference publicSentencesReference = firebaseDatabase.getReference("public_sentences");
 
 
     @Inject
@@ -45,6 +45,11 @@ public class FirebaseRealtimeDatabaseService implements UserSentenceRepository {
     @Override
     public void insert(UserSentence sentenceCandidate) {
         sentenceReference.push().setValue(sentenceCandidate);
+    }
+
+    @Override
+    public void insertPublic(UserSentence userSentence) {
+        publicSentencesReference.push().setValue(userSentence);
     }
 
     public Single<String> getUserName(String uid) {
@@ -110,41 +115,35 @@ public class FirebaseRealtimeDatabaseService implements UserSentenceRepository {
     }
 
     public Observable<UserSentence> getPublicSentences() {
-        return Observable.create(subscriber -> {
-            publicSentenceReference
-                    .orderByChild("public").equalTo(1)
-                    .limitToFirst(100)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                            for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                                sentenceReference
-                                        .child(Objects.requireNonNull(snapshot.getKey()))
-                                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot2) {
-                                                UserSentence userSentence = dataSnapshot2.getValue(UserSentence.class);
-                                                userSentence.setKey(dataSnapshot2.getKey());
-                                                subscriber.onNext(userSentence);
-                                            }
-
-                                            @Override
-                                            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                            }
-                                        });
+        return Observable.create(subscriber ->
+                publicSentencesReference
+                        .addChildEventListener(new ChildEventListener() {
+                            @Override
+                            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                subscriber.onNext(dataSnapshot.getValue(UserSentence.class));
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            @Override
+                            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                        }
-                    });
+                            }
 
-        });
+                            @Override
+                            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+                            }
+
+                            @Override
+                            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        }));
     }
-
 
     public Observable<UserSentence> getUserSentences(String uid) {
         return Observable.create(subscriber ->

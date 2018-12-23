@@ -1,5 +1,6 @@
 package pl.jozefniemiec.langninja.ui.main.send;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -40,9 +41,10 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<SentenceRowHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull SentenceRowHolder holder, int position) {
-        holder.setAuthor(userSentences.get(position).getCreatedBy());
+        holder.setAuthor(userSentences.get(position).getAuthor().getName());
         holder.setSentence(userSentences.get(position).getSentence());
         holder.setFlag(Utility.getLanguageFlagUri(holder.flag.getContext(), userSentences.get(position).getLanguageCode()));
+        holder.setAuthorPhoto(Uri.parse(userSentences.get(position).getAuthor().getPhoto()));
         holder.itemView.setOnClickListener(v -> listener.onItemClicked(userSentences.get(position)));
     }
 

@@ -11,6 +11,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
 public class SentenceRowHolder extends RecyclerView.ViewHolder implements UserSentenceItemView {
 
@@ -22,6 +23,9 @@ public class SentenceRowHolder extends RecyclerView.ViewHolder implements UserSe
 
     @BindView(R.id.sentenceRowAuthorTextView)
     TextView authorTextView;
+
+    @BindView(R.id.newSentenceRowUserPhoto)
+    ImageView authorPhoto;
 
     SentenceRowHolder(View itemView) {
         super(itemView);
@@ -41,5 +45,14 @@ public class SentenceRowHolder extends RecyclerView.ViewHolder implements UserSe
 
     public void setAuthor(String name) {
         authorTextView.setText(name);
+    }
+
+    public void setAuthorPhoto(Uri uri) {
+        Picasso
+                .with(itemView.getContext())
+                .load(uri)
+                .fit()
+                .transform(new CircleTransform())
+                .into(authorPhoto);
     }
 }

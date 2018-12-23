@@ -1,78 +1,55 @@
 package pl.jozefniemiec.langninja.data.repository.firebase.model;
 
-import android.support.annotation.NonNull;
-
-import com.google.firebase.database.Exclude;
 import com.google.firebase.database.ServerValue;
 
-import pl.jozefniemiec.langninja.data.repository.model.Sentence;
+public class UserSentence {
 
-public class UserSentence extends Sentence {
-
-    private String key;
-    private String createdBy;
-    private int publicVisibility;
-    private String dateEdited;
-    private Object dateCreated;
-    private int likes;
-    private int comments;
+    private String id;
+    private String sentence;
+    private String languageCode;
+    private Object dateEdited = ServerValue.TIMESTAMP;
+    private Object dateCreated = ServerValue.TIMESTAMP;
+    private Author author;
 
     public UserSentence() {
     }
 
-    public UserSentence(@NonNull String sentence, @NonNull String languageCode, String createdBy) {
-        super(sentence, languageCode);
-        this.createdBy = createdBy;
-        this.dateCreated = ServerValue.TIMESTAMP;
+    public UserSentence(String id, String sentence, String languageCode, Author author) {
+        this.id = id;
+        this.sentence = sentence;
+        this.languageCode = languageCode;
+        this.author = author;
     }
 
-    public String getKey() {
-        return key;
+    public String getId() {
+        return id;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
+    public String getSentence() {
+        return sentence;
     }
 
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setSentence(String sentence) {
+        this.sentence = sentence;
     }
 
-    public int getPublicVisibility() {
-        return publicVisibility;
+    public String getLanguageCode() {
+        return languageCode;
     }
 
-    public void setPublicVisibility(int publicVisibility) {
-        this.publicVisibility = publicVisibility;
+    public void setLanguageCode(String languageCode) {
+        this.languageCode = languageCode;
     }
 
-    @Override
-    public int getLikes() {
-        return likes;
-    }
-
-    @Override
-    public void setLikes(int likes) {
-        this.likes = likes;
-    }
-
-    public int getComments() {
-        return comments;
-    }
-
-    public void setComments(int comments) {
-        this.comments = comments;
-    }
-
-    public String getDateEdited() {
+    public Object getDateEdited() {
         return dateEdited;
     }
 
-    public void setDateEdited(String dateEdited) {
+    public void setDateEdited(Object dateEdited) {
         this.dateEdited = dateEdited;
     }
 
@@ -80,25 +57,27 @@ public class UserSentence extends Sentence {
         return dateCreated;
     }
 
-    @Exclude
-    public long getDateCreatedLong() {
-        return (long) dateCreated;
-    }
-
     public void setDateCreated(Object dateCreated) {
         this.dateCreated = dateCreated;
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     @Override
     public String toString() {
         return "UserSentence{" +
-                "key='" + key + '\'' +
-                ", createdBy='" + createdBy + '\'' +
-                ", publicVisibility=" + publicVisibility +
+                "id='" + id + '\'' +
+                ", sentence='" + sentence + '\'' +
+                ", languageCode='" + languageCode + '\'' +
                 ", dateEdited='" + dateEdited + '\'' +
                 ", dateCreated=" + dateCreated +
-                ", likes=" + likes +
-                ", comments=" + comments +
+                ", author=" + author +
                 '}';
     }
 }
