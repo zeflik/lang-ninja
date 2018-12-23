@@ -12,7 +12,7 @@ public class LoginPresenter implements LoginActivityContract.Presenter {
     private FirebaseAuth.AuthStateListener authStateListener;
 
     @Inject
-    public LoginPresenter(LoginActivityContract.View view, FirebaseAuth auth) {
+    LoginPresenter(LoginActivityContract.View view, FirebaseAuth auth) {
         this.view = view;
         this.auth = auth;
     }
@@ -48,8 +48,7 @@ public class LoginPresenter implements LoginActivityContract.Presenter {
 
     @Override
     public void onLoginFailed() {
-        view.showLoginErrorMessage();
-        view.login();
+        view.close();
     }
 
     @Override
