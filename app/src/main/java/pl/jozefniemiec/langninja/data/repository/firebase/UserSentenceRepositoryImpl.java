@@ -51,26 +51,6 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     public void insertPublic(UserSentence userSentence) {
         publicSentencesReference.push().setValue(userSentence);
     }
-
-    public Single<String> getUserName(String uid) {
-        return Single.create(subscriber ->
-                userReference.child(uid).child("name").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.exists()) {
-                            subscriber.onSuccess(dataSnapshot.getValue(String.class));
-                        } else {
-                            subscriber.onError(new RuntimeException("User " + uid + " data does not exist"));
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        subscriber.onError(new RuntimeException(databaseError.getMessage()));
-                    }
-                }));
-    }
-
     public Single<List<UserSentence>> getUserListSentences(String uid) {
         return Single.create(subscriber ->
                 sentenceReference
