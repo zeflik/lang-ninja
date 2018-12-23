@@ -18,8 +18,8 @@ import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
-import pl.jozefniemiec.langninja.data.repository.firebase.FirebaseRealtimeDatabaseService;
 import pl.jozefniemiec.langninja.data.repository.firebase.UserRepositoryImpl;
+import pl.jozefniemiec.langninja.data.repository.firebase.UserSentenceRepositoryImpl;
 import pl.jozefniemiec.langninja.data.repository.room.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.room.RoomSentenceRepository;
 import pl.jozefniemiec.langninja.data.resources.AndroidResourceManager;
@@ -71,7 +71,7 @@ abstract class AppModule {
     abstract SentenceRepository bindSentenceRepository(RoomSentenceRepository repository);
 
     @Binds
-    abstract UserSentenceRepository bindSentenceCandidateRepository(FirebaseRealtimeDatabaseService db);
+    abstract UserSentenceRepository bindSentenceCandidateRepository(UserSentenceRepositoryImpl db);
 
     @Binds
     abstract AuthService bindAuthService(FirebaseAuthService authService);

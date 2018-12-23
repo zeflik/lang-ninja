@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.data.repository.firebase.FirebaseRealtimeDatabaseService;
+import pl.jozefniemiec.langninja.data.repository.firebase.UserSentenceRepositoryImpl;
 
 public class CommunityFeedbackFragment extends Fragment {
 
@@ -52,7 +52,7 @@ public class CommunityFeedbackFragment extends Fragment {
     public void onResume() {
         super.onResume();
         TextView textView = requireActivity().findViewById(R.id.sentenceRowSentenceTextView);
-        new FirebaseRealtimeDatabaseService().getSentence(sentenceKey).subscribe(userSentence -> textView.setText(userSentence.getSentence()));
+        new UserSentenceRepositoryImpl().getSentence(sentenceKey).subscribe(userSentence -> textView.setText(userSentence.getSentence()));
     }
 
     @Override

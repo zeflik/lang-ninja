@@ -20,9 +20,9 @@ import io.reactivex.Single;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 
-public class FirebaseRealtimeDatabaseService implements UserSentenceRepository {
+public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
-    private static final String TAG = FirebaseRealtimeDatabaseService.class.getSimpleName();
+    private static final String TAG = UserSentenceRepositoryImpl.class.getSimpleName();
 
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference sentenceReference = firebaseDatabase.getReference("sentence");
@@ -32,7 +32,7 @@ public class FirebaseRealtimeDatabaseService implements UserSentenceRepository {
 
 
     @Inject
-    public FirebaseRealtimeDatabaseService() {
+    public UserSentenceRepositoryImpl() {
         publicSentenceReference.keepSynced(true);
         sentenceReference.keepSynced(true);
     }
@@ -70,7 +70,6 @@ public class FirebaseRealtimeDatabaseService implements UserSentenceRepository {
                     }
                 }));
     }
-
 
     public Single<List<UserSentence>> getUserListSentences(String uid) {
         return Single.create(subscriber ->
