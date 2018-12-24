@@ -28,7 +28,6 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     private DatabaseReference userPublicSentencesReference = firebaseDatabase.getReference("user_public_sentences");
     private DatabaseReference publicSentencesReference = firebaseDatabase.getReference("public_sentences");
 
-
     @Inject
     public UserSentenceRepositoryImpl() {
         publicSentencesReference.keepSynced(true);
@@ -47,9 +46,9 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
     @Override
     public void insertPublic(UserSentence userSentence) {
-        String userSentenceKey = publicSentencesReference.push().getKey();
+        String userSentenceKey = Objects.requireNonNull(publicSentencesReference.push().getKey());
         publicSentencesReference
-                .child(Objects.requireNonNull(userSentenceKey))
+                .child(userSentenceKey)
                 .setValue(userSentence);
         userPublicSentencesReference
                 .child(userSentence.getAuthor().getUid())
@@ -79,7 +78,6 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                         }));
     }
 
-
     public Single<UserSentence> getSentence(String key) {
         return Single.create(subscriber ->
                 publicSentencesReference
@@ -103,7 +101,10 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                         .addChildEventListener(new ChildEventListener() {
                             @Override
                             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                subscriber.onNext(dataSnapshot.getValue(UserSentence.class));
+                                UserSentence userSentence =
+                                        Objects.requireNonNull(dataSnapshot.getValue(UserSentence.class));
+                                userSentence.setId(dataSnapshot.getKey());
+                                subscriber.onNext(userSentence);
                             }
 
                             @Override
