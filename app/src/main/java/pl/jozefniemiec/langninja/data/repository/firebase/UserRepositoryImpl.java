@@ -21,42 +21,64 @@ import pl.jozefniemiec.langninja.data.repository.firebase.model.User;
 
 public class UserRepositoryImpl implements UserRepository {
 
+    private static final String MESSAGE_USER_NOT_EXIST = "User %s data does not exist";
+
     @Inject
     UserRepositoryImpl() {
     }
 
-    private DatabaseReference usersDatabaseReference = FirebaseDatabase.getInstance().getReference().child("users");
+    private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference usersDatabaseReference = databaseReference.child("users");
 
     @Override
     public Completable insert(User user) {
-        return Completable.create(subscriber -> {
-            DatabaseReference userReference = usersDatabaseReference.child(user.getUid());
-            Map<String, Object> taskMap = new HashMap<>();
-            taskMap.put("name", user.getName());
-            taskMap.put("email", user.getEmail());
-            if (user.getPhoto() != null) {
-                taskMap.put("photo", user.getPhoto());
-            }
-            userReference.updateChildren(taskMap)
-                    .addOnCompleteListener(task -> subscriber.onComplete())
-                    .addOnFailureListener(subscriber::onError);
-        });
+        return Completable.create(subscriber ->
+                databaseReference
+                        .child("user_public_sentences")
+                        .child(user.getUid())
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                Map<String, Object> taskMap = new HashMap<>();
+                                taskMap.put("/users/" + user.getUid() + "/name/", user.getName());
+                                taskMap.put("/users/" + user.getUid() + "/email/", user.getEmail());
+                                if (user.getPhoto() != null) {
+                                    taskMap.put("/users/" + user.getUid() + "/photo/", user.getPhoto());
+                                }
+                                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                    taskMap.put("/public_sentences/" + snapshot.getKey() + "/author/name/", user.getName());
+                                    if (user.getPhoto() != null) {
+                                        taskMap.put("/public_sentences/" + snapshot.getKey() + "/author/photo/", user.getPhoto());
+                                    }
+                                }
+                                databaseReference.updateChildren(taskMap)
+                                        .addOnCompleteListener(task -> subscriber.onComplete())
+                                        .addOnFailureListener(subscriber::onError);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        }));
     }
 
     @Override
     public Single<User> getUser(String uid) {
-        return Single
-                .create(subscriber ->
-                        usersDatabaseReference.child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+        return Single.create(subscriber ->
+                usersDatabaseReference
+                        .child(uid)
+                        .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
                                     User user = dataSnapshot.getValue(User.class);
                                     Objects.requireNonNull(user).setUid(uid);
-                                    subscriber.onSuccess(user);
+                                    subscriber
+                                            .onSuccess(user);
                                 } else {
-                                    subscriber.onError(new RuntimeException("User " + uid + " data does not exist"));
-
+                                    subscriber
+                                            .onError(new RuntimeException(String.format(MESSAGE_USER_NOT_EXIST, uid)));
                                 }
                             }
 
@@ -65,7 +87,7 @@ public class UserRepositoryImpl implements UserRepository {
                                 subscriber.onError(new RuntimeException(databaseError.getMessage()));
                             }
                         })
-                );
+        );
     }
 
     @Override
