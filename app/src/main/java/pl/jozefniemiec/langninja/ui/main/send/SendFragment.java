@@ -15,8 +15,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -55,8 +53,6 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     private Unbinder unbinder;
     private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
     private FirebaseAuth auth;
-
-    private DatabaseReference dbSentencesRef = FirebaseDatabase.getInstance().getReference("sentence");
 
     public static SendFragment newInstance() {
         SendFragment fragment = new SendFragment();
