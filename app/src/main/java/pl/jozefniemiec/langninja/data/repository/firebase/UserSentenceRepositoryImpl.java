@@ -12,6 +12,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -23,37 +24,42 @@ import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
     private static final String TAG = UserSentenceRepositoryImpl.class.getSimpleName();
-
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference sentenceReference = firebaseDatabase.getReference("sentence");
-    private DatabaseReference userReference = firebaseDatabase.getReference("users");
-    private DatabaseReference publicSentenceReference = firebaseDatabase.getReference("sentence_public_list");
+    private DatabaseReference userPublicSentencesReference = firebaseDatabase.getReference("user_public_sentences");
     private DatabaseReference publicSentencesReference = firebaseDatabase.getReference("public_sentences");
 
 
     @Inject
     public UserSentenceRepositoryImpl() {
-        publicSentenceReference.keepSynced(true);
-        sentenceReference.keepSynced(true);
+        publicSentencesReference.keepSynced(true);
     }
 
     @Override
     public void insertByUserUid(String userUid, UserSentence sentenceCandidate) {
-        sentenceReference.child(userUid).push().setValue(sentenceCandidate);
+        publicSentencesReference.child(userUid).push().setValue(sentenceCandidate);
+
     }
 
     @Override
     public void insert(UserSentence sentenceCandidate) {
-        sentenceReference.push().setValue(sentenceCandidate);
+        publicSentencesReference.push().setValue(sentenceCandidate);
     }
 
     @Override
     public void insertPublic(UserSentence userSentence) {
-        publicSentencesReference.push().setValue(userSentence);
+        String userSentenceKey = publicSentencesReference.push().getKey();
+        publicSentencesReference
+                .child(Objects.requireNonNull(userSentenceKey))
+                .setValue(userSentence);
+        userPublicSentencesReference
+                .child(userSentence.getAuthor().getUid())
+                .child(userSentenceKey)
+                .setValue(true);
     }
+
     public Single<List<UserSentence>> getUserListSentences(String uid) {
         return Single.create(subscriber ->
-                sentenceReference
+                publicSentencesReference
                         .orderByChild("createdBy")
                         .startAt(uid).endAt(uid)
                         .addValueEventListener(new ValueEventListener() {
@@ -76,7 +82,7 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
     public Single<UserSentence> getSentence(String key) {
         return Single.create(subscriber ->
-                sentenceReference
+                publicSentencesReference
                         .child(key)
                         .addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
@@ -89,8 +95,6 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
                             }
                         }));
-
-
     }
 
     public Observable<UserSentence> getPublicSentences() {
@@ -126,7 +130,7 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
     public Observable<UserSentence> getUserSentences(String uid) {
         return Observable.create(subscriber ->
-                sentenceReference
+                publicSentencesReference
                         .orderByChild("createdBy")
                         .startAt(uid).endAt(uid)
                         .addChildEventListener(new ChildEventListener() {

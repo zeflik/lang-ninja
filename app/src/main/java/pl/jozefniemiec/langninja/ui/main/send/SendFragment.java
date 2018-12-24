@@ -106,7 +106,7 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
 
     @Override
     public void addData(UserSentence userSentence) {
-        adapter.addUserSentente(userSentence);
+        adapter.addUserSentence(userSentence);
     }
 
     private void openNewSentencePage() {

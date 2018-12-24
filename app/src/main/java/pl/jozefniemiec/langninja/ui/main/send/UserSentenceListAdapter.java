@@ -3,7 +3,6 @@ package pl.jozefniemiec.langninja.ui.main.send;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -26,10 +25,9 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<SentenceRowHolder> {
         this.userSentences.addAll(userSentences);
     }
 
-    void addUserSentente(UserSentence userSentence) {
+    void addUserSentence(UserSentence userSentence) {
         this.userSentences.add(userSentence);
         notifyItemInserted(userSentences.size() - 1);
-        Log.d("sdfsdfsd", "addUserSentente: add user called");
     }
 
     @NonNull
