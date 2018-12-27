@@ -14,8 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.ui.main.community.SendFragment;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
-import pl.jozefniemiec.langninja.ui.main.send.SendFragment;
 import pl.jozefniemiec.langninja.ui.profile.UserProfileActivity;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {

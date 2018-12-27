@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.send;
+package pl.jozefniemiec.langninja.ui.main.community;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -26,6 +28,9 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.data.repository.room.RoomLanguageRepository;
+import pl.jozefniemiec.langninja.ui.base.spinner.LanguagesSpinnerAdapter;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
@@ -36,7 +41,9 @@ import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 public class SendFragment extends DaggerFragment implements SendFragmentContract.View {
 
     private static final String TAG = SendFragment.class.getSimpleName();
-    private static final int RC_SIGN_IN = 1;
+    private Unbinder unbinder;
+    private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
+    private FirebaseAuth auth;
 
     @BindView(R.id.floatingActionButtonAddSentence)
     FloatingActionButton floatingActionButton;
@@ -47,12 +54,14 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     @BindView(R.id.logoffButton)
     Button logoffButton;
 
+    @BindView(R.id.sentencesCategoryFilterSpinner)
+    Spinner sentencesCategoryFilterSpinner;
+
+    @BindView(R.id.sentenceLanguageFilterSpinner)
+    Spinner sentenceLanguageFilterSpinner;
+
     @Inject
     SendFragmentContract.Presenter presenter;
-
-    private Unbinder unbinder;
-    private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
-    private FirebaseAuth auth;
 
     public static SendFragment newInstance() {
         SendFragment fragment = new SendFragment();
@@ -92,6 +101,18 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
         floatingActionButton.setOnClickListener(v -> openNewSentencePage());
         auth = FirebaseAuth.getInstance();
         logoffButton.setOnClickListener(v -> auth.signOut());
+        initializeSpinner();
+    }
+
+    private void initializeSpinner() {
+        String[] values = {"Mojekody", "Ostatnio dodane"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        sentencesCategoryFilterSpinner.setAdapter(adapter);
+        List<Language> languages = new RoomLanguageRepository(requireContext()).getAll();
+        LanguagesSpinnerAdapter languagesSpinnerAdapter = new LanguagesSpinnerAdapter(requireContext());
+        languagesSpinnerAdapter.addAll(languages);
+        sentenceLanguageFilterSpinner.setAdapter(languagesSpinnerAdapter);
     }
 
     public void showData(List<UserSentence> userSentences) {

@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
+import pl.jozefniemiec.langninja.ui.base.spinner.LanguagesSpinnerAdapter;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
@@ -44,7 +45,7 @@ public class SentenceCreator extends BaseSecuredActivity
     SentenceCreatorContract.Presenter presenter;
 
     @Inject
-    SpinnerAdapter spinnerAdapter;
+    LanguagesSpinnerAdapter languagesSpinnerAdapter;
 
     private InputMethodManager imm;
 
@@ -60,8 +61,8 @@ public class SentenceCreator extends BaseSecuredActivity
 
     @Override
     public void initializeSpinner(List<Language> languages) {
-        spinnerAdapter.addAll(languages);
-        languagesSpinner.setAdapter(spinnerAdapter);
+        languagesSpinnerAdapter.addAll(languages);
+        languagesSpinner.setAdapter(languagesSpinnerAdapter);
     }
 
     private void enableDoneButtonForMultilineEditText() {

@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.main.send;
+package pl.jozefniemiec.langninja.ui.main.community;
 
 import javax.inject.Inject;
 

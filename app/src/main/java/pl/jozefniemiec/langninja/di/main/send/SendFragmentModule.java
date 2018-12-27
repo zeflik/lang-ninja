@@ -2,12 +2,12 @@ package pl.jozefniemiec.langninja.di.main.send;
 
 import dagger.Binds;
 import dagger.Module;
-import pl.jozefniemiec.langninja.ui.main.send.SendFragment;
-import pl.jozefniemiec.langninja.ui.main.send.SendFragmentContract;
-import pl.jozefniemiec.langninja.ui.main.send.SendPresenter;
+import pl.jozefniemiec.langninja.ui.main.community.SendFragment;
+import pl.jozefniemiec.langninja.ui.main.community.SendFragmentContract;
+import pl.jozefniemiec.langninja.ui.main.community.SendPresenter;
 
 @Module
-public abstract class SendFragmentModule {
+abstract class SendFragmentModule {
 
     @Binds
     @SendFragmentScope
