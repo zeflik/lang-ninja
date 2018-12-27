@@ -21,7 +21,7 @@ import pl.jozefniemiec.langninja.utils.Utility;
 public class SpinnerAdapter extends ArrayAdapter<Language> {
 
     @Inject
-    SpinnerAdapter(@NonNull Context context) {
+    public SpinnerAdapter(@NonNull Context context) {
         super(context, 0);
     }
 

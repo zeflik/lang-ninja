@@ -18,7 +18,7 @@ public class RoomLanguageRepository implements LanguageRepository {
     private final LanguageDao languageDao;
 
     @Inject
-    RoomLanguageRepository(Context context) {
+    public RoomLanguageRepository(Context context) {
         this.languageDao = AppDatabase.getInstance(context).languageDao();
     }
 
