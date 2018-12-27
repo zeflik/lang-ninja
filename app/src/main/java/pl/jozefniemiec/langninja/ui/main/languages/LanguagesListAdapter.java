@@ -15,6 +15,7 @@ import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
+import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.di.main.languages.LanguagesFragmentScope;
 import pl.jozefniemiec.langninja.utils.Utility;
 
@@ -23,12 +24,15 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesViewHold
 
     private final LanguagesFragmentContract.Presenter presenter;
     private final Context context;
+    private final ResourcesManager resourcesManager;
     private List<Language> languages;
 
     @Inject
-    LanguagesListAdapter(Context context, LanguagesFragmentContract.Presenter presenter) {
+    LanguagesListAdapter(Context context, LanguagesFragmentContract.Presenter presenter,
+                         ResourcesManager resourcesManager) {
         this.context = context;
         this.presenter = presenter;
+        this.resourcesManager = resourcesManager;
     }
 
     @NonNull
@@ -41,7 +45,7 @@ public class LanguagesListAdapter extends RecyclerView.Adapter<LanguagesViewHold
 
     @Override
     public void onBindViewHolder(@NonNull LanguagesViewHolder holder, int position) {
-        holder.setLanguageName(languages.get(position).getCode());
+        holder.setLanguageName(resourcesManager.getLanguageName(languages.get(position).getCode()));
         holder.setLanguageNativeName(languages.get(position).getNativeName());
         Picasso
                 .with(context)
