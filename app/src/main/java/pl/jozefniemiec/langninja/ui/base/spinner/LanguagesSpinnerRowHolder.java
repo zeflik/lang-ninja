@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.creator;
+package pl.jozefniemiec.langninja.ui.base.spinner;
 
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
 
-public class SpinnerRowHolder extends RecyclerView.ViewHolder {
+public class LanguagesSpinnerRowHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.spinner_flag)
     ImageView flag;
@@ -20,7 +20,7 @@ public class SpinnerRowHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.spinner_lang_name)
     TextView langName;
 
-    SpinnerRowHolder(View itemView) {
+    LanguagesSpinnerRowHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
     }

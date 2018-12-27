@@ -1,4 +1,4 @@
-package pl.jozefniemiec.langninja.ui.creator;
+package pl.jozefniemiec.langninja.ui.base.spinner;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -18,10 +18,10 @@ import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 @SentenceCreatorScope
-public class SpinnerAdapter extends ArrayAdapter<Language> {
+public class LanguagesSpinnerAdapter extends ArrayAdapter<Language> {
 
     @Inject
-    public SpinnerAdapter(@NonNull Context context) {
+    public LanguagesSpinnerAdapter(@NonNull Context context) {
         super(context, 0);
     }
 
@@ -41,7 +41,7 @@ public class SpinnerAdapter extends ArrayAdapter<Language> {
             convertView = LayoutInflater.from(getContext())
                     .inflate(R.layout.languages_spinner_row, parent, false);
         }
-        SpinnerRowHolder holder = new SpinnerRowHolder(convertView);
+        LanguagesSpinnerRowHolder holder = new LanguagesSpinnerRowHolder(convertView);
         holder.setFlag(Utility.getLanguageFlagUri(getContext(), Objects.requireNonNull(getItem(position)).getCode()));
         holder.setLangName(Objects.requireNonNull(getItem(position)).getNativeName());
         return convertView;
