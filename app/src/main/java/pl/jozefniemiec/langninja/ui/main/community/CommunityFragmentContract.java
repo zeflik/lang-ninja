@@ -4,7 +4,7 @@ import java.util.List;
 
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 
-public interface SendFragmentContract {
+public interface CommunityFragmentContract {
 
     interface View {
 

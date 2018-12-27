@@ -38,9 +38,9 @@ import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
-public class SendFragment extends DaggerFragment implements SendFragmentContract.View {
+public class CommunityFragment extends DaggerFragment implements CommunityFragmentContract.View {
 
-    private static final String TAG = SendFragment.class.getSimpleName();
+    private static final String TAG = CommunityFragment.class.getSimpleName();
     private Unbinder unbinder;
     private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
     private FirebaseAuth auth;
@@ -61,10 +61,10 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     Spinner sentenceLanguageFilterSpinner;
 
     @Inject
-    SendFragmentContract.Presenter presenter;
+    CommunityFragmentContract.Presenter presenter;
 
-    public static SendFragment newInstance() {
-        SendFragment fragment = new SendFragment();
+    public static CommunityFragment newInstance() {
+        CommunityFragment fragment = new CommunityFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -73,7 +73,7 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
     @Override
     public android.view.View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                                           Bundle savedInstanceState) {
-        android.view.View view = inflater.inflate(R.layout.fragment_send, container, false);
+        android.view.View view = inflater.inflate(R.layout.fragment_community, container, false);
         unbinder = ButterKnife.bind(this, view);
         adapter.setListener(userSentence -> {
             Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
@@ -101,13 +101,13 @@ public class SendFragment extends DaggerFragment implements SendFragmentContract
         floatingActionButton.setOnClickListener(v -> openNewSentencePage());
         auth = FirebaseAuth.getInstance();
         logoffButton.setOnClickListener(v -> auth.signOut());
-        initializeSpinner();
+        initializeSpinners();
     }
 
-    private void initializeSpinner() {
-        String[] values = {"Mojekody", "Ostatnio dodane"};
+    private void initializeSpinners() {
+        String[] spinnerOptions = getResources().getStringArray(R.array.filter_spinner_options);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+                R.layout.simple_spinner_row, R.id.simple_spinner_textview, spinnerOptions);
         sentencesCategoryFilterSpinner.setAdapter(adapter);
         List<Language> languages = new RoomLanguageRepository(requireContext()).getAll();
         LanguagesSpinnerAdapter languagesSpinnerAdapter = new LanguagesSpinnerAdapter(requireContext());

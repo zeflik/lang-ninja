@@ -89,4 +89,9 @@
     <string name="hint_user_name">Imię…</string>
     <string name="label_name_input">IMIĘ</string>
     <string name="message_unknown_upload_error">Nieznany błąd, zdjęcie nie zostało zapisane.</string>
+    <string-array name="filter_spinner_options">
+        <item>Moje</item>
+        <item>Najnowsze</item>
+        <item>Najwyżej oceniane</item>
+    </string-array>
 </resources>

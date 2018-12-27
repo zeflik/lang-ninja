@@ -14,7 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.main.community.SendFragment;
+import pl.jozefniemiec.langninja.ui.main.community.CommunityFragment;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
 import pl.jozefniemiec.langninja.ui.profile.UserProfileActivity;
 
@@ -48,7 +48,7 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
                 getString(R.string.tabs_tongue_twisters)
         );
         sectionPageAdapter.addFragment(
-                SendFragment.newInstance(),
+                CommunityFragment.newInstance(),
                 getString(R.string.tabs_send_tongue_twister)
         );
         tabLayout.setupWithViewPager(viewPager);

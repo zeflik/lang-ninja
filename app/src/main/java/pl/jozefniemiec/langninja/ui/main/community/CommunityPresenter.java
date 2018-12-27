@@ -5,18 +5,18 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
-import pl.jozefniemiec.langninja.di.main.send.SendFragmentScope;
+import pl.jozefniemiec.langninja.di.main.community.CommunityFragmentScope;
 
-@SendFragmentScope
-public class SendPresenter implements SendFragmentContract.Presenter {
+@CommunityFragmentScope
+public class CommunityPresenter implements CommunityFragmentContract.Presenter {
 
-    private static final String TAG = SendPresenter.class.getSimpleName();
+    private static final String TAG = CommunityPresenter.class.getSimpleName();
 
-    private final SendFragmentContract.View view;
+    private final CommunityFragmentContract.View view;
     private final UserSentenceRepository repository;
 
     @Inject
-    SendPresenter(SendFragmentContract.View view, UserSentenceRepository repository) {
+    CommunityPresenter(CommunityFragmentContract.View view, UserSentenceRepository repository) {
         this.view = view;
         this.repository = repository;
     }

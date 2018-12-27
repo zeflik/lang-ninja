@@ -8,8 +8,8 @@ import pl.jozefniemiec.langninja.di.login.LoginActivityModule;
 import pl.jozefniemiec.langninja.di.login.LoginActivityScope;
 import pl.jozefniemiec.langninja.di.main.MainActivityModule;
 import pl.jozefniemiec.langninja.di.main.MainActivityScope;
+import pl.jozefniemiec.langninja.di.main.community.CommunityFragmentProvider;
 import pl.jozefniemiec.langninja.di.main.languages.LanguagesFragmentProvider;
-import pl.jozefniemiec.langninja.di.main.send.SendFragmentProvider;
 import pl.jozefniemiec.langninja.di.profile.UserProfileActivityModule;
 import pl.jozefniemiec.langninja.di.profile.UserProfileActivityScope;
 import pl.jozefniemiec.langninja.di.reader.ReaderFragmentProvider;
@@ -31,7 +31,7 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = {
             MainActivityModule.class,
             LanguagesFragmentProvider.class,
-            SendFragmentProvider.class
+            CommunityFragmentProvider.class
     })
     @MainActivityScope
     abstract MainActivity bindMainActivity();

@@ -13,7 +13,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.utils.Utility;
 
-class UserSentenceListAdapter extends RecyclerView.Adapter<SentenceRowHolder> {
+class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder> {
 
     private List<UserSentence> userSentences = new ArrayList<>();
     private OnClickListener listener;
@@ -32,13 +32,13 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<SentenceRowHolder> {
 
     @NonNull
     @Override
-    public SentenceRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new SentenceRowHolder(LayoutInflater.from(parent.getContext())
+    public UserSentenceRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new UserSentenceRowHolder(LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.new_sentence_row, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SentenceRowHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UserSentenceRowHolder holder, int position) {
         holder.setAuthor(userSentences.get(position).getAuthor().getName());
         holder.setSentence(userSentences.get(position).getSentence());
         holder.setFlag(Utility.getLanguageFlagUri(holder.flag.getContext(), userSentences.get(position).getLanguageCode()));
