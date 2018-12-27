@@ -30,15 +30,14 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
     SectionPageAdapter sectionPageAdapter;
 
     @Inject
-    MainContract.Presenter mainPresenter;
-
+    MainContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        mainPresenter.loadMain();
+        presenter.loadMain();
     }
 
     @Override
@@ -70,6 +69,9 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
                 break;
             case R.id.settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.sign_out:
+                presenter.onMenuSignOutClicked();
                 break;
             default:
                 return super.onOptionsItemSelected(item);

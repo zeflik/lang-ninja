@@ -10,5 +10,7 @@ public interface MainContract {
     interface Presenter {
 
         void loadMain();
+
+        void onMenuSignOutClicked();
     }
 }

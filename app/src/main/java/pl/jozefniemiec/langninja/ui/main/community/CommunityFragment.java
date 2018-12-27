@@ -13,10 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
 
@@ -43,16 +40,12 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     private static final String TAG = CommunityFragment.class.getSimpleName();
     private Unbinder unbinder;
     private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
-    private FirebaseAuth auth;
 
     @BindView(R.id.floatingActionButtonAddSentence)
     FloatingActionButton floatingActionButton;
 
     @BindView(R.id.sendSentencesRecyclerView)
     RecyclerView recyclerView;
-
-    @BindView(R.id.logoffButton)
-    Button logoffButton;
 
     @BindView(R.id.sentencesCategoryFilterSpinner)
     Spinner sentencesCategoryFilterSpinner;
@@ -99,8 +92,6 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
         floatingActionButton.setOnClickListener(v -> openNewSentencePage());
-        auth = FirebaseAuth.getInstance();
-        logoffButton.setOnClickListener(v -> auth.signOut());
         initializeSpinners();
     }
 

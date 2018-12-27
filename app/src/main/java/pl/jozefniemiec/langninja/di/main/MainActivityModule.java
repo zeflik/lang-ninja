@@ -2,6 +2,8 @@ package pl.jozefniemiec.langninja.di.main;
 
 import android.support.v4.app.FragmentManager;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -20,8 +22,8 @@ public abstract class MainActivityModule {
 
     @Provides
     @MainActivityScope
-    static MainContract.Presenter provideHomePresenter(MainContract.View mainView) {
-        return new MainPresenter(mainView);
+    static MainContract.Presenter provideHomePresenter(MainContract.View mainView, FirebaseAuth auth) {
+        return new MainPresenter(mainView, auth);
     }
 
     @Binds
