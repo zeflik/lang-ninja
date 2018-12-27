@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.di.main.community.CommunityFragmentScope;
 
 @CommunityFragmentScope
@@ -30,7 +31,7 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
     }
 
     @Override
-    public void loadData(String userUid) {
+    public void onOptionSelected(Language language, int option) {
         repository
                 .getPublicSentences()
                 .subscribeOn(Schedulers.io())

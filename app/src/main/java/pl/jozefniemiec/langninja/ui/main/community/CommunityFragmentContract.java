@@ -3,6 +3,7 @@ package pl.jozefniemiec.langninja.ui.main.community;
 import java.util.List;
 
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+import pl.jozefniemiec.langninja.data.repository.model.Language;
 
 public interface CommunityFragmentContract {
 
@@ -19,7 +20,7 @@ public interface CommunityFragmentContract {
 
         void onViewInvisible();
 
-        void loadData(String userUid);
+        void onOptionSelected(Language language, int option);
     }
 
 }

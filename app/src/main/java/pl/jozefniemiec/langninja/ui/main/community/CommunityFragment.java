@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
@@ -53,6 +54,12 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     @BindView(R.id.sentenceLanguageFilterSpinner)
     Spinner sentenceLanguageFilterSpinner;
 
+    @OnItemSelected({R.id.sentenceLanguageFilterSpinner, R.id.sentencesCategoryFilterSpinner})
+    public void onSpinnerChanged(Spinner spinner, int position) {
+        presenter.onOptionSelected((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
+                sentencesCategoryFilterSpinner.getSelectedItemPosition());
+    }
+
     @Inject
     CommunityFragmentContract.Presenter presenter;
 
@@ -75,7 +82,6 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
             intent.putExtra(SENTENCE_ID_KEY, userSentence.getId());
             startActivity(intent);
         });
-        presenter.loadData(null);
         return view;
     }
 
