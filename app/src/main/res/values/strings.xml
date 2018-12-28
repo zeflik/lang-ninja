@@ -91,8 +91,9 @@
     <string name="message_unknown_upload_error">Nieznany błąd, zdjęcie nie zostało zapisane.</string>
     <string name="sign_out">Wyloguj</string>
     <string-array name="filter_spinner_options">
-        <item>Moje</item>
         <item>Najnowsze</item>
-        <item>Najwyżej oceniane</item>
+        <item>Najpopularniejsze</item>
+        <item>Moje</item>
     </string-array>
+    <string name="spinner_all_languages">Wszystkie języki</string>
 </resources>

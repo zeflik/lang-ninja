@@ -15,19 +15,21 @@ import pl.jozefniemiec.langninja.utils.Utility;
 
 class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder> {
 
+    public static final int INSERT_INDEX = 0;
     private List<UserSentence> userSentences = new ArrayList<>();
     private OnClickListener listener;
 
     UserSentenceListAdapter() {
     }
 
-    void addUserSententes(List<UserSentence> userSentences) {
-        this.userSentences.addAll(userSentences);
+    void addUserSentence(UserSentence userSentence) {
+        this.userSentences.add(INSERT_INDEX, userSentence);
+        notifyItemInserted(INSERT_INDEX);
     }
 
-    void addUserSentence(UserSentence userSentence) {
-        this.userSentences.add(userSentence);
-        notifyItemInserted(userSentences.size() - 1);
+    void removeAll() {
+        userSentences.clear();
+        notifyDataSetChanged();
     }
 
     @NonNull

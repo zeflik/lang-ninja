@@ -22,7 +22,7 @@
         android:gravity="end"
         app:layout_constraintEnd_toStartOf="@+id/sentencesCategoryFilterSpinner"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="spread"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent" />
 
     <android.support.v7.widget.RecyclerView

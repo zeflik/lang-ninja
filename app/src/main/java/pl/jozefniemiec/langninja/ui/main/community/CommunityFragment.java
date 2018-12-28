@@ -8,7 +8,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import pl.jozefniemiec.langninja.ui.base.spinner.LanguagesSpinnerAdapter;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
+import static pl.jozefniemiec.langninja.ui.base.Constants.DEFAULT_LANG_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
@@ -41,6 +41,7 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     private static final String TAG = CommunityFragment.class.getSimpleName();
     private Unbinder unbinder;
     private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
+    private int spinnerOnSelectedCounter;
 
     @BindView(R.id.floatingActionButtonAddSentence)
     FloatingActionButton floatingActionButton;
@@ -54,14 +55,16 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     @BindView(R.id.sentenceLanguageFilterSpinner)
     Spinner sentenceLanguageFilterSpinner;
 
-    @OnItemSelected({R.id.sentenceLanguageFilterSpinner, R.id.sentencesCategoryFilterSpinner})
-    public void onSpinnerChanged(Spinner spinner, int position) {
-        presenter.onOptionSelected((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
-                sentencesCategoryFilterSpinner.getSelectedItemPosition());
-    }
-
     @Inject
     CommunityFragmentContract.Presenter presenter;
+
+    @OnItemSelected({R.id.sentenceLanguageFilterSpinner, R.id.sentencesCategoryFilterSpinner})
+    public void onSpinnerChanged(Spinner spinner, int position) {
+        if (spinnerOnSelectedCounter++ > 0) {
+            presenter.onOptionSelected((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
+                                       sentencesCategoryFilterSpinner.getSelectedItemPosition());
+        }
+    }
 
     public static CommunityFragment newInstance() {
         CommunityFragment fragment = new CommunityFragment();
@@ -108,36 +111,32 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         sentencesCategoryFilterSpinner.setAdapter(adapter);
         List<Language> languages = new RoomLanguageRepository(requireContext()).getAll();
         LanguagesSpinnerAdapter languagesSpinnerAdapter = new LanguagesSpinnerAdapter(requireContext());
+        languagesSpinnerAdapter.add(new Language(DEFAULT_LANG_KEY, getString(R.string.spinner_all_languages)));
         languagesSpinnerAdapter.addAll(languages);
         sentenceLanguageFilterSpinner.setAdapter(languagesSpinnerAdapter);
-    }
-
-    public void showData(List<UserSentence> userSentences) {
-        Log.d(TAG, "onDataChange called form view" + userSentences);
-        adapter.addUserSententes(userSentences);
-        adapter.notifyDataSetChanged();
     }
 
     @Override
     public void addData(UserSentence userSentence) {
         adapter.addUserSentence(userSentence);
-    }
-
-    private void openNewSentencePage() {
-        Intent intent = new Intent(requireContext(), SentenceCreator.class);
-        startActivity(intent);
+        if (recyclerView != null) {
+            recyclerView.scrollToPosition(UserSentenceListAdapter.INSERT_INDEX);
+        }
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        presenter.onViewVisible();
+    public void clearData() {
+        adapter.removeAll();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        presenter.onViewInvisible();
+    }
+
+    private void openNewSentencePage() {
+        Intent intent = new Intent(requireContext(), SentenceCreator.class);
+        startActivity(intent);
     }
 
     @Override

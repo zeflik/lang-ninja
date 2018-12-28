@@ -53,7 +53,7 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
                 .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
                 .map(author -> new UserSentence(null, sentence, language.getCode(), author))
                 .subscribe(userSentence -> {
-                    userSentenceRepository.insertPublic(userSentence);
+                    userSentenceRepository.insert(userSentence);
                     view.close();
                 });
     }
