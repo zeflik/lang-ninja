@@ -15,6 +15,8 @@ public interface CommunityFragmentContract {
     interface Presenter {
 
         void onOptionSelected(Language language, int option);
+
+        void onDestroyView();
     }
 
 }

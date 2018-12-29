@@ -27,6 +27,8 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference publicSentencesByLanguageReference = firebaseDatabase.getReference("public_sentences_by_lang");
     private DatabaseReference publicSentencesReference = firebaseDatabase.getReference("public_sentences");
+    private DatabaseReference dbReference;
+    private ChildEventListener childEventListener;
 
     @Inject
     public UserSentenceRepositoryImpl() {
@@ -49,19 +51,19 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
     public Single<UserSentence> getSentence(String key) {
         return Single.create(subscriber ->
-                publicSentencesReference
-                        .child(key)
-                        .addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                subscriber.onSuccess(dataSnapshot.getValue(UserSentence.class));
-                            }
+                                     publicSentencesReference
+                                             .child(key)
+                                             .addListenerForSingleValueEvent(new ValueEventListener() {
+                                                 @Override
+                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                     subscriber.onSuccess(dataSnapshot.getValue(UserSentence.class));
+                                                 }
 
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                 @Override
+                                                 public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                            }
-                        }));
+                                                 }
+                                             }));
     }
 
 
@@ -83,20 +85,16 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
     private Observable<UserSentence> getPublicSentencesByLanguageAndChildValue(String languageCode, String childKey, String childValue) {
         return Observable.create(subscriber -> {
-            DatabaseReference dbReference;
             if (languageCode.equals(Constants.DEFAULT_LANG_KEY)) {
                 dbReference = publicSentencesReference;
-
             } else {
                 dbReference = publicSentencesByLanguageReference.child(languageCode);
             }
-
             Query query = dbReference.orderByChild(childKey);
-
-            if (childValue != null)
-                query = query
-                        .equalTo(childValue);
-            query
+            if (childValue != null) {
+                query = query.equalTo(childValue);
+            }
+            childEventListener = query
                     .addChildEventListener(new ChildEventListener() {
                         @Override
                         public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
@@ -127,6 +125,13 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                         }
                     });
         });
+    }
+
+    @Override
+    public void dispose() {
+        if (dbReference != null && childEventListener != null) {
+            dbReference.removeEventListener(childEventListener);
+        }
     }
 }
 

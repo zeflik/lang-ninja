@@ -143,5 +143,6 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        presenter.onDestroyView();
     }
 }

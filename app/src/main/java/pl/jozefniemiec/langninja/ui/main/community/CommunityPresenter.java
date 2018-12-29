@@ -9,6 +9,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.firebase.RepositoryQueryFactory;
 import pl.jozefniemiec.langninja.data.repository.firebase.SearchStrategy;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
@@ -35,10 +36,7 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
 
     @Override
     public void onOptionSelected(Language language, int option) {
-        if (subscription != null) {
-            subscription.dispose();
-        }
-        view.clearData();
+        cleanup();
         SearchStrategy searchStrategy = SearchStrategy.valueOf(option);
         String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : DEFAULT_USER_UID;
         String languageCode = language.getCode();
@@ -48,5 +46,18 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(view::addData);
+    }
+
+    @Override
+    public void onDestroyView() {
+        cleanup();
+    }
+
+    private void cleanup() {
+        if (subscription != null) {
+            repository.dispose();
+            subscription.dispose();
+        }
+        view.clearData();
     }
 }
