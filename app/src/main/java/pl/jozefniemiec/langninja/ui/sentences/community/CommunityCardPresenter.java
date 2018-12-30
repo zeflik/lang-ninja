@@ -3,7 +3,9 @@ package pl.jozefniemiec.langninja.ui.sentences.community;
 import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.di.sentences.community.CommunityCardScope;
 
+@CommunityCardScope
 public class CommunityCardPresenter implements CommunityCardContract.Presenter {
 
     private final CommunityCardContract.View view;

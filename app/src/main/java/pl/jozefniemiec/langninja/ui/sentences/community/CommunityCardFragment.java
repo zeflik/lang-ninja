@@ -21,9 +21,7 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
-import pl.jozefniemiec.langninja.di.sentences.community.CommunityCardScope;
 
-@CommunityCardScope
 public class CommunityCardFragment extends DaggerFragment implements CommunityCardContract.View {
 
     private static final String ARG_PARAM1 = "param1";
