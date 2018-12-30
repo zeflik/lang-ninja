@@ -3,7 +3,6 @@ package pl.jozefniemiec.langninja.ui.profile;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +17,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -151,7 +151,7 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK) {
-            Uri imageUri = data.getData();
+            Uri imageUri = Objects.requireNonNull(data.getData());
 
             CropImage.activity(imageUri)
                     .setGuidelines(CropImageView.Guidelines.ON)
@@ -185,18 +185,14 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         if (savedInstanceState.containsKey("Selected image uri")) {
-            Serializable selectedImageUri = savedInstanceState.getSerializable("Selected image uri");
+            Serializable selectedImageUri =
+                    Objects.requireNonNull(savedInstanceState.getSerializable("Selected image uri"));
             imageHolderUri = Uri.parse(selectedImageUri.toString());
         }
     }
 
     @Override
     public void showNeedInternetDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.missing_internet_connection)
-                .setMessage(R.string.message_connect_to_internet_and_refresh)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(R.string.button_ok, (dialog, whichButton) -> dialog.dismiss())
-                .show();
+        Utility.showNeedInternetDialog(this);
     }
 }

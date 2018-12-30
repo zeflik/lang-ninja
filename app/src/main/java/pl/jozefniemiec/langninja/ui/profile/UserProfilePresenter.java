@@ -47,7 +47,7 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
 
     @Override
     public void loadData(String userNameField, Uri imageHolderUri) {
-        if (TextUtils.isEmpty(userNameField) && auth.checkSignInStatus()) {
+        if (TextUtils.isEmpty(userNameField) && auth.isSignedIn()) {
             view.showProgress();
             userRepository
                     .getUser(auth.getCurrentUserUid())

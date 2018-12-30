@@ -1,15 +1,15 @@
 package pl.jozefniemiec.langninja.ui.sentences.community;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -17,20 +17,26 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+import pl.jozefniemiec.langninja.utils.Utility;
+import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
 public class CommunityCardFragment extends DaggerFragment implements CommunityCardContract.View {
 
-    private static final String ARG_PARAM1 = "param1";
+    private static final String TAG = CommunityCardFragment.class.getSimpleName();
+    private static final String SENTENCE_KEY = "sentence_key";
     private String sentenceKey;
-    private OnFragmentInteractionListener mListener;
     private Unbinder unbinder;
 
     @Inject
     CommunityCardContract.Presenter presenter;
+
+    @Inject
+    Picasso picasso;
 
     @BindView(R.id.communityFeedbackAuthorTextView)
     TextView communityFeedbackAuthorTextView;
@@ -47,13 +53,29 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     @BindView(R.id.communityFeedbackThumbsCountTextView)
     TextView communityFeedbackThumbsCountTextView;
 
+    @BindView(R.id.communityFeedbackThumbUpImageButton)
+    ImageButton communityFeedbackThumbUpImageView;
+
+    @OnClick(R.id.communityFeedbackThumbUpImageButton)
+    void dislike() {
+        presenter.onLikeButtonClicked(sentenceKey);
+    }
+
+    @BindView(R.id.communityFeedbackThumbDownImageView)
+    ImageButton communityFeedbackThumbDownImageView;
+
+    @OnClick(R.id.communityFeedbackThumbDownImageView)
+    void like() {
+        presenter.onDislikeButtonClicked(sentenceKey);
+    }
+
     public CommunityCardFragment() {
     }
 
     public static CommunityCardFragment newInstance(String param1) {
         CommunityCardFragment fragment = new CommunityCardFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putString(SENTENCE_KEY, param1);
         fragment.setArguments(args);
         return fragment;
     }
@@ -62,7 +84,7 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            sentenceKey = getArguments().getString(ARG_PARAM1);
+            sentenceKey = getArguments().getString(SENTENCE_KEY);
         }
     }
 
@@ -77,51 +99,66 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.loadData(sentenceKey);
     }
 
     @Override
     public void showData(UserSentence userSentence) {
         communityFeedbackAuthorTextView.setText(userSentence.getAuthor().getName());
         communityFeedbackCommentsCountTextView.setText("12");
-        communityFeedbackThumbsCountTextView.setText("102");
+        communityFeedbackThumbsCountTextView.setText(String.valueOf(userSentence.getLikes().getCount()));
         communityFeedbackDateTextView.setText("now");
-        Picasso
-                .with(requireContext())
+        picasso
                 .load(userSentence.getAuthor().getPhoto())
+                .fit()
+                .transform(new CircleTransform())
                 .into(communityFeedbackAuthorImageView);
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void highlightLikeButton() {
+        Utility.highlightButton(requireActivity(), communityFeedbackThumbUpImageView);
     }
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
+    public void highlightDislikeButton() {
+        Utility.highlightButton(requireActivity(), communityFeedbackThumbDownImageView);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+    @Override
+    public void unHighlightLikeButton() {
+        Utility.unHighlightButton(requireActivity(), communityFeedbackThumbUpImageView);
+    }
+
+    @Override
+    public void unHighlightDislikeButton() {
+        Utility.unHighlightButton(requireActivity(), communityFeedbackThumbDownImageView);
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showSignInDialog() {
+        Utility.signInRequiredDialog(requireContext());
+    }
+
+    @Override
+    public void showNeedInternetDialog() {
+        Utility.showNeedInternetDialog(requireContext());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        presenter.loadData(sentenceKey);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        presenter.onViewClose();
     }
 
     @Override

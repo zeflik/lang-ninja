@@ -9,15 +9,19 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Objects;
 
 import javax.inject.Inject;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.ui.base.Constants;
 
@@ -70,6 +74,83 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
         );
     }
 
+    @Override
+    public Completable like(String sentenceKey, String userUid) {
+        return Completable.create(subscriber -> {
+            DatabaseReference likesReference = publicSentencesReference
+                    .child(sentenceKey)
+                    .child("likes");
+            likesReference.runTransaction(new Transaction.Handler() {
+                @NonNull
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    Likes likes = mutableData.getValue(Likes.class);
+                    if (likes == null) {
+                        return Transaction.success(mutableData);
+                    }
+                    if (likes.getLikesMap().containsKey(userUid)) {
+                        likes.setCount(likes.getCount() - 1);
+                        likes.getLikesMap().remove(userUid);
+                    } else if (likes.getDislikesMap().containsKey(userUid)) {
+                        likes.setCount(likes.getCount() + 2);
+                        likes.getDislikesMap().remove(userUid);
+                        likes.getLikesMap().put(userUid, true);
+                    } else {
+                        likes.setCount(likes.getCount() + 1);
+                        likes.getLikesMap().put(userUid, true);
+                    }
+                    mutableData.setValue(likes);
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b,
+                                       DataSnapshot dataSnapshot) {
+                    subscriber.onComplete();
+                    Log.d(TAG, "LikesTransaction:onComplete:" + databaseError);
+                }
+            });
+        });
+    }
+
+    @Override
+    public Completable dislike(String sentenceKey, String userUid) {
+        return Completable.create(subscriber -> {
+            DatabaseReference likesReference = publicSentencesReference
+                    .child(sentenceKey)
+                    .child("likes");
+            likesReference.runTransaction(new Transaction.Handler() {
+                @NonNull
+                @Override
+                public Transaction.Result doTransaction(MutableData mutableData) {
+                    Likes likes = mutableData.getValue(Likes.class);
+                    if (likes == null) {
+                        return Transaction.success(mutableData);
+                    }
+                    if (likes.getDislikesMap().containsKey(userUid)) {
+                        likes.setCount(likes.getCount() + 1);
+                        likes.getDislikesMap().remove(userUid);
+                    } else if (likes.getLikesMap().containsKey(userUid)) {
+                        likes.setCount(likes.getCount() - 2);
+                        likes.getLikesMap().remove(userUid);
+                        likes.getDislikesMap().put(userUid, true);
+                    } else {
+                        likes.setCount(likes.getCount() - 1);
+                        likes.getDislikesMap().put(userUid, true);
+                    }
+                    mutableData.setValue(likes);
+                    return Transaction.success(mutableData);
+                }
+
+                @Override
+                public void onComplete(DatabaseError databaseError, boolean b,
+                                       DataSnapshot dataSnapshot) {
+                    subscriber.onComplete();
+                    Log.d(TAG, "Dislike Transaction:onComplete:" + databaseError);
+                }
+            });
+        });
+    }
 
     public Observable<UserSentence> getSentences() {
         return getPublicSentencesByLanguageAndChildValue(Constants.DEFAULT_LANG_KEY, "dateCreated", null);

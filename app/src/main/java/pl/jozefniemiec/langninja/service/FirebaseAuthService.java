@@ -14,7 +14,7 @@ public class FirebaseAuthService implements AuthService {
     }
 
     @Override
-    public boolean checkSignInStatus() {
+    public boolean isSignedIn() {
         return instance.getCurrentUser() != null;
     }
 

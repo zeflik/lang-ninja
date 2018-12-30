@@ -2,13 +2,18 @@ package pl.jozefniemiec.langninja.utils;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.widget.ImageButton;
+
+import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.ui.login.LoginActivity;
 
 public class Utility {
 
@@ -58,5 +63,28 @@ public class Utility {
                 (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public static void signInRequiredDialog(Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Wymagana autoryzacja")
+                .setMessage("Zawartość tylko dla zarejstrowanych użytkowników. Czy chcesz się zalogować?")
+                .setIcon(android.R.drawable.ic_secure)
+                .setPositiveButton(R.string.login, (dialog, whichButton) -> {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                })
+                .setNegativeButton(R.string.button_cancel, (dialog, which) -> ((Activity) context).finish())
+                .setCancelable(false)
+                .show();
+    }
+
+    public static void showNeedInternetDialog(Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle(R.string.missing_internet_connection)
+                .setMessage(R.string.message_connect_to_internet_and_refresh)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setPositiveButton(R.string.button_ok, (dialog, whichButton) -> dialog.dismiss())
+                .show();
     }
 }

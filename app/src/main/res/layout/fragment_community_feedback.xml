@@ -48,7 +48,7 @@
                 app:layout_constraintStart_toStartOf="@+id/communityFeedbackAuthorTextView"
                 app:layout_constraintTop_toBottomOf="@+id/communityFeedbackAuthorTextView"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackThumbUpImageView"
+                card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackThumbUpImageButton"
                 card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintVertical_bias="0.0" />
 
@@ -87,8 +87,8 @@
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintTop_toTopOf="@+id/communityFeedbackDateTextView" />
 
-            <ImageView
-                android:id="@+id/communityFeedbackThumbUpImageView"
+            <ImageButton
+                android:id="@+id/communityFeedbackThumbUpImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -108,7 +108,7 @@
                 card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackThumbDownImageView"
                 card_view:layout_constraintTop_toTopOf="@+id/communityFeedbackThumbDownImageView" />
 
-            <ImageView
+            <ImageButton
                 android:id="@+id/communityFeedbackThumbDownImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

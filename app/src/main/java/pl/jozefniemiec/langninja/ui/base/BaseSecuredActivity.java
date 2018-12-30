@@ -1,16 +1,12 @@
 package pl.jozefniemiec.langninja.ui.base;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.ui.login.LoginActivity;
+import pl.jozefniemiec.langninja.utils.Utility;
 
 public abstract class BaseSecuredActivity extends BaseActivity {
 
@@ -32,17 +28,7 @@ public abstract class BaseSecuredActivity extends BaseActivity {
     }
 
     private void showLoginDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Wymagana autoryzacja")
-                .setMessage("Zawartość tylko dla zarejstrowanych użytkowników. Czy chcesz się zalogować?")
-                .setIcon(android.R.drawable.ic_secure)
-                .setPositiveButton(R.string.login, (dialog, whichButton) -> {
-                    Intent intent = new Intent(context, LoginActivity.class);
-                    startActivity(intent);
-                })
-                .setNegativeButton(R.string.button_cancel, (dialog, which) -> ((Activity) context).finish())
-                .setCancelable(false)
-                .show();
+        Utility.signInRequiredDialog(this);
     }
 
     @Override

@@ -2,7 +2,7 @@ package pl.jozefniemiec.langninja.service;
 
 public interface AuthService {
 
-    boolean checkSignInStatus();
+    boolean isSignedIn();
 
     String getCurrentUserUid();
 

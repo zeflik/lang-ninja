@@ -12,8 +12,7 @@ public class UserSentence {
     private String languageCode;
     private Object dateEdited = ServerValue.TIMESTAMP;
     private Object dateCreated = ServerValue.TIMESTAMP;
-    private Map<String, Integer> likes = new HashMap<>();
-    private int likesCount;
+    private Likes likes;
     private Map<String, Integer> comments = new HashMap<>();
     private int commentsCount;
     private Author author;
@@ -26,6 +25,7 @@ public class UserSentence {
         this.sentence = sentence;
         this.languageCode = languageCode;
         this.author = author;
+        likes = new Likes();
     }
 
     public String getId() {
@@ -76,28 +76,12 @@ public class UserSentence {
         this.author = author;
     }
 
-    public int getLikesCount() {
-        return likesCount;
-    }
-
-    public void setLikesCount(int likesCount) {
-        this.likesCount = likesCount;
-    }
-
     public int getCommentsCount() {
         return commentsCount;
     }
 
     public void setCommentsCount(int commentsCount) {
         this.commentsCount = commentsCount;
-    }
-
-    public Map<String, Integer> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Map<String, Integer> likes) {
-        this.likes = likes;
     }
 
     public Map<String, Integer> getComments() {
@@ -108,6 +92,14 @@ public class UserSentence {
         this.comments = comments;
     }
 
+    public Likes getLikes() {
+        return likes;
+    }
+
+    public void setLikes(Likes likes) {
+        this.likes = likes;
+    }
+
     @Override
     public String toString() {
         return "UserSentence{" +
@@ -116,7 +108,8 @@ public class UserSentence {
                 ", languageCode='" + languageCode + '\'' +
                 ", dateEdited=" + dateEdited +
                 ", dateCreated=" + dateCreated +
-                ", likesCount=" + likesCount +
+                ", likes=" + likes +
+                ", comments=" + comments +
                 ", commentsCount=" + commentsCount +
                 ", author=" + author +
                 '}';
