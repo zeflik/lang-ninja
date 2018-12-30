@@ -45,6 +45,7 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
         holder.setSentence(userSentences.get(position).getSentence());
         holder.setFlag(Utility.getLanguageFlagUri(holder.flag.getContext(), userSentences.get(position).getLanguageCode()));
         holder.setAuthorPhoto(Uri.parse(userSentences.get(position).getAuthor().getPhoto()));
+        holder.setLikesCountTextView(String.valueOf(userSentences.get(position).getLikes().getCount()));
         holder.itemView.setOnClickListener(v -> listener.onItemClicked(userSentences.get(position)));
     }
 
