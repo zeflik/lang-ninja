@@ -68,10 +68,12 @@ public class SentenceCardViewerActivity extends BaseActivity
         languageCode = getIntent().getStringExtra(LANGUAGE_CODE_KEY);
         if (languageCode == null) {
             throw new RuntimeException(this.toString()
-                    + ": language code missing in intent");
+                                               + ": language code missing in intent");
         }
         sentence = getIntent().getStringExtra(SENTENCE_KEY);
-        attachFragments();
+        if (savedInstanceState == null) {
+            attachFragments();
+        }
         presenter.onViewCreated();
     }
 
@@ -79,7 +81,6 @@ public class SentenceCardViewerActivity extends BaseActivity
         reader = ReaderFragment.newInstance(languageCode);
         sentenceCard = SentenceCardFragment.newInstance(languageCode, sentence);
         speechRecognizer = SpeechRecognizerFragment.newInstance(languageCode);
-
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         supportFragmentManager
                 .beginTransaction()

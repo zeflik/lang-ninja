@@ -31,8 +31,9 @@ import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
 public class UserProfileActivity extends BaseSecuredActivity implements UserProfileContract.View {
 
-    private static final int SELECT_PICTURE = 2;
+    private static final int SELECT_PICTURE = 1;
     private static final String TAG = UserProfileActivity.class.getSimpleName();
+    public static final String IMAGE_URI_KEY = "Selected image uri key";
     private Uri imageHolderUri;
 
     @Inject
@@ -176,17 +177,18 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        if (imageHolderUri != null)
-            savedInstanceState.putSerializable("Selected image uri", imageHolderUri.toString());
+        if (imageHolderUri != null) {
+            savedInstanceState.putSerializable(IMAGE_URI_KEY, imageHolderUri.toString());
+        }
 
     }
 
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        if (savedInstanceState.containsKey("Selected image uri")) {
+        if (savedInstanceState.containsKey(IMAGE_URI_KEY)) {
             Serializable selectedImageUri =
-                    Objects.requireNonNull(savedInstanceState.getSerializable("Selected image uri"));
+                    Objects.requireNonNull(savedInstanceState.getSerializable(IMAGE_URI_KEY));
             imageHolderUri = Uri.parse(selectedImageUri.toString());
         }
     }
