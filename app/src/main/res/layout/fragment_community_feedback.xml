@@ -22,7 +22,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/sentenceRowSentenceTextView"
+                android:id="@+id/communityFeedbackAuthorTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
@@ -31,13 +31,13 @@
                 android:text="Author"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="13sp"
-                app:layout_constraintStart_toEndOf="@+id/newSentenceRowUserPhoto"
+                app:layout_constraintStart_toEndOf="@+id/communityFeedbackAuthorImageView"
                 app:layout_constraintTop_toTopOf="parent"
                 card_view:layout_constraintEnd_toEndOf="parent"
                 card_view:layout_constraintHorizontal_bias="0.0" />
 
             <TextView
-                android:id="@+id/sentenceRowAuthorTextView"
+                android:id="@+id/communityFeedbackDateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
@@ -45,15 +45,15 @@
                 android:layout_marginBottom="16dp"
                 android:text="creation date"
                 android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="@+id/sentenceRowSentenceTextView"
-                app:layout_constraintTop_toBottomOf="@+id/sentenceRowSentenceTextView"
+                app:layout_constraintStart_toStartOf="@+id/communityFeedbackAuthorTextView"
+                app:layout_constraintTop_toBottomOf="@+id/communityFeedbackAuthorTextView"
                 card_view:layout_constraintBottom_toBottomOf="parent"
-                card_view:layout_constraintEnd_toStartOf="@+id/imageView2"
+                card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackThumbUpImageView"
                 card_view:layout_constraintHorizontal_bias="0.0"
                 card_view:layout_constraintVertical_bias="0.0" />
 
             <ImageView
-                android:id="@+id/newSentenceRowUserPhoto"
+                android:id="@+id/communityFeedbackAuthorImageView"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
@@ -67,56 +67,56 @@
                 app:layout_constraintVertical_bias="0.25" />
 
             <ImageView
-                android:id="@+id/newSentenceRowCommentIcon"
+                android:id="@+id/communityFeedbackCommentsImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:src="@drawable/ic_comment"
-                card_view:layout_constraintBottom_toBottomOf="@+id/newSentenceRowCommentTextView"
-                card_view:layout_constraintEnd_toStartOf="@+id/newSentenceRowCommentTextView"
-                card_view:layout_constraintTop_toTopOf="@+id/newSentenceRowCommentTextView" />
+                card_view:layout_constraintBottom_toBottomOf="@+id/communityFeedbackCommentsCountTextView"
+                card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackCommentsCountTextView"
+                card_view:layout_constraintTop_toTopOf="@+id/communityFeedbackCommentsCountTextView" />
 
             <TextView
-                android:id="@+id/newSentenceRowCommentTextView"
+                android:id="@+id/communityFeedbackCommentsCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="15"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                card_view:layout_constraintBottom_toBottomOf="@+id/sentenceRowAuthorTextView"
+                card_view:layout_constraintBottom_toBottomOf="@+id/communityFeedbackDateTextView"
                 card_view:layout_constraintEnd_toEndOf="parent"
-                card_view:layout_constraintTop_toTopOf="@+id/sentenceRowAuthorTextView" />
+                card_view:layout_constraintTop_toTopOf="@+id/communityFeedbackDateTextView" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/communityFeedbackThumbUpImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/ic_thumb_up"
-                card_view:layout_constraintBottom_toBottomOf="@+id/newSentenceRowThumbsTextView"
-                card_view:layout_constraintEnd_toStartOf="@+id/newSentenceRowThumbsTextView"
-                card_view:layout_constraintTop_toTopOf="@+id/newSentenceRowThumbsTextView" />
+                card_view:layout_constraintBottom_toBottomOf="@+id/communityFeedbackThumbsCountTextView"
+                card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackThumbsCountTextView"
+                card_view:layout_constraintTop_toTopOf="@+id/communityFeedbackThumbsCountTextView" />
 
             <TextView
-                android:id="@+id/newSentenceRowThumbsTextView"
+                android:id="@+id/communityFeedbackThumbsCountTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:text="15"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
-                card_view:layout_constraintBottom_toBottomOf="@+id/imageView"
-                card_view:layout_constraintEnd_toStartOf="@+id/imageView"
-                card_view:layout_constraintTop_toTopOf="@+id/imageView" />
+                card_view:layout_constraintBottom_toBottomOf="@+id/communityFeedbackThumbDownImageView"
+                card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackThumbDownImageView"
+                card_view:layout_constraintTop_toTopOf="@+id/communityFeedbackThumbDownImageView" />
 
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/communityFeedbackThumbDownImageView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="32dp"
                 android:background="@drawable/ic_thumb_down"
-                card_view:layout_constraintBottom_toBottomOf="@+id/newSentenceRowCommentIcon"
-                card_view:layout_constraintEnd_toStartOf="@+id/newSentenceRowCommentIcon"
-                card_view:layout_constraintTop_toTopOf="@+id/newSentenceRowCommentIcon" />
+                card_view:layout_constraintBottom_toBottomOf="@+id/communityFeedbackCommentsImage"
+                card_view:layout_constraintEnd_toStartOf="@+id/communityFeedbackCommentsImage"
+                card_view:layout_constraintTop_toTopOf="@+id/communityFeedbackCommentsImage" />
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.CardView>

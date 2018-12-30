@@ -2,6 +2,7 @@ package pl.jozefniemiec.langninja.data.repository.firebase;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -16,7 +17,6 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.ui.base.Constants;
@@ -49,21 +49,25 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                 .setValue(userSentence);
     }
 
-    public Single<UserSentence> getSentence(String key) {
-        return Single.create(subscriber ->
-                                     publicSentencesReference
-                                             .child(key)
-                                             .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                 @Override
-                                                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                     subscriber.onSuccess(dataSnapshot.getValue(UserSentence.class));
-                                                 }
+    public Observable<UserSentence> getSentence(String key) {
+        Log.d(TAG, "getSentence: " + key);
+        return Observable.create(
+                subscriber ->
+                        publicSentencesReference
+                                .child(key)
+                                .addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        Log.d(TAG, "onDataChange: " + dataSnapshot.getValue());
+                                        subscriber.onNext(dataSnapshot.getValue(UserSentence.class));
+                                    }
 
-                                                 @Override
-                                                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                                                 }
-                                             }));
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                                        Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+                                    }
+                                })
+        );
     }
 
 
@@ -84,47 +88,48 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     }
 
     private Observable<UserSentence> getPublicSentencesByLanguageAndChildValue(String languageCode, String childKey, String childValue) {
-        return Observable.create(subscriber -> {
-            if (languageCode.equals(Constants.DEFAULT_LANG_KEY)) {
-                dbReference = publicSentencesReference;
-            } else {
-                dbReference = publicSentencesByLanguageReference.child(languageCode);
-            }
-            Query query = dbReference.orderByChild(childKey);
-            if (childValue != null) {
-                query = query.equalTo(childValue);
-            }
-            childEventListener = query
-                    .addChildEventListener(new ChildEventListener() {
-                        @Override
-                        public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                            UserSentence userSentence =
-                                    Objects.requireNonNull(dataSnapshot.getValue(UserSentence.class));
-                            userSentence.setId(dataSnapshot.getKey());
-                            subscriber.onNext(userSentence);
-                        }
+        return Observable.create(
+                subscriber -> {
+                    if (languageCode.equals(Constants.DEFAULT_LANG_KEY)) {
+                        dbReference = publicSentencesReference;
+                    } else {
+                        dbReference = publicSentencesByLanguageReference.child(languageCode);
+                    }
+                    Query query = dbReference.orderByChild(childKey);
+                    if (childValue != null) {
+                        query = query.equalTo(childValue);
+                    }
+                    childEventListener = query
+                            .addChildEventListener(new ChildEventListener() {
+                                @Override
+                                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                    UserSentence userSentence =
+                                            Objects.requireNonNull(dataSnapshot.getValue(UserSentence.class));
+                                    userSentence.setId(dataSnapshot.getKey());
+                                    subscriber.onNext(userSentence);
+                                }
 
-                        @Override
-                        public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                @Override
+                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                        }
+                                }
 
-                        @Override
-                        public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+                                @Override
+                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
 
-                        }
+                                }
 
-                        @Override
-                        public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                                @Override
+                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
 
-                        }
+                                }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-                        }
-                    });
-        });
+                                }
+                            });
+                });
     }
 
     @Override

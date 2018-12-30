@@ -15,5 +15,7 @@ public interface UserSentenceRepository {
 
     Observable<UserSentence> getUserSentencesByLanguage(String uid, String languageCode);
 
+    Observable<UserSentence> getSentence(String sentenceKey);
+
     void dispose();
 }
