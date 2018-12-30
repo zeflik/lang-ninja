@@ -15,5 +15,5 @@ abstract class CommunityFragmentModule {
 
     @Binds
     @CommunityFragmentScope
-    abstract CommunityFragmentContract.View provideHomeFragmentView(CommunityFragment fragment);
+    abstract CommunityFragmentContract.View provideView(CommunityFragment fragment);
 }
