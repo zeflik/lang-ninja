@@ -23,7 +23,7 @@ import pl.jozefniemiec.langninja.ui.reader.OnReaderFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
 import pl.jozefniemiec.langninja.ui.sentences.card.OnSentenceCardFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardFragment;
-import pl.jozefniemiec.langninja.ui.sentences.community.CommunityFeedbackFragment;
+import pl.jozefniemiec.langninja.ui.sentences.community.CommunityCardFragment;
 import pl.jozefniemiec.langninja.ui.speech.OnSpeechRecognitionFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
 
@@ -53,7 +53,7 @@ public class SentenceCardViewerActivity extends BaseActivity
     private SentenceCardFragment sentenceCard;
     private ReaderFragment reader;
     private SpeechRecognizerFragment speechRecognizer;
-    private CommunityFeedbackFragment communityFeedbackFragment;
+    private CommunityCardFragment communityCardFragment;
     private String languageCode;
     private String sentence;
 
@@ -90,10 +90,10 @@ public class SentenceCardViewerActivity extends BaseActivity
 
         String sentenceId = getIntent().getStringExtra(SENTENCE_ID_KEY);
         if (sentenceId != null) {
-            communityFeedbackFragment = CommunityFeedbackFragment.newInstance(sentenceId);
+            communityCardFragment = CommunityCardFragment.newInstance(sentenceId);
             supportFragmentManager
                     .beginTransaction()
-                    .add(R.id.sentenceCommunityFragmentContainer, communityFeedbackFragment)
+                    .add(R.id.sentenceCommunityFragmentContainer, communityCardFragment)
                     .commit();
         }
 

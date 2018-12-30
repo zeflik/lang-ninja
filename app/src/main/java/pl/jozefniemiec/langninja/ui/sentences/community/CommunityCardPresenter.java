@@ -4,14 +4,14 @@ import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 
-public class CommunityFeedbackPresenter implements CommunityFeedbackContract.Presenter {
+public class CommunityCardPresenter implements CommunityCardContract.Presenter {
 
-    private final CommunityFeedbackContract.View view;
+    private final CommunityCardContract.View view;
     private final UserSentenceRepository userSentenceRepository;
 
     @Inject
-    CommunityFeedbackPresenter(CommunityFeedbackContract.View view,
-                               UserSentenceRepository userSentenceRepository) {
+    CommunityCardPresenter(CommunityCardContract.View view,
+                           UserSentenceRepository userSentenceRepository) {
         this.view = view;
         this.userSentenceRepository = userSentenceRepository;
     }

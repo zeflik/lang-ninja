@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +13,26 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
-import pl.jozefniemiec.langninja.data.repository.firebase.UserSentenceRepositoryImpl;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+import pl.jozefniemiec.langninja.di.sentences.community.CommunityCardScope;
 
-public class CommunityFeedbackFragment extends Fragment implements CommunityFeedbackContract.View {
+@CommunityCardScope
+public class CommunityCardFragment extends DaggerFragment implements CommunityCardContract.View {
 
     private static final String ARG_PARAM1 = "param1";
     private String sentenceKey;
     private OnFragmentInteractionListener mListener;
     private Unbinder unbinder;
-    private CommunityFeedbackContract.Presenter presenter;
 
-    public CommunityFeedbackFragment() {
-    }
+    @Inject
+    CommunityCardContract.Presenter presenter;
 
     @BindView(R.id.communityFeedbackAuthorTextView)
     TextView communityFeedbackAuthorTextView;
@@ -47,8 +49,11 @@ public class CommunityFeedbackFragment extends Fragment implements CommunityFeed
     @BindView(R.id.communityFeedbackThumbsCountTextView)
     TextView communityFeedbackThumbsCountTextView;
 
-    public static CommunityFeedbackFragment newInstance(String param1) {
-        CommunityFeedbackFragment fragment = new CommunityFeedbackFragment();
+    public CommunityCardFragment() {
+    }
+
+    public static CommunityCardFragment newInstance(String param1) {
+        CommunityCardFragment fragment = new CommunityCardFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         fragment.setArguments(args);
@@ -61,7 +66,6 @@ public class CommunityFeedbackFragment extends Fragment implements CommunityFeed
         if (getArguments() != null) {
             sentenceKey = getArguments().getString(ARG_PARAM1);
         }
-        presenter = new CommunityFeedbackPresenter(this, new UserSentenceRepositoryImpl());
     }
 
     @Override

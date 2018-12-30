@@ -2,7 +2,7 @@ package pl.jozefniemiec.langninja.ui.sentences.community;
 
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 
-public interface CommunityFeedbackContract {
+public interface CommunityCardContract {
 
     interface View {
 
