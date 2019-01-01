@@ -7,7 +7,7 @@ import pl.jozefniemiec.langninja.R;
 public class DateUtils {
 
     private static final int SECONDS_DENOMINATOR = 1000;
-    private static final int SECONDS_IN_MINIUTE = 60;
+    private static final int SECONDS_IN_MINUTE = 60;
     private static final int ONE_MINUTE = 1;
     private static final int FIVES_MINUTES = 5;
     private static final int MINUTES_IN_HOUR = 60;
@@ -70,6 +70,6 @@ public class DateUtils {
 
     private static int getTimeDistanceInMinutes(long time) {
         long timeDistance = System.currentTimeMillis() - time;
-        return Math.round((Math.abs(timeDistance) / SECONDS_DENOMINATOR) / SECONDS_IN_MINIUTE);
+        return Math.round((Math.abs(timeDistance) / SECONDS_DENOMINATOR) / SECONDS_IN_MINUTE);
     }
 }
