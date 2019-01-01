@@ -40,8 +40,10 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
 
     private static final String TAG = CommunityFragment.class.getSimpleName();
     private Unbinder unbinder;
-    private UserSentenceListAdapter adapter = new UserSentenceListAdapter();
     private int spinnerOnSelectedCounter;
+
+    @Inject
+    UserSentenceListAdapter adapter;
 
     @BindView(R.id.floatingActionButtonAddSentence)
     FloatingActionButton floatingActionButton;

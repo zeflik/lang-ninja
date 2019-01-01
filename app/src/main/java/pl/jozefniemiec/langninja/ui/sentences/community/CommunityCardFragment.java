@@ -22,6 +22,7 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+import pl.jozefniemiec.langninja.utils.DateUtils;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
@@ -106,7 +107,8 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
         communityFeedbackAuthorTextView.setText(userSentence.getAuthor().getName());
         communityFeedbackCommentsCountTextView.setText("12");
         communityFeedbackThumbsCountTextView.setText(String.valueOf(userSentence.getLikes().getCount()));
-        communityFeedbackDateTextView.setText("now");
+        Long timestamp = (Long) userSentence.getDateEdited();
+        communityFeedbackDateTextView.setText(DateUtils.generateTimePeriodDescription(timestamp, requireContext()));
         picasso
                 .load(userSentence.getAuthor().getPhoto())
                 .fit()

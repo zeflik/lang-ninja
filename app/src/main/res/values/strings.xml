@@ -96,4 +96,21 @@
         <item>Moje</item>
     </string-array>
     <string name="spinner_all_languages">Wszystkie języki</string>
+
+    <!-- Date Util -->
+    <string name="date_util_now">teraz</string>
+    <string name="date_util_unit_minute">minuta</string>
+    <string name="date_util_unit_minutes_to_4">minuty</string>
+    <string name="date_util_unit_minutes_from_5">minut</string>
+    <string name="date_util_unit_hour">godzina</string>
+    <string name="date_util_unit_hours_to_4">godziny</string>
+    <string name="date_util_unit_hours_from_5">godzin</string>
+    <string name="date_util_unit_day">dzień</string>
+    <string name="date_util_unit_days">dni</string>
+    <string name="date_util_unit_month">miesiąc</string>
+    <string name="date_util_unit_months_to_4">miesiące</string>
+    <string name="date_util_unit_months_from_5">miesięcy</string>
+    <string name="date_util_unit_year">rok</string>
+    <string name="date_util_unit_years_to_4">lata</string>
+    <string name="date_util_unit_years_from_5">lat</string>
 </resources>

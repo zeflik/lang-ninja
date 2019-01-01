@@ -30,6 +30,9 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
     @BindView(R.id.newSentenceRowThumbsTextView)
     TextView likesCountTextView;
 
+    @BindView(R.id.newSentenceRowCalendarTextView)
+    TextView newSentenceRowCalendarTextView;
+
     UserSentenceRowHolder(View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -52,6 +55,10 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
 
     public void setLikesCountTextView(String text) {
         likesCountTextView.setText(text);
+    }
+
+    public void setDateText(String timeAgo) {
+        newSentenceRowCalendarTextView.setText(timeAgo);
     }
 
     public void setAuthorPhoto(Uri uri) {
