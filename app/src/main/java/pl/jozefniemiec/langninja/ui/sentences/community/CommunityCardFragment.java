@@ -31,6 +31,7 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     private static final String TAG = CommunityCardFragment.class.getSimpleName();
     private static final String SENTENCE_KEY = "sentence_key";
     private String sentenceKey;
+    private UserSentence userSentence;
     private Unbinder unbinder;
 
     @Inject
@@ -59,7 +60,7 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
 
     @OnClick(R.id.communityFeedbackThumbUpImageButton)
     void dislike() {
-        presenter.onLikeButtonClicked(sentenceKey);
+        presenter.onLikeButtonClicked(userSentence);
     }
 
     @BindView(R.id.communityFeedbackThumbDownImageView)
@@ -67,7 +68,7 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
 
     @OnClick(R.id.communityFeedbackThumbDownImageView)
     void like() {
-        presenter.onDislikeButtonClicked(sentenceKey);
+        presenter.onDislikeButtonClicked(userSentence);
     }
 
     public CommunityCardFragment() {
@@ -104,9 +105,10 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
 
     @Override
     public void showData(UserSentence userSentence) {
+        this.userSentence = userSentence;
         communityFeedbackAuthorTextView.setText(userSentence.getAuthor().getName());
         communityFeedbackCommentsCountTextView.setText("12");
-        communityFeedbackThumbsCountTextView.setText(String.valueOf(userSentence.getLikes().getCount()));
+        communityFeedbackThumbsCountTextView.setText(String.valueOf(userSentence.getLikesCount()));
         Long timestamp = (Long) userSentence.getDateEdited();
         communityFeedbackDateTextView.setText(DateUtils.generateTimePeriodDescription(timestamp, requireContext()));
         picasso
@@ -149,6 +151,11 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     @Override
     public void showNeedInternetDialog() {
         Utility.showNeedInternetDialog(requireContext());
+    }
+
+    @Override
+    public void showLikesCount(String value) {
+        communityFeedbackThumbsCountTextView.setText(value);
     }
 
     @Override

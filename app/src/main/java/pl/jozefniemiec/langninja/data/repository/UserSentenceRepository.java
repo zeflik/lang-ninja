@@ -2,6 +2,7 @@ package pl.jozefniemiec.langninja.data.repository;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 
 public interface UserSentenceRepository {
@@ -18,9 +19,11 @@ public interface UserSentenceRepository {
 
     Observable<UserSentence> getSentence(String sentenceKey);
 
-    Completable like(String sentenceKey, String userUid);
+    Completable like(String sentenceKey, String languageCode, String userUid);
 
-    Completable dislike(String sentenceKey, String userUid);
+    Completable dislike(String sentenceKey, String languageCode, String userUid);
+
+    Observable<Likes> getLikes(String key);
 
     void dispose();
 }

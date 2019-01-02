@@ -21,15 +21,17 @@ public interface CommunityCardContract {
         void showSignInDialog();
 
         void showNeedInternetDialog();
+
+        void showLikesCount(String value);
     }
 
     interface Presenter {
 
         void loadData(String sentenceKey);
 
-        void onLikeButtonClicked(String sentenceKey);
+        void onLikeButtonClicked(UserSentence userSentence);
 
-        void onDislikeButtonClicked(String sentenceKey);
+        void onDislikeButtonClicked(UserSentence userSentence);
 
         void onViewClose();
     }

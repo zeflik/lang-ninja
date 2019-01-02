@@ -12,7 +12,7 @@ public class UserSentence {
     private String languageCode;
     private Object dateEdited = ServerValue.TIMESTAMP;
     private Object dateCreated = ServerValue.TIMESTAMP;
-    private Likes likes;
+    private int likesCount;
     private Map<String, Integer> comments = new HashMap<>();
     private int commentsCount;
     private Author author;
@@ -25,7 +25,6 @@ public class UserSentence {
         this.sentence = sentence;
         this.languageCode = languageCode;
         this.author = author;
-        likes = new Likes();
     }
 
     public String getId() {
@@ -92,12 +91,12 @@ public class UserSentence {
         this.comments = comments;
     }
 
-    public Likes getLikes() {
-        return likes;
+    public int getLikesCount() {
+        return likesCount;
     }
 
-    public void setLikes(Likes likes) {
-        this.likes = likes;
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
     }
 
     @Override
@@ -108,7 +107,7 @@ public class UserSentence {
                 ", languageCode='" + languageCode + '\'' +
                 ", dateEdited=" + dateEdited +
                 ", dateCreated=" + dateCreated +
-                ", likes=" + likes +
+                ", likesCount=" + likesCount +
                 ", comments=" + comments +
                 ", commentsCount=" + commentsCount +
                 ", author=" + author +

@@ -6,6 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.di.sentences.community.CommunityCardScope;
 import pl.jozefniemiec.langninja.service.AuthService;
 import pl.jozefniemiec.langninja.service.InternetConnectionService;
@@ -18,7 +19,8 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     private final UserSentenceRepository userSentenceRepository;
     private final AuthService authService;
     private final InternetConnectionService internetConnectionService;
-    private Disposable subscription;
+    private Disposable sentencesSubscription;
+    private Disposable likesSubscription;
 
     @Inject
     CommunityCardPresenter(CommunityCardContract.View view,
@@ -33,18 +35,26 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
 
     @Override
     public void loadData(String sentenceKey) {
-        subscription = userSentenceRepository
+        sentencesSubscription = userSentenceRepository
                 .getSentence(sentenceKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userSentence -> {
-                    view.showData(userSentence);
+                .subscribe(view::showData);
+
+        likesSubscription = userSentenceRepository
+                .getLikes(sentenceKey)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(likes -> {
+                    view.showLikesCount(String.valueOf(likes.getCount()));
                     if (authService.isSignedIn()) {
                         String userUid = authService.getCurrentUserUid();
-                        if (userSentence.getLikes().getLikesMap().containsKey(userUid)) {
+                        if (likes.getLikesMap().containsKey(userUid)
+                                && likes.getLikesMap().get(userUid)) {
                             view.unHighlightDislikeButton();
                             view.highlightLikeButton();
-                        } else if (userSentence.getLikes().getDislikesMap().containsKey(userUid)) {
+                        } else if (likes.getDislikesMap().containsKey(userUid)
+                                && likes.getDislikesMap().get(userUid)) {
                             view.unHighlightLikeButton();
                             view.highlightDislikeButton();
                         } else {
@@ -56,11 +66,14 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     }
 
     @Override
-    public void onLikeButtonClicked(String sentenceKey) {
+    public void onLikeButtonClicked(UserSentence userSentence) {
         if (authService.isSignedIn()) {
             if (internetConnectionService.isInternetOn()) {
+                String sentenceId = userSentence.getId();
+                String languageCode = userSentence.getLanguageCode();
+                String userUid = authService.getCurrentUserUid();
                 userSentenceRepository
-                        .like(sentenceKey, authService.getCurrentUserUid())
+                        .like(sentenceId, languageCode, userUid)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe();
@@ -73,11 +86,11 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     }
 
     @Override
-    public void onDislikeButtonClicked(String sentenceKey) {
+    public void onDislikeButtonClicked(UserSentence userSentence) {
         if (authService.isSignedIn()) {
             if (internetConnectionService.isInternetOn()) {
                 userSentenceRepository
-                        .dislike(sentenceKey, authService.getCurrentUserUid())
+                        .dislike(userSentence.getId(), userSentence.getLanguageCode(), authService.getCurrentUserUid())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe();
@@ -91,6 +104,7 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
 
     @Override
     public void onViewClose() {
-        subscription.dispose();
+        sentencesSubscription.dispose();
+        likesSubscription.dispose();
     }
 }
