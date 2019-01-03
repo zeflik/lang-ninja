@@ -25,7 +25,7 @@ public class SentenceCardViewerPresenter implements SentenceCardViewerContract.P
     @Override
     public void onTextSpokenResult(List<String> spokenTextsList) {
         String spokenTextFirstMatch = spokenTextsList.get(0);
-        if (spokenTextFirstMatch.equalsIgnoreCase(Utility.removePunctationMarks(view.getCurrentSentence()))) {
+        if (spokenTextFirstMatch.equalsIgnoreCase(Utility.removePunctuationMarks(view.getCurrentSentence()))) {
             view.showCorrectSpokenText(spokenTextFirstMatch);
         } else {
             view.showWrongSpokenText(spokenTextFirstMatch);

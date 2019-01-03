@@ -28,7 +28,7 @@ public class Utility {
         return (int) (dpWidth / 140);
     }
 
-    public static String removePunctationMarks(String text) {
+    public static String removePunctuationMarks(String text) {
         return text
                 .replaceAll(PUNCTUATION_MARKS_REGEX, "")
                 .trim()
