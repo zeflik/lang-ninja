@@ -93,6 +93,12 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     @Override
     public void onViewCreated(@NonNull android.view.View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        initializeRecyclerView();
+        initializeSpinners();
+        floatingActionButton.setOnClickListener(v -> openNewSentencePage());
+    }
+
+    private void initializeRecyclerView() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
@@ -100,10 +106,11 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         recyclerView.addItemDecoration(
                 new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
         );
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
-        floatingActionButton.setOnClickListener(v -> openNewSentencePage());
-        initializeSpinners();
     }
 
     private void initializeSpinners() {
@@ -122,7 +129,7 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     public void addData(UserSentence userSentence) {
         adapter.addUserSentence(userSentence);
         if (recyclerView != null) {
-            recyclerView.scrollToPosition(UserSentenceListAdapter.INSERT_INDEX);
+            recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
         }
     }
 

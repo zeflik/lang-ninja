@@ -19,7 +19,6 @@ import pl.jozefniemiec.langninja.utils.Utility;
 
 class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder> {
 
-    public static final int INSERT_INDEX = 0;
     public static final String TAG = UserSentenceListAdapter.class.getSimpleName();
     private List<UserSentence> userSentences = new ArrayList<>();
     private OnClickListener listener;
@@ -34,8 +33,8 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
     }
 
     void addUserSentence(UserSentence userSentence) {
-        this.userSentences.add(INSERT_INDEX, userSentence);
-        notifyItemInserted(INSERT_INDEX);
+        this.userSentences.add(userSentence);
+        notifyDataSetChanged();
     }
 
     void removeAll() {
