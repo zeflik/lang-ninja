@@ -68,13 +68,18 @@ public class SentenceCardFragment extends DaggerFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null && getArguments().containsKey(LANGUAGE_CODE_KEY)) {
-            languageCode = getArguments().getString(LANGUAGE_CODE_KEY);
+        if (savedInstanceState != null) {
+            languageCode = savedInstanceState.getString(LANGUAGE_CODE_KEY);
+            sentence = savedInstanceState.getString(SENTENCE_KEY);
         } else {
-            throw new RuntimeException(requireContext().toString()
-                    + " must pass valid language code");
+            if (getArguments() != null && getArguments().containsKey(LANGUAGE_CODE_KEY)) {
+                languageCode = getArguments().getString(LANGUAGE_CODE_KEY);
+            } else {
+                throw new RuntimeException(requireContext().toString()
+                                                   + " must pass valid language code");
+            }
+            sentence = getArguments().getString(SENTENCE_KEY);
         }
-        sentence = getArguments().getString(SENTENCE_KEY);
     }
 
     @Nullable
@@ -132,5 +137,12 @@ public class SentenceCardFragment extends DaggerFragment
 
     public String getCurrentSentence() {
         return presenter.getCurrentSentence();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(LANGUAGE_CODE_KEY, languageCode);
+        outState.putString(SENTENCE_KEY, sentence);
     }
 }

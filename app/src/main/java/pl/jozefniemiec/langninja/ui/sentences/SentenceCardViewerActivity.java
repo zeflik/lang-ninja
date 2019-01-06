@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentManager;
 import android.widget.TextView;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -50,6 +51,8 @@ public class SentenceCardViewerActivity extends BaseActivity
     @Inject
     SentenceCardViewerContract.Presenter presenter;
 
+    private static final String SENTENCE_CARD_TAG = SentenceCardFragment.class.getSimpleName();
+
     private SentenceCardFragment sentenceCard;
     private ReaderFragment reader;
     private SpeechRecognizerFragment speechRecognizer;
@@ -65,15 +68,17 @@ public class SentenceCardViewerActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewer_without_spoken_text);
         ButterKnife.bind(this);
-        languageCode = getIntent().getStringExtra(LANGUAGE_CODE_KEY);
-        if (languageCode == null) {
-            throw new RuntimeException(this.toString()
-                                               + ": language code missing in intent");
-        }
-        sentence = getIntent().getStringExtra(SENTENCE_KEY);
-        if (savedInstanceState == null) {
+        if (savedInstanceState != null) {
+            languageCode = savedInstanceState.getString(LANGUAGE_CODE_KEY);
+            sentence = savedInstanceState.getString(SENTENCE_KEY);
+            sentenceCard = (SentenceCardFragment)
+                    getSupportFragmentManager().findFragmentByTag(SENTENCE_CARD_TAG);
+        } else {
+            languageCode = Objects.requireNonNull(getIntent().getStringExtra(LANGUAGE_CODE_KEY));
+            sentence = getIntent().getStringExtra(SENTENCE_KEY);
             attachFragments();
         }
+
         presenter.onViewCreated();
     }
 
@@ -84,7 +89,7 @@ public class SentenceCardViewerActivity extends BaseActivity
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         supportFragmentManager
                 .beginTransaction()
-                .add(R.id.sentenceCardFragmentContainer, sentenceCard)
+                .add(R.id.sentenceCardFragmentContainer, sentenceCard, SENTENCE_CARD_TAG)
                 .add(R.id.readerFragmentContainer, reader)
                 .add(R.id.speechRecognizerFragmentContainer, speechRecognizer)
                 .commit();
@@ -157,5 +162,12 @@ public class SentenceCardViewerActivity extends BaseActivity
     private void changeTextViewBackground(TextView textView, int color) {
         GradientDrawable tvBackground = (GradientDrawable) textView.getBackground();
         tvBackground.setColor(color);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(LANGUAGE_CODE_KEY, languageCode);
+        outState.putString(SENTENCE_KEY, sentence);
     }
 }
