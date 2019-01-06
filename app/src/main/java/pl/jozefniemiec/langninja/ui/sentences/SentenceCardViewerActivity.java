@@ -78,7 +78,6 @@ public class SentenceCardViewerActivity extends BaseActivity
             sentence = getIntent().getStringExtra(SENTENCE_KEY);
             attachFragments();
         }
-
         presenter.onViewCreated();
     }
 
@@ -102,7 +101,6 @@ public class SentenceCardViewerActivity extends BaseActivity
                     .add(R.id.sentenceCommunityFragmentContainer, communityCardFragment)
                     .commit();
         }
-
     }
 
     @Override
