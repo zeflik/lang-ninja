@@ -92,7 +92,6 @@
     <string name="sign_out">Wyloguj</string>
     <string-array name="filter_spinner_options">
         <item>Najnowsze</item>
-        <item>Najpopularniejsze</item>
         <item>Moje</item>
     </string-array>
     <string name="spinner_all_languages">Wszystkie języki</string>
