@@ -18,7 +18,7 @@ public class Constants {
 
     public static final String SENTENCE_ID_KEY = "Sentence id key";
 
-    public static final String DEFAULT_LANG_KEY = "Default lang key";
+    public static final String DEFAULT_LANG_KEY = "world";
 
     public static final String DEFAULT_USER_UID = "ABCDEFG";
 }
