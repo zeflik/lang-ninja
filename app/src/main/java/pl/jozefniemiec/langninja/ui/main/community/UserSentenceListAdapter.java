@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +25,15 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
     private List<UserSentence> userSentences = new ArrayList<>();
     private OnClickListener listener;
     private Context context;
+    private Picasso picasso;
 
     UserSentenceListAdapter() {
     }
 
     @Inject
-    UserSentenceListAdapter(Context context) {
+    UserSentenceListAdapter(Context context, Picasso picasso) {
         this.context = context;
+        this.picasso = picasso;
     }
 
     void addUserSentence(UserSentence userSentence) {
@@ -46,7 +50,7 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
     @Override
     public UserSentenceRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new UserSentenceRowHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.new_sentence_row, parent, false));
+                                                 .inflate(R.layout.new_sentence_row, parent, false), picasso);
     }
 
     @Override

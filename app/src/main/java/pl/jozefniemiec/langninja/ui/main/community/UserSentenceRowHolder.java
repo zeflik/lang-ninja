@@ -6,14 +6,19 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
 public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements UserSentenceItemView {
+
+    private final Picasso picasso;
 
     @BindView(R.id.sentenceRowImageView)
     ImageView flag;
@@ -33,14 +38,15 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
     @BindView(R.id.newSentenceRowCalendarTextView)
     TextView newSentenceRowCalendarTextView;
 
-    UserSentenceRowHolder(View itemView) {
+
+    UserSentenceRowHolder(View itemView, Picasso picasso) {
         super(itemView);
         ButterKnife.bind(this, itemView);
+        this.picasso = picasso;
     }
 
     public void setFlag(Uri uri) {
-        Picasso
-                .with(itemView.getContext())
+        picasso
                 .load(uri)
                 .into(flag);
     }
@@ -62,11 +68,36 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
     }
 
     public void setAuthorPhoto(Uri uri) {
-        Picasso
-                .with(itemView.getContext())
+        picasso
                 .load(uri)
+                .networkPolicy(NetworkPolicy.OFFLINE)
                 .fit()
                 .transform(new CircleTransform())
-                .into(authorPhoto);
+                .into(authorPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        if (Utility.isNetworkAvailable(itemView.getContext())) {
+                            picasso
+                                    .load(uri)
+                                    .fit()
+                                    .transform(new CircleTransform())
+                                    .into(authorPhoto, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                        }
+                                    });
+                        }
+                    }
+                });
     }
 }
