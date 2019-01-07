@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -84,7 +85,7 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
 
     @Override
     public void setPhoto(Uri uri) {
-        imageProgressBar.setVisibility(View.VISIBLE);
+        showProgress();
         imageHolderUri = uri;
         picasso
                 .load(imageHolderUri)
@@ -126,11 +127,14 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
 
     @Override
     public void showProgress() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         imageProgressBar.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideProgress() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         imageProgressBar.setVisibility(View.GONE);
     }
 
