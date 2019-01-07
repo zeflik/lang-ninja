@@ -4,8 +4,8 @@ import android.util.SparseArray;
 
 public enum SearchStrategy {
     NEWEST(0),
-    POPULAR(1),
-    USER(2);
+    USER(1),
+    POPULAR(2);
 
     private int value;
     private static SparseArray<SearchStrategy> map = new SparseArray<>();
