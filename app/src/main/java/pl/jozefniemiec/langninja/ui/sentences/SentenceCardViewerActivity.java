@@ -39,18 +39,8 @@ public class SentenceCardViewerActivity extends BaseActivity
         OnSpeechRecognitionFragmentInteractionListener,
         OnSentenceCardFragmentInteractionListener {
 
-    @BindView(R.id.sentencePageCount)
-    TextView sentencePageCountTextView;
-
-    @BindView(R.id.sentenceCardViewerWithoutSpokenTextLayout)
-    ConstraintLayout layout;
-
-    @BindView(R.id.sentencePageAnswerTv)
-    TextView sentencePageAnswerTextView;
-
-    @Inject
-    SentenceCardViewerContract.Presenter presenter;
-
+    private static final String READER_TAG = "reader tag";
+    private static final String SPEECH_TAG = "speech tag";
     private static final String SENTENCE_CARD_TAG = SentenceCardFragment.class.getSimpleName();
 
     private SentenceCardFragment sentenceCard;
@@ -63,6 +53,18 @@ public class SentenceCardViewerActivity extends BaseActivity
     private ConstraintSet layoutNoSpokenTextSet = new ConstraintSet();
     private ConstraintSet layoutWithSpokenTextSet = new ConstraintSet();
 
+    @BindView(R.id.sentencePageCount)
+    TextView sentencePageCountTextView;
+
+    @BindView(R.id.sentenceCardViewerWithoutSpokenTextLayout)
+    ConstraintLayout layout;
+
+    @BindView(R.id.sentencePageAnswerTv)
+    TextView sentencePageAnswerTextView;
+
+    @Inject
+    SentenceCardViewerContract.Presenter presenter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +75,10 @@ public class SentenceCardViewerActivity extends BaseActivity
             sentence = savedInstanceState.getString(SENTENCE_KEY);
             sentenceCard = (SentenceCardFragment)
                     getSupportFragmentManager().findFragmentByTag(SENTENCE_CARD_TAG);
+            reader = (ReaderFragment)
+                    getSupportFragmentManager().findFragmentByTag(READER_TAG);
+            speechRecognizer = (SpeechRecognizerFragment)
+                    getSupportFragmentManager().findFragmentByTag(SPEECH_TAG);
         } else {
             languageCode = Objects.requireNonNull(getIntent().getStringExtra(LANGUAGE_CODE_KEY));
             sentence = getIntent().getStringExtra(SENTENCE_KEY);
@@ -89,8 +95,8 @@ public class SentenceCardViewerActivity extends BaseActivity
         supportFragmentManager
                 .beginTransaction()
                 .add(R.id.sentenceCardFragmentContainer, sentenceCard, SENTENCE_CARD_TAG)
-                .add(R.id.readerFragmentContainer, reader)
-                .add(R.id.speechRecognizerFragmentContainer, speechRecognizer)
+                .add(R.id.readerFragmentContainer, reader, READER_TAG)
+                .add(R.id.speechRecognizerFragmentContainer, speechRecognizer, SPEECH_TAG)
                 .commit();
 
         String sentenceId = getIntent().getStringExtra(SENTENCE_ID_KEY);
