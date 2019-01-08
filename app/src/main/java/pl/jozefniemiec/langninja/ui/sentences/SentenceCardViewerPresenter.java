@@ -35,6 +35,8 @@ public class SentenceCardViewerPresenter implements SentenceCardViewerContract.P
     @Override
     public void onSentencePageChanged(int position, int pageCount) {
         view.hideSpokenText();
+        view.stopReading();
+        view.stopListening();
         view.updateNumbering(position, pageCount);
     }
 }

@@ -20,6 +20,8 @@ public interface ReaderContract {
 
         void read(String text);
 
+        void stopReading();
+
         boolean isReaderAvailable();
 
         void showTTSInstallDialog();

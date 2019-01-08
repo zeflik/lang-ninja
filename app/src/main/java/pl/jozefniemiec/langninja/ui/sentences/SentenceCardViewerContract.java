@@ -14,6 +14,10 @@ public interface SentenceCardViewerContract {
 
         void hideSpokenText();
 
+        void stopReading();
+
+        void stopListening();
+
         void updateNumbering(int position, int pageCount);
     }
 

@@ -187,7 +187,11 @@ public class ReaderFragment extends DaggerFragment implements ReaderContract.Vie
         return textToSpeech.isSpeaking();
     }
 
+    @Override
     public void stopReading() {
-        textToSpeech.stop();
+        if (isReading()) {
+            unHighlightReadButton();
+            textToSpeech.stop();
+        }
     }
 }

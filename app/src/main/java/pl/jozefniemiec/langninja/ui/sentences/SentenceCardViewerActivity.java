@@ -145,6 +145,16 @@ public class SentenceCardViewerActivity extends BaseActivity
     }
 
     @Override
+    public void stopReading() {
+        reader.stopReading();
+    }
+
+    @Override
+    public void stopListening() {
+        speechRecognizer.cancelSpeechListening();
+    }
+
+    @Override
     public void updateNumbering(int position, int pageCount) {
         String pageCountFormat = getResources().getString(R.string.page_count);
         sentencePageCountTextView.setText(String.format(pageCountFormat, position, pageCount));
