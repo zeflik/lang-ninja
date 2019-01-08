@@ -73,18 +73,22 @@ public class SentenceCardViewerActivity extends BaseActivity
         if (savedInstanceState != null) {
             languageCode = savedInstanceState.getString(LANGUAGE_CODE_KEY);
             sentence = savedInstanceState.getString(SENTENCE_KEY);
-            sentenceCard = (SentenceCardFragment)
-                    getSupportFragmentManager().findFragmentByTag(SENTENCE_CARD_TAG);
-            reader = (ReaderFragment)
-                    getSupportFragmentManager().findFragmentByTag(READER_TAG);
-            speechRecognizer = (SpeechRecognizerFragment)
-                    getSupportFragmentManager().findFragmentByTag(SPEECH_TAG);
+            findFragmentReferences();
         } else {
             languageCode = Objects.requireNonNull(getIntent().getStringExtra(LANGUAGE_CODE_KEY));
             sentence = getIntent().getStringExtra(SENTENCE_KEY);
             attachFragments();
         }
         presenter.onViewCreated();
+    }
+
+    private void findFragmentReferences() {
+        sentenceCard = (SentenceCardFragment)
+                getSupportFragmentManager().findFragmentByTag(SENTENCE_CARD_TAG);
+        reader = (ReaderFragment)
+                getSupportFragmentManager().findFragmentByTag(READER_TAG);
+        speechRecognizer = (SpeechRecognizerFragment)
+                getSupportFragmentManager().findFragmentByTag(SPEECH_TAG);
     }
 
     private void attachFragments() {
