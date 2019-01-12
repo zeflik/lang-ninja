@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -80,14 +81,19 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
                                           Bundle savedInstanceState) {
         android.view.View view = inflater.inflate(R.layout.fragment_community, container, false);
         unbinder = ButterKnife.bind(this, view);
-        adapter.setListener(userSentence -> {
-            Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
-            intent.putExtra(LANGUAGE_CODE_KEY, userSentence.getLanguageCode());
-            intent.putExtra(SENTENCE_KEY, userSentence.getSentence());
-            intent.putExtra(SENTENCE_ID_KEY, userSentence.getId());
-            startActivity(intent);
-        });
+        adapter.setListener(userSentence -> presenter.onShowButtonClicked(userSentence));
+        adapter.setOnLongClickListener(userSentence -> presenter.onItemLongButtonClicked(userSentence));
         return view;
+
+    }
+
+    @Override
+    public void showSentenceDetails(UserSentence userSentence) {
+        Intent intent = new Intent(requireActivity(), SentenceCardViewerActivity.class);
+        intent.putExtra(LANGUAGE_CODE_KEY, userSentence.getLanguageCode());
+        intent.putExtra(SENTENCE_KEY, userSentence.getSentence());
+        intent.putExtra(SENTENCE_ID_KEY, userSentence.getId());
+        startActivity(intent);
     }
 
     @Override
@@ -95,7 +101,10 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         super.onViewCreated(view, savedInstanceState);
         initializeRecyclerView();
         initializeSpinners();
-        floatingActionButton.setOnClickListener(v -> openNewSentencePage());
+        floatingActionButton.setOnClickListener(v -> {
+            Language selectedItem = (Language) sentenceLanguageFilterSpinner.getSelectedItem();
+            presenter.onCreateSentenceButtonClicked(selectedItem);
+        });
     }
 
     private void initializeRecyclerView() {
@@ -116,7 +125,7 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     private void initializeSpinners() {
         String[] spinnerOptions = getResources().getStringArray(R.array.filter_spinner_options);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                R.layout.simple_spinner_row, R.id.simple_spinner_textview, spinnerOptions);
+                                                          R.layout.simple_spinner_row, R.id.simple_spinner_textview, spinnerOptions);
         sentencesCategoryFilterSpinner.setAdapter(adapter);
         List<Language> languages = new RoomLanguageRepository(requireContext()).getAll();
         LanguagesSpinnerAdapter languagesSpinnerAdapter = new LanguagesSpinnerAdapter(requireContext());
@@ -139,11 +148,32 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     }
 
     @Override
+    public void showSentenceOptionsDialog(CharSequence[] options, UserSentence userSentence) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle(userSentence.getSentence());
+        builder.setItems(options, (dialog, item) -> presenter.onSentenceOptionSelected(item, userSentence));
+        builder.show();
+    }
+
+    @Override
+    public void showInappropriateContentDialog(CharSequence[] reasons, UserSentence userSentence) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle(
+                String.format(
+                        getString(R.string.alert_title_send_sentence_feedback),
+                        userSentence.getSentence()
+                ));
+        builder.setItems(reasons, (dialog, item) -> presenter.onInappropriateContentSelected(item, userSentence));
+        builder.show();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
     }
 
-    private void openNewSentencePage() {
+    @Override
+    public void openNewSentencePage(String languageCode) {
         Intent intent = new Intent(requireContext(), SentenceCreator.class);
         Language language = (Language) sentenceLanguageFilterSpinner.getSelectedItem();
         intent.putExtra(LANGUAGE_CODE_KEY, language.getCode());

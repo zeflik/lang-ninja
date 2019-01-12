@@ -1,5 +1,7 @@
 package pl.jozefniemiec.langninja.ui.main.community;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
@@ -26,6 +28,8 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
     private final UserSentenceRepository repository;
     private final FirebaseAuth auth;
     private Disposable subscription;
+    private String[] inappropriateContentOptions = {"Propagowanie nienawiści", "Niecenzuralne wyrazy", "Inne"};
+    private String[] menuOptions = {"Edytuj", "Usuń"};
 
     @Inject
     CommunityPresenter(CommunityFragmentContract.View view, UserSentenceRepository repository, FirebaseAuth auth) {
@@ -51,6 +55,43 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
     @Override
     public void onDestroyView() {
         cleanup();
+    }
+
+    @Override
+    public void onShowButtonClicked(UserSentence userSentence) {
+        view.showSentenceDetails(userSentence);
+    }
+
+
+    @Override
+    public void onCreateSentenceButtonClicked(Language language) {
+        view.openNewSentencePage(language.getCode());
+    }
+
+    @Override
+    public void onItemLongButtonClicked(UserSentence userSentence) {
+        String sentenceAuthorUid = userSentence.getAuthor().getUid();
+        if (auth.getCurrentUser() != null && auth.getCurrentUser().getUid().equals(sentenceAuthorUid)) {
+            view.showSentenceOptionsDialog(menuOptions, userSentence);
+        } else {
+            view.showInappropriateContentDialog(inappropriateContentOptions, userSentence);
+        }
+    }
+
+    @Override
+    public void onInappropriateContentSelected(int reasonIndex, UserSentence userSentence) {
+        String inappropriateContentOption = inappropriateContentOptions[reasonIndex];
+        Log.d(TAG, "onInappropriateContentSelected: " + inappropriateContentOption);
+    }
+
+    @Override
+    public void onSentenceOptionSelected(int optionIndex, UserSentence userSentence) {
+        switch (optionIndex) {
+            case 0:
+                view.showSentenceDetails(userSentence);
+            case 1:
+                Log.d(TAG, "onSentenceOptionSelected: removing sentence: " + userSentence.getSentence());
+        }
     }
 
     private void cleanup() {

@@ -24,6 +24,7 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
     public static final String TAG = UserSentenceListAdapter.class.getSimpleName();
     private List<UserSentence> userSentences = new ArrayList<>();
     private OnClickListener listener;
+    private OnLongClickListener onLongClickListener;
     private Context context;
     private Picasso picasso;
 
@@ -64,6 +65,12 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
         String timeAgo = DateUtils.generateTimePeriodDescription(timestamp, context);
         holder.setDateText(timeAgo);
         holder.itemView.setOnClickListener(v -> listener.onItemClicked(userSentences.get(position)));
+        if (onLongClickListener != null) {
+            holder.itemView.setOnLongClickListener(view -> {
+                onLongClickListener.onLongItemClicked(userSentences.get(position));
+                return true;
+            });
+        }
     }
 
     @Override
@@ -75,7 +82,15 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
         this.listener = listener;
     }
 
+    public void setOnLongClickListener(OnLongClickListener onLongClickListener) {
+        this.onLongClickListener = onLongClickListener;
+    }
+
     public interface OnClickListener {
         void onItemClicked(UserSentence userSentence);
+    }
+
+    public interface OnLongClickListener {
+        void onLongItemClicked(UserSentence userSentence);
     }
 }

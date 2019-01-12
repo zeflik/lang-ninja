@@ -9,7 +9,15 @@ public interface CommunityFragmentContract {
 
         void addData(UserSentence userSentence);
 
+        void showSentenceDetails(UserSentence userSentence);
+
+        void openNewSentencePage(String languageCode);
+
         void clearData();
+
+        void showSentenceOptionsDialog(CharSequence[] options, UserSentence userSentence);
+
+        void showInappropriateContentDialog(CharSequence[] reasons, UserSentence userSentence);
     }
 
     interface Presenter {
@@ -17,6 +25,15 @@ public interface CommunityFragmentContract {
         void onOptionSelected(Language language, int option);
 
         void onDestroyView();
-    }
 
+        void onShowButtonClicked(UserSentence userSentence);
+
+        void onCreateSentenceButtonClicked(Language selectedItem);
+
+        void onItemLongButtonClicked(UserSentence userSentence);
+
+        void onInappropriateContentSelected(int reasonIndex, UserSentence userSentence);
+
+        void onSentenceOptionSelected(int optionIndex, UserSentence userSentence);
+    }
 }
