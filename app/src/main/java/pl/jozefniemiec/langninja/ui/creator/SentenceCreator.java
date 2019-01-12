@@ -128,11 +128,6 @@ public class SentenceCreator extends BaseSecuredActivity
 
     @Override
     public void close() {
-        try {
-            hideKeyboard();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         finish();
     }
 
