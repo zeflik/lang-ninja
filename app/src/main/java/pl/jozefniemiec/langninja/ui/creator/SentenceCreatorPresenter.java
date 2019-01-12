@@ -52,33 +52,29 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
 
     @Override
     public void onCreateButtonClicked(Language language, String sentence) {
-        if (language == null) {
-            view.showErrorMessage("Wybierz język!");
-            return;
+        if (validateData(sentence)) {
+            userRepository.getUser(authService.getCurrentUserUid())
+                    .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
+                    .map(author -> new UserSentence(null, sentence, language.getCode(), author))
+                    .subscribe(userSentence -> {
+                        userSentenceRepository.insert(userSentence);
+                        view.close();
+                    });
         }
+    }
+
+    private boolean validateData(String sentence) {
         if (sentence.trim().isEmpty()) {
             view.showErrorMessage("Wprowadź tekst!");
-            return;
+            return false;
         }
-        userRepository.getUser(authService.getCurrentUserUid())
-                .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
-                .map(author -> new UserSentence(null, sentence, language.getCode(), author))
-                .subscribe(userSentence -> {
-                    userSentenceRepository.insert(userSentence);
-                    view.close();
-                });
+        return true;
     }
 
     @Override
     public void onTestButtonClicked(Language language, String sentence) {
-        if (language == null) {
-            view.showErrorMessage("Wybierz język!");
-            return;
+        if (validateData(sentence)) {
+            view.showSentenceCard(language.getCode(), sentence);
         }
-        if (sentence.trim().isEmpty()) {
-            view.showErrorMessage("Wprowadź tekst!");
-            return;
-        }
-        view.showSentenceCard(language.getCode(), sentence);
     }
 }
