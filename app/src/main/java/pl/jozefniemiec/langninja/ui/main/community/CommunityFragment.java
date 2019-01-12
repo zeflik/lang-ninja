@@ -145,6 +145,8 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
 
     private void openNewSentencePage() {
         Intent intent = new Intent(requireContext(), SentenceCreator.class);
+        Language language = (Language) sentenceLanguageFilterSpinner.getSelectedItem();
+        intent.putExtra(LANGUAGE_CODE_KEY, language.getCode());
         startActivity(intent);
     }
 

@@ -1,5 +1,7 @@
 package pl.jozefniemiec.langninja.ui.creator;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
@@ -35,8 +37,17 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
     }
 
     @Override
-    public void onViewCreated() {
-        view.initializeSpinner(languageRepository.getAll());
+    public void onViewCreated(String languageCode) {
+        List<Language> allLanguages = languageRepository.getAll();
+        view.initializeSpinner(allLanguages);
+        if (languageCode != null) {
+            for (int i = 0; i < allLanguages.size(); i++) {
+                if (allLanguages.get(i).getCode().equals(languageCode)) {
+                    view.selectSpinnerAtPosition(i);
+                    break;
+                }
+            }
+        }
     }
 
     @Override

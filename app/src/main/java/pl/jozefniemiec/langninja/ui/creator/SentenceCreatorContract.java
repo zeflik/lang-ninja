@@ -18,12 +18,14 @@ public interface SentenceCreatorContract {
 
         void initializeSpinner(List<Language> languages);
 
+        void selectSpinnerAtPosition(int position);
+
         void close();
     }
 
     interface Presenter {
 
-        void onViewCreated();
+        void onViewCreated(String languageCode);
 
         void onCreateButtonClicked(Language language, String sentence);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -17,6 +18,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
@@ -29,14 +31,32 @@ import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 public class SentenceCreator extends BaseSecuredActivity
         implements SentenceCreatorContract.View {
 
+    private InputMethodManager imm;
+
     @BindView(R.id.sentenceCandidateTextInput)
     EditText sentenceTextInput;
 
     @BindView(R.id.sentenceCandidateSendButton)
     Button sentenceCreateButton;
 
+    @OnClick(R.id.sentenceCandidateSendButton)
+    public void submit(View view) {
+        presenter.onCreateButtonClicked(
+                (Language) languagesSpinner.getSelectedItem(),
+                sentenceTextInput.getText().toString()
+        );
+    }
+
     @BindView(R.id.sentenceCandidateTestButton)
     Button sentenceTestButton;
+
+    @OnClick(R.id.sentenceCandidateTestButton)
+    public void test(View view) {
+        presenter.onTestButtonClicked(
+                (Language) languagesSpinner.getSelectedItem(),
+                sentenceTextInput.getText().toString()
+        );
+    }
 
     @BindView(R.id.languages_spinner)
     Spinner languagesSpinner;
@@ -47,16 +67,17 @@ public class SentenceCreator extends BaseSecuredActivity
     @Inject
     LanguagesSpinnerAdapter languagesSpinnerAdapter;
 
-    private InputMethodManager imm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_sentence);
         ButterKnife.bind(this);
+        String languageCode = null;
+        if (savedInstanceState == null) {
+            languageCode = getIntent().getStringExtra(LANGUAGE_CODE_KEY);
+        }
         enableDoneButtonForMultilineEditText();
-        attachListeners();
-        presenter.onViewCreated();
+        presenter.onViewCreated(languageCode);
     }
 
     @Override
@@ -65,24 +86,14 @@ public class SentenceCreator extends BaseSecuredActivity
         languagesSpinner.setAdapter(languagesSpinnerAdapter);
     }
 
+    @Override
+    public void selectSpinnerAtPosition(int position) {
+        languagesSpinner.setSelection(position);
+    }
+
     private void enableDoneButtonForMultilineEditText() {
         sentenceTextInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
         sentenceTextInput.setRawInputType(InputType.TYPE_CLASS_TEXT);
-    }
-
-    private void attachListeners() {
-        sentenceCreateButton.setOnClickListener(v ->
-                presenter.onCreateButtonClicked(
-                        (Language) languagesSpinner.getSelectedItem(),
-                        sentenceTextInput.getText().toString()
-                )
-        );
-        sentenceTestButton.setOnClickListener(v ->
-                presenter.onTestButtonClicked(
-                        (Language) languagesSpinner.getSelectedItem(),
-                        sentenceTextInput.getText().toString()
-                )
-        );
     }
 
     @Override
