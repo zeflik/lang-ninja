@@ -15,6 +15,8 @@ import android.widget.ImageButton;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.login.LoginActivity;
 
+import static pl.jozefniemiec.langninja.ui.base.Constants.ACTION_USER_SENTENCES_CHANGED;
+
 public class Utility {
 
     private static final String PUNCTUATION_MARKS_REGEX = "[-+\",.!¡?¿:;]";
@@ -86,5 +88,11 @@ public class Utility {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setPositiveButton(R.string.button_ok, (dialog, whichButton) -> dialog.dismiss())
                 .show();
+    }
+
+    public static void sendBroadcastUserSentencesChanged(Context context) {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_USER_SENTENCES_CHANGED);
+        context.sendBroadcast(intent);
     }
 }

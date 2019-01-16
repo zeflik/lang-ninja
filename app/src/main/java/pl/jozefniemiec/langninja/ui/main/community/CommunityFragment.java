@@ -44,6 +44,7 @@ import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 public class CommunityFragment extends DaggerFragment implements CommunityFragmentContract.View {
 
     private static final String TAG = CommunityFragment.class.getSimpleName();
+    public static final int SPINNERS_INITIAL_AUTO_TRIGGER = 2;
     private Unbinder unbinder;
     private int spinnerOnSelectedCounter;
     @Inject
@@ -73,7 +74,7 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
 
     @OnItemSelected({R.id.sentenceLanguageFilterSpinner, R.id.sentencesCategoryFilterSpinner})
     public void onSpinnerChanged(Spinner spinner, int position) {
-        if (spinnerOnSelectedCounter++ > 0) {
+        if (spinnerOnSelectedCounter++ > SPINNERS_INITIAL_AUTO_TRIGGER) {
             presenter.pullData((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
                                sentencesCategoryFilterSpinner.getSelectedItemPosition());
         }
@@ -116,6 +117,8 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
             presenter.onCreateSentenceButtonClicked(currentLanguage);
         });
         presenter.onViewCreated();
+        presenter.pullData((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
+                           sentencesCategoryFilterSpinner.getSelectedItemPosition());
     }
 
     @Override

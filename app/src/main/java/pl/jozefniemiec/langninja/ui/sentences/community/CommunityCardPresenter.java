@@ -76,6 +76,7 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
                         .like(sentenceId, languageCode, userUid)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doOnComplete(view::notifyDataChanged)
                         .subscribe();
             } else {
                 view.showNeedInternetDialog();
@@ -93,6 +94,7 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
                         .dislike(userSentence.getId(), userSentence.getLanguageCode(), authService.getCurrentUserUid())
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
+                        .doOnComplete(view::notifyDataChanged)
                         .subscribe();
             } else {
                 view.showNeedInternetDialog();

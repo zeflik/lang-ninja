@@ -159,6 +159,11 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     }
 
     @Override
+    public void notifyDataChanged() {
+        Utility.sendBroadcastUserSentencesChanged(requireContext());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         presenter.loadData(sentenceKey);

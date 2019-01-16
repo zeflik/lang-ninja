@@ -23,6 +23,8 @@ public interface CommunityCardContract {
         void showNeedInternetDialog();
 
         void showLikesCount(String value);
+
+        void notifyDataChanged();
     }
 
     interface Presenter {

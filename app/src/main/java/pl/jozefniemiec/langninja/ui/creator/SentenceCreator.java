@@ -24,8 +24,8 @@ import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
 import pl.jozefniemiec.langninja.ui.base.spinner.LanguagesSpinnerAdapter;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
+import pl.jozefniemiec.langninja.utils.Utility;
 
-import static pl.jozefniemiec.langninja.ui.base.Constants.ACTION_USER_SENTENCES_CHANGED;
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
@@ -131,9 +131,7 @@ public class SentenceCreator extends BaseSecuredActivity
 
     @Override
     public void notifyDataChanged() {
-        Intent intent = new Intent();
-        intent.setAction(ACTION_USER_SENTENCES_CHANGED);
-        sendBroadcast(intent);
+        Utility.sendBroadcastUserSentencesChanged(this);
     }
 
     @Override
