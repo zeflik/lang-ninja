@@ -1,5 +1,7 @@
 package pl.jozefniemiec.langninja.ui.main.community;
 
+import java.util.List;
+
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 
@@ -8,6 +10,8 @@ public interface CommunityFragmentContract {
     interface View {
 
         void addData(UserSentence userSentence);
+
+        void addData(List<UserSentence> userSentences);
 
         void showSentenceDetails(UserSentence userSentence);
 
@@ -18,11 +22,19 @@ public interface CommunityFragmentContract {
         void showSentenceOptionsDialog(CharSequence[] options, UserSentence userSentence);
 
         void showInappropriateContentDialog(CharSequence[] reasons, UserSentence userSentence);
+
+        void removeItem(UserSentence userSentence);
+
+        void registerOnDataChangeListener();
+
+        void unregisterOnDataChangeListener();
     }
 
     interface Presenter {
 
-        void onOptionSelected(Language language, int option);
+        void onViewCreated();
+
+        void pullData(Language language, int option);
 
         void onDestroyView();
 

@@ -1,6 +1,9 @@
 package pl.jozefniemiec.langninja.ui.main.community;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,6 +35,7 @@ import pl.jozefniemiec.langninja.ui.base.spinner.LanguagesSpinnerAdapter;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
+import static pl.jozefniemiec.langninja.ui.base.Constants.ACTION_USER_SENTENCES_CHANGED;
 import static pl.jozefniemiec.langninja.ui.base.Constants.DEFAULT_LANG_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
@@ -42,9 +46,15 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     private static final String TAG = CommunityFragment.class.getSimpleName();
     private Unbinder unbinder;
     private int spinnerOnSelectedCounter;
-
     @Inject
     UserSentenceListAdapter adapter;
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            presenter.pullData((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
+                               sentencesCategoryFilterSpinner.getSelectedItemPosition());
+        }
+    };
 
     @BindView(R.id.floatingActionButtonAddSentence)
     FloatingActionButton floatingActionButton;
@@ -64,8 +74,8 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     @OnItemSelected({R.id.sentenceLanguageFilterSpinner, R.id.sentencesCategoryFilterSpinner})
     public void onSpinnerChanged(Spinner spinner, int position) {
         if (spinnerOnSelectedCounter++ > 0) {
-            presenter.onOptionSelected((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
-                                       sentencesCategoryFilterSpinner.getSelectedItemPosition());
+            presenter.pullData((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
+                               sentencesCategoryFilterSpinner.getSelectedItemPosition());
         }
     }
 
@@ -77,9 +87,9 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     }
 
     @Override
-    public android.view.View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                                          Bundle savedInstanceState) {
-        android.view.View view = inflater.inflate(R.layout.fragment_community, container, false);
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_community, container, false);
         unbinder = ButterKnife.bind(this, view);
         adapter.setListener(userSentence -> presenter.onShowButtonClicked(userSentence));
         adapter.setOnLongClickListener(userSentence -> presenter.onItemLongButtonClicked(userSentence));
@@ -102,9 +112,17 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         initializeRecyclerView();
         initializeSpinners();
         floatingActionButton.setOnClickListener(v -> {
-            Language selectedItem = (Language) sentenceLanguageFilterSpinner.getSelectedItem();
-            presenter.onCreateSentenceButtonClicked(selectedItem);
+            Language currentLanguage = (Language) sentenceLanguageFilterSpinner.getSelectedItem();
+            presenter.onCreateSentenceButtonClicked(currentLanguage);
         });
+        presenter.onViewCreated();
+    }
+
+    @Override
+    public void registerOnDataChangeListener() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ACTION_USER_SENTENCES_CHANGED);
+        requireActivity().registerReceiver(broadcastReceiver, filter);
     }
 
     private void initializeRecyclerView() {
@@ -143,6 +161,11 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     }
 
     @Override
+    public void addData(List<UserSentence> userSentences) {
+        adapter.addAll(userSentences);
+    }
+
+    @Override
     public void clearData() {
         adapter.removeAll();
     }
@@ -168,6 +191,17 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     }
 
     @Override
+    public void removeItem(UserSentence userSentence) {
+        adapter.remove(userSentence);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
     }
@@ -175,8 +209,7 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     @Override
     public void openNewSentencePage(String languageCode) {
         Intent intent = new Intent(requireContext(), SentenceCreator.class);
-        Language language = (Language) sentenceLanguageFilterSpinner.getSelectedItem();
-        intent.putExtra(LANGUAGE_CODE_KEY, language.getCode());
+        intent.putExtra(LANGUAGE_CODE_KEY, languageCode);
         startActivity(intent);
     }
 
@@ -185,5 +218,10 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         super.onDestroyView();
         unbinder.unbind();
         presenter.onDestroyView();
+    }
+
+    @Override
+    public void unregisterOnDataChangeListener() {
+        requireActivity().unregisterReceiver(broadcastReceiver);
     }
 }

@@ -20,6 +20,8 @@ public interface SentenceCreatorContract {
 
         void selectSpinnerAtPosition(int position);
 
+        void notifyDataChanged();
+
         void close();
     }
 

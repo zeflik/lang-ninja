@@ -25,12 +25,15 @@ import pl.jozefniemiec.langninja.ui.base.BaseSecuredActivity;
 import pl.jozefniemiec.langninja.ui.base.spinner.LanguagesSpinnerAdapter;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
 
+import static pl.jozefniemiec.langninja.ui.base.Constants.ACTION_USER_SENTENCES_CHANGED;
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_KEY;
 
 public class SentenceCreator extends BaseSecuredActivity
         implements SentenceCreatorContract.View {
 
+    public static final String USER_SENTENCE_TAG = "user_sentence_tag";
+    private static final String TAG = SentenceCreator.class.getSimpleName();
     private InputMethodManager imm;
 
     @BindView(R.id.sentenceCandidateTextInput)
@@ -124,6 +127,13 @@ public class SentenceCreator extends BaseSecuredActivity
     @Override
     public void hideKeyboard() {
         imm.hideSoftInputFromWindow(sentenceTextInput.getWindowToken(), 0);
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        Intent intent = new Intent();
+        intent.setAction(ACTION_USER_SENTENCES_CHANGED);
+        sendBroadcast(intent);
     }
 
     @Override

@@ -106,5 +106,6 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     public void onViewClose() {
         sentencesSubscription.dispose();
         likesSubscription.dispose();
+        userSentenceRepository.dispose();
     }
 }

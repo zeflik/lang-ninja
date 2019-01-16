@@ -39,12 +39,25 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
 
     void addUserSentence(UserSentence userSentence) {
         this.userSentences.add(userSentence);
-        notifyDataSetChanged();
+        this.notifyItemInserted(userSentences.size() - 1);
+    }
+
+    void addAll(List<UserSentence> userSentences) {
+        this.userSentences.clear();
+        this.userSentences.addAll(userSentences);
+        this.notifyDataSetChanged();
+    }
+
+    void remove(UserSentence userSentence) {
+        int index = userSentences.indexOf(userSentence);
+        userSentences.remove(index);
+        this.notifyItemRemoved(index);
+        this.notifyItemRangeChanged(index, userSentences.size());
     }
 
     void removeAll() {
         userSentences.clear();
-        notifyDataSetChanged();
+        this.notifyDataSetChanged();
     }
 
     @NonNull

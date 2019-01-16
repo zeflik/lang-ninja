@@ -1,10 +1,8 @@
 package pl.jozefniemiec.langninja.data.repository.firebase;
 
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -14,7 +12,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -22,6 +22,7 @@ import javax.inject.Inject;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
@@ -30,79 +31,130 @@ import pl.jozefniemiec.langninja.ui.base.Constants;
 public class UserSentenceRepositoryImpl implements UserSentenceRepository {
 
     private static final String TAG = UserSentenceRepositoryImpl.class.getSimpleName();
-    private static final String SENTENCE_LIKES_COUNT_PATH = "/public_sentences/%s/likesCount/";
-    private static final String SENTENCE_BY_LANG_LIKES_COUNT_PATH = "/public_sentences_by_lang/%s/%s/likesCount/";
+    private static final String SENTENCES_NODE = "public_sentences";
+    private static final String SENTENCES_BY_LANG_NODE = "public_sentences_by_lang";
+    private static final String LIKES_NODE = "likes";
+    private static final String SENTENCE_BY_KEY_PATH = "/" + SENTENCES_NODE + "/%s/";
+    private static final String SENTENCE_BY_LANG_KEY_PATH = "/" + SENTENCES_BY_LANG_NODE + "/%s/%s";
+    private static final String SENTENCE_LIKES_COUNT_PATH = SENTENCE_BY_KEY_PATH + "/likesCount/";
+    private static final String SENTENCE_BY_LANG_LIKES_COUNT_PATH = SENTENCE_BY_LANG_KEY_PATH + "/likesCount/";
+    private static final String LIKES_PATH = "/" + LIKES_NODE + "/%s/";
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
-    private DatabaseReference publicSentencesByLanguageReference = firebaseDatabase.getReference("public_sentences_by_lang");
-    private DatabaseReference publicSentencesReference = firebaseDatabase.getReference("public_sentences");
-    private DatabaseReference likesReference = firebaseDatabase.getReference("likes");
+    private DatabaseReference publicSentencesByLanguageReference =
+            firebaseDatabase.getReference(SENTENCES_BY_LANG_NODE);
+    private DatabaseReference publicSentencesReference =
+            firebaseDatabase.getReference(SENTENCES_NODE);
+    private DatabaseReference likesReference =
+            firebaseDatabase.getReference(LIKES_NODE);
     private DatabaseReference dbReference;
-    private ChildEventListener childEventListener;
-    private ValueEventListener sentencesValueEventListener;
-    private ValueEventListener likesValueEventListener;
+    private Map<DatabaseReference, ValueEventListener> valueEventListenersMap = new HashMap<>();
 
     @Inject
-    public UserSentenceRepositoryImpl() {
+    UserSentenceRepositoryImpl() {
         publicSentencesReference.keepSynced(true);
     }
 
     @Override
-    public void insert(UserSentence userSentence) {
-        String userSentenceKey = Objects.requireNonNull(publicSentencesReference.push().getKey());
-        publicSentencesReference
-                .child(userSentenceKey)
-                .setValue(userSentence);
-        publicSentencesByLanguageReference
-                .child(userSentence.getLanguageCode())
-                .child(userSentenceKey)
-                .setValue(userSentence);
-        likesReference
-                .child(userSentenceKey)
-                .setValue(new Likes());
+    public Single<String> insert(UserSentence userSentence) {
+        return Single.create(subscriber -> {
+            String userSentenceKey = Objects.requireNonNull(publicSentencesReference.push().getKey());
+            Map<String, Object> updateMap = new HashMap<>();
+            String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentenceKey);
+            updateMap.put(sentenceWithKeyPath, userSentence);
+            String sentenceWithLangAndKeyPath =
+                    String.format(SENTENCE_BY_LANG_KEY_PATH,
+                                  userSentence.getLanguageCode(),
+                                  userSentenceKey);
+            updateMap.put(sentenceWithLangAndKeyPath, userSentence);
+            String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentenceKey);
+            updateMap.put(sentenceLikesWithKeyPath, new Likes());
+            databaseReference.updateChildren(updateMap)
+                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(userSentenceKey))
+                    .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+        });
+    }
+
+    @Override
+    public Single<List<UserSentence>> getUserSentencesByLanguage(String uid, String languageCode) {
+        return getPublicSentencesByLanguageAndChildValueOnce(languageCode, "author/uid", uid);
+    }
+
+    @Override
+    public Single<List<UserSentence>> getSentencesByLanguage(String languageCode) {
+        return getPublicSentencesByLanguageAndChildValueOnce(languageCode, "dateCreated", null);
     }
 
     public Observable<UserSentence> getSentence(String key) {
         return Observable.create(
-                subscriber ->
-                        sentencesValueEventListener = publicSentencesReference
-                                .child(key)
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                subscriber -> {
+                    DatabaseReference databaseReference = publicSentencesReference.child(key);
+                    ValueEventListener listener = databaseReference
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
                                         UserSentence userSentence = Objects.requireNonNull(
                                                 dataSnapshot.getValue(UserSentence.class)
                                         );
                                         userSentence.setId(dataSnapshot.getKey());
                                         subscriber.onNext(userSentence);
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                                        Log.d(TAG, "onCancelled: " + databaseError.getMessage());
-                                    }
-                                })
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+                                }
+                            });
+                    valueEventListenersMap.put(databaseReference, listener);
+                }
         );
     }
 
     public Observable<Likes> getLikes(String key) {
         return Observable.create(
-                subscriber ->
-                        likesValueEventListener = likesReference
-                                .child(key)
-                                .addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                        Likes likes = Objects.requireNonNull(dataSnapshot.getValue(Likes.class));
+                subscriber -> {
+                    DatabaseReference databaseReference = likesReference.child(key);
+                    ValueEventListener listener = databaseReference
+                            .addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        Likes likes = dataSnapshot.getValue(Likes.class);
                                         subscriber.onNext(likes);
+                                    } else {
+                                        Log.d(TAG, "getLikes: dataSnapshot is empty");
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(@NonNull DatabaseError likesDataSnapshot) {
-                                        Log.d(TAG, "onCancelled: " + likesDataSnapshot.getMessage());
-                                    }
-                                })
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError likesDataSnapshot) {
+                                    Log.d(TAG, "getLikes: " + likesDataSnapshot.getMessage());
+                                }
+                            });
+                    valueEventListenersMap.put(databaseReference, listener);
+                }
         );
+    }
+
+    @Override
+    public Completable remove(UserSentence userSentence) {
+        return Completable.create(subscriber -> {
+            Map<String, Object> updateMap = new HashMap<>();
+            String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentence.getId());
+            updateMap.put(sentenceWithKeyPath, null);
+            String sentenceWithLangAndKeyPath =
+                    String.format(SENTENCE_BY_LANG_KEY_PATH,
+                                  userSentence.getLanguageCode(),
+                                  userSentence.getId());
+            updateMap.put(sentenceWithLangAndKeyPath, null);
+            String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentence.getId());
+            updateMap.put(sentenceLikesWithKeyPath, null);
+            databaseReference.updateChildren(updateMap)
+                    .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                    .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+        });
     }
 
     @Override
@@ -203,24 +255,16 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                                 }));
     }
 
-    public Observable<UserSentence> getSentences() {
-        return getPublicSentencesByLanguageAndChildValue(Constants.DEFAULT_LANG_KEY, "dateCreated", null);
+    @Override
+    public void dispose() {
+        for (Map.Entry<DatabaseReference, ValueEventListener> reference : valueEventListenersMap.entrySet()) {
+            reference.getKey().removeEventListener(reference.getValue());
+        }
+        valueEventListenersMap.clear();
     }
 
-    public Observable<UserSentence> getSentencesByLanguage(String languageCode) {
-        return getPublicSentencesByLanguageAndChildValue(languageCode, "dateCreated", null);
-    }
-
-    public Observable<UserSentence> getUserSentences(String uid) {
-        return getPublicSentencesByLanguageAndChildValue(Constants.DEFAULT_LANG_KEY, "author/uid", uid);
-    }
-
-    public Observable<UserSentence> getUserSentencesByLanguage(String uid, String languageCode) {
-        return getPublicSentencesByLanguageAndChildValue(languageCode, "author/uid", uid);
-    }
-
-    private Observable<UserSentence> getPublicSentencesByLanguageAndChildValue(String languageCode, String childKey, String childValue) {
-        return Observable.create(
+    private Single<List<UserSentence>> getPublicSentencesByLanguageAndChildValueOnce(String languageCode, String childKey, String childValue) {
+        return Single.create(
                 subscriber -> {
                     if (languageCode.equals(Constants.DEFAULT_LANG_KEY)) {
                         dbReference = publicSentencesReference;
@@ -231,29 +275,17 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                     if (childValue != null) {
                         query = query.equalTo(childValue);
                     }
-                    childEventListener = query
-                            .addChildEventListener(new ChildEventListener() {
+                    query
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                                    UserSentence userSentence =
-                                            Objects.requireNonNull(dataSnapshot.getValue(UserSentence.class));
-                                    userSentence.setId(Objects.requireNonNull(dataSnapshot.getKey()));
-                                    subscriber.onNext(userSentence);
-                                }
-
-                                @Override
-                                public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                                }
-
-                                @Override
-                                public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                                }
-
-                                @Override
-                                public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    ArrayList<UserSentence> result = new ArrayList<>();
+                                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                                        UserSentence userSentence = Objects.requireNonNull(snapshot.getValue(UserSentence.class));
+                                        userSentence.setId(snapshot.getKey());
+                                        result.add(userSentence);
+                                    }
+                                    subscriber.onSuccess(result);
                                 }
 
                                 @Override
@@ -262,21 +294,6 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                                 }
                             });
                 });
-    }
-
-    @Override
-    public void dispose() {
-        if (dbReference != null) {
-            if (childEventListener != null) {
-                dbReference.removeEventListener(childEventListener);
-            }
-            if (sentencesValueEventListener != null) {
-                dbReference.removeEventListener(sentencesValueEventListener);
-            }
-            if (likesValueEventListener != null) {
-                dbReference.removeEventListener(likesValueEventListener);
-            }
-        }
     }
 }
 

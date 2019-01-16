@@ -51,7 +51,7 @@ abstract class AppModule {
                 .build();
         if (BuildConfig.DEBUG) {
             build.setIndicatorsEnabled(true);
-            build.setLoggingEnabled(true);
+            //  build.setLoggingEnabled(true);
         }
         return build;
     }

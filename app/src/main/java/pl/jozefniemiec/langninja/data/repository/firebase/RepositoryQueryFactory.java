@@ -1,12 +1,14 @@
 package pl.jozefniemiec.langninja.data.repository.firebase;
 
-import io.reactivex.Observable;
+import java.util.List;
+
+import io.reactivex.Single;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 
 public class RepositoryQueryFactory {
 
-    public static Observable<UserSentence> composeQuery(
+    public static Single<List<UserSentence>> composeQuery(
             UserSentenceRepository repository,
             SearchStrategy strategy,
             String uid,

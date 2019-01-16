@@ -6,9 +6,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import javax.inject.Inject;
 
-import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.RepositoryQueryFactory;
@@ -27,7 +25,6 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
     private final CommunityFragmentContract.View view;
     private final UserSentenceRepository repository;
     private final FirebaseAuth auth;
-    private Disposable subscription;
     private String[] inappropriateContentOptions = {"Propagowanie nienawiści", "Niecenzuralne wyrazy", "Inne"};
     private String[] menuOptions = {"Edytuj", "Usuń"};
 
@@ -39,29 +36,32 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
     }
 
     @Override
-    public void onOptionSelected(Language language, int option) {
+    public void pullData(Language language, int option) {
         cleanup();
         SearchStrategy searchStrategy = SearchStrategy.valueOf(option);
         String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : DEFAULT_USER_UID;
         String languageCode = language.getCode();
-        Observable<UserSentence> userSentenceObservable =
-                RepositoryQueryFactory.composeQuery(repository, searchStrategy, uid, languageCode);
-        subscription = userSentenceObservable
+        RepositoryQueryFactory.composeQuery(repository, searchStrategy, uid, languageCode)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(view::addData);
     }
 
     @Override
+    public void onViewCreated() {
+        view.registerOnDataChangeListener();
+    }
+
+    @Override
     public void onDestroyView() {
         cleanup();
+        view.unregisterOnDataChangeListener();
     }
 
     @Override
     public void onShowButtonClicked(UserSentence userSentence) {
         view.showSentenceDetails(userSentence);
     }
-
 
     @Override
     public void onCreateSentenceButtonClicked(Language language) {
@@ -90,15 +90,14 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
             case 0:
                 view.showSentenceDetails(userSentence);
             case 1:
-                Log.d(TAG, "onSentenceOptionSelected: removing sentence: " + userSentence.getSentence());
+                repository
+                        .remove(userSentence)
+                        .doOnComplete(() -> view.removeItem(userSentence))
+                        .subscribe();
         }
     }
 
     private void cleanup() {
-        if (subscription != null) {
-            repository.dispose();
-            subscription.dispose();
-        }
         view.clearData();
     }
 }

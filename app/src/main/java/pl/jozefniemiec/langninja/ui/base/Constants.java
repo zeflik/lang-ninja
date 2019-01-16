@@ -21,4 +21,6 @@ public class Constants {
     public static final String DEFAULT_LANG_KEY = "world";
 
     public static final String DEFAULT_USER_UID = "ABCDEFG";
+
+    public static final String ACTION_USER_SENTENCES_CHANGED = "pl.jozefniemiec.langninja.USER_SENTENCES_CHANGED";
 }
