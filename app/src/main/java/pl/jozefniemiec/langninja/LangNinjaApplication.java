@@ -27,7 +27,6 @@ public class LangNinjaApplication extends DaggerApplication {
         super.onCreate();
         APP_PACKAGE_NAME = this.getPackageName();
         FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        firebaseDatabase.setPersistenceEnabled(true);
         DatabaseReference sentencesReference = firebaseDatabase.getReference("data");
         new LocalDatabaseManager(this).syncData(sentencesReference);
     }

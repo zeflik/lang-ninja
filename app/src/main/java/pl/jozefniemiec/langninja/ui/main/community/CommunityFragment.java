@@ -156,7 +156,6 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
 
     @Override
     public void addData(List<UserSentence> userSentences) {
-        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
         adapter.addAll(userSentences);
     }
 
