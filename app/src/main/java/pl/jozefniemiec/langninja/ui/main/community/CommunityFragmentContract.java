@@ -9,8 +9,6 @@ public interface CommunityFragmentContract {
 
     interface View {
 
-        void addData(UserSentence userSentence);
-
         void addData(List<UserSentence> userSentences);
 
         void showSentenceDetails(UserSentence userSentence);
