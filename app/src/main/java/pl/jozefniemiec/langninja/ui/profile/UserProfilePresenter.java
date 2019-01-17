@@ -100,8 +100,10 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
         User user = new User(auth.getCurrentUserUid(), name, email, photo);
         userRepository.insert(user)
                 .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnComplete(view::notifyDataChanged)
+                .doOnComplete(view::close)
                 .subscribe();
-        view.close();
     }
 
     private void onError(Throwable throwable) {

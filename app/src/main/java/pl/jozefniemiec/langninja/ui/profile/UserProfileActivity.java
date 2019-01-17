@@ -144,6 +144,11 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
     }
 
     @Override
+    public void notifyDataChanged() {
+        Utility.sendBroadcastUserSentencesChanged(this);
+    }
+
+    @Override
     public void findPhotoInGallery() {
         Intent intent = new Intent();
         intent.setType("image/*");

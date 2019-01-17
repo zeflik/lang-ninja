@@ -18,6 +18,8 @@ public interface UserProfileContract extends BaseContract {
 
         void hideProgress();
 
+        void notifyDataChanged();
+
         void close();
 
         void showNeedInternetDialog();
