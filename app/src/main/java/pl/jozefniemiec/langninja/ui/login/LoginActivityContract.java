@@ -13,6 +13,8 @@ public interface LoginActivityContract {
         void showNeedInternetDialog();
 
         void showLoginErrorMessage();
+
+        void notifyDataChanged();
     }
 
     interface Presenter {

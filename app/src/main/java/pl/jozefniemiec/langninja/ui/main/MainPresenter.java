@@ -23,5 +23,6 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void onMenuSignOutClicked() {
         auth.signOut();
+        view.notifyDataChanged();
     }
 }

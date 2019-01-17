@@ -17,6 +17,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.main.community.CommunityFragment;
 import pl.jozefniemiec.langninja.ui.main.languages.LanguagesFragment;
 import pl.jozefniemiec.langninja.ui.profile.UserProfileActivity;
+import pl.jozefniemiec.langninja.utils.Utility;
 
 public class MainActivity extends DaggerAppCompatActivity implements MainContract.View {
 
@@ -77,5 +78,10 @@ public class MainActivity extends DaggerAppCompatActivity implements MainContrac
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void notifyDataChanged() {
+        Utility.sendBroadcastUserSentencesChanged(this);
     }
 }

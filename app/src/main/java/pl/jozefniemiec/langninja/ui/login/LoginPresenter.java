@@ -43,6 +43,7 @@ public class LoginPresenter implements LoginActivityContract.Presenter {
 
     @Override
     public void onLoginSucceed() {
+        view.notifyDataChanged();
         view.close();
     }
 

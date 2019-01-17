@@ -5,6 +5,8 @@ public interface MainContract {
     interface View {
 
         void showFragments();
+
+        void notifyDataChanged();
     }
 
     interface Presenter {

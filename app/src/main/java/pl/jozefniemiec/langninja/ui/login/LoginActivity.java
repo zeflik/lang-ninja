@@ -75,6 +75,11 @@ public class LoginActivity extends BaseActivity implements LoginActivityContract
     }
 
     @Override
+    public void notifyDataChanged() {
+        Utility.sendBroadcastUserSentencesChanged(this);
+    }
+
+    @Override
     public void showLoginErrorMessage() {
         Toast.makeText(this, R.string.message_login_error, Toast.LENGTH_SHORT).show();
     }
