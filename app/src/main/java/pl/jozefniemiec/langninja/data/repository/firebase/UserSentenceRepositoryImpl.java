@@ -26,6 +26,7 @@ import io.reactivex.Single;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+import pl.jozefniemiec.langninja.service.InternetConnectionService;
 import pl.jozefniemiec.langninja.ui.base.Constants;
 
 public class UserSentenceRepositoryImpl implements UserSentenceRepository {
@@ -39,6 +40,7 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     private static final String SENTENCE_LIKES_COUNT_PATH = SENTENCE_BY_KEY_PATH + "/likesCount/";
     private static final String SENTENCE_BY_LANG_LIKES_COUNT_PATH = SENTENCE_BY_LANG_KEY_PATH + "/likesCount/";
     private static final String LIKES_PATH = "/" + LIKES_NODE + "/%s/";
+    private final InternetConnectionService internetConnectionService;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
     private DatabaseReference publicSentencesByLanguageReference =
@@ -51,8 +53,8 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     private Map<DatabaseReference, ValueEventListener> valueEventListenersMap = new HashMap<>();
 
     @Inject
-    UserSentenceRepositoryImpl() {
-        publicSentencesReference.keepSynced(true);
+    UserSentenceRepositoryImpl(InternetConnectionService internetConnectionService) {
+        this.internetConnectionService = internetConnectionService;
     }
 
     @Override
@@ -141,19 +143,23 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     @Override
     public Completable remove(UserSentence userSentence) {
         return Completable.create(subscriber -> {
-            Map<String, Object> updateMap = new HashMap<>();
-            String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentence.getId());
-            updateMap.put(sentenceWithKeyPath, null);
-            String sentenceWithLangAndKeyPath =
-                    String.format(SENTENCE_BY_LANG_KEY_PATH,
-                                  userSentence.getLanguageCode(),
-                                  userSentence.getId());
-            updateMap.put(sentenceWithLangAndKeyPath, null);
-            String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentence.getId());
-            updateMap.put(sentenceLikesWithKeyPath, null);
-            databaseReference.updateChildren(updateMap)
-                    .addOnSuccessListener(aVoid -> subscriber.onComplete())
-                    .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+            if (!internetConnectionService.isInternetOn()) {
+                subscriber.onError(new RuntimeException("Need Internet"));
+            } else {
+                Map<String, Object> updateMap = new HashMap<>();
+                String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentence.getId());
+                updateMap.put(sentenceWithKeyPath, null);
+                String sentenceWithLangAndKeyPath =
+                        String.format(SENTENCE_BY_LANG_KEY_PATH,
+                                      userSentence.getLanguageCode(),
+                                      userSentence.getId());
+                updateMap.put(sentenceWithLangAndKeyPath, null);
+                String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentence.getId());
+                updateMap.put(sentenceLikesWithKeyPath, null);
+                databaseReference.updateChildren(updateMap)
+                        .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                        .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+            }
         });
     }
 

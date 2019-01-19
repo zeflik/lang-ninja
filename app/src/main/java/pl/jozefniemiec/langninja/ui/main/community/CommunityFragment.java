@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.OnItemSelected;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
@@ -45,7 +48,7 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
 
     private static final String TAG = CommunityFragment.class.getSimpleName();
     private Unbinder unbinder;
-    private boolean isSpinnerTriggered;
+    private boolean isSpinnerTriggeredFirstTime;
     @Inject
     UserSentenceListAdapter adapter;
     private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -68,16 +71,28 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     @BindView(R.id.sentenceLanguageFilterSpinner)
     Spinner sentenceLanguageFilterSpinner;
 
+    @BindView(R.id.noInternetConnectionLayout)
+    ConstraintLayout noInternetConnectionLayout;
+
+    @BindView(R.id.userSentencesProgressBar)
+    ProgressBar progressBar;
+
+    @OnClick(R.id.noInternetConnectionRefreshButton)
+    void onRefreshButtonClicked(View view) {
+        presenter.pullData((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
+                           sentencesCategoryFilterSpinner.getSelectedItemPosition());
+    }
+
     @Inject
     CommunityFragmentContract.Presenter presenter;
 
     @OnItemSelected({R.id.sentenceLanguageFilterSpinner, R.id.sentencesCategoryFilterSpinner})
     public void onSpinnerChanged(Spinner spinner, int position) {
-        if (isSpinnerTriggered) {
+        if (isSpinnerTriggeredFirstTime) {
             presenter.pullData((Language) sentenceLanguageFilterSpinner.getSelectedItem(),
                                sentencesCategoryFilterSpinner.getSelectedItemPosition());
         } else {
-            isSpinnerTriggered = true;
+            isSpinnerTriggeredFirstTime = true;
         }
     }
 
@@ -189,7 +204,6 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         adapter.remove(userSentence);
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -217,5 +231,25 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
     @Override
     public void unregisterOnDataChangeListener() {
         requireActivity().unregisterReceiver(broadcastReceiver);
+    }
+
+    @Override
+    public void showNeedInternetInfo() {
+        noInternetConnectionLayout.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideNeedInternetInfo() {
+        noInternetConnectionLayout.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

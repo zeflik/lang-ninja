@@ -26,6 +26,14 @@ public interface CommunityFragmentContract {
         void registerOnDataChangeListener();
 
         void unregisterOnDataChangeListener();
+
+        void showNeedInternetInfo();
+
+        void hideNeedInternetInfo();
+
+        void showProgress();
+
+        void hideProgress();
     }
 
     interface Presenter {

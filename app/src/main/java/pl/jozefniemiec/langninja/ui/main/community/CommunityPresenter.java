@@ -14,6 +14,7 @@ import pl.jozefniemiec.langninja.data.repository.firebase.SearchStrategy;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.di.main.community.CommunityFragmentScope;
+import pl.jozefniemiec.langninja.service.InternetConnectionService;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.DEFAULT_USER_UID;
 
@@ -25,26 +26,37 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
     private final CommunityFragmentContract.View view;
     private final UserSentenceRepository repository;
     private final FirebaseAuth auth;
+    private final InternetConnectionService internetConnectionService;
     private String[] inappropriateContentOptions = {"Propagowanie nienawiści", "Niecenzuralne wyrazy", "Inne"};
     private String[] menuOptions = {"Edytuj", "Usuń"};
 
     @Inject
-    CommunityPresenter(CommunityFragmentContract.View view, UserSentenceRepository repository, FirebaseAuth auth) {
+    CommunityPresenter(CommunityFragmentContract.View view, UserSentenceRepository repository, FirebaseAuth auth, InternetConnectionService internetConnectionService) {
         this.view = view;
         this.repository = repository;
         this.auth = auth;
+        this.internetConnectionService = internetConnectionService;
     }
 
     @Override
     public void pullData(Language language, int option) {
-        cleanup();
-        SearchStrategy searchStrategy = SearchStrategy.valueOf(option);
-        String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : DEFAULT_USER_UID;
-        String languageCode = language.getCode();
-        RepositoryQueryFactory.composeQuery(repository, searchStrategy, uid, languageCode)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(view::addData);
+        if (internetConnectionService.isInternetOn()) {
+            view.hideNeedInternetInfo();
+            view.clearData();
+            view.showProgress();
+            SearchStrategy searchStrategy = SearchStrategy.valueOf(option);
+            String uid = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : DEFAULT_USER_UID;
+            String languageCode = language.getCode();
+            RepositoryQueryFactory.composeQuery(repository, searchStrategy, uid, languageCode)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doFinally(view::hideProgress)
+                    .subscribe(view::addData);
+        } else {
+            view.clearData();
+            view.showNeedInternetInfo();
+        }
+
     }
 
     @Override
@@ -54,7 +66,7 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
 
     @Override
     public void onDestroyView() {
-        cleanup();
+        view.clearData();
         view.unregisterOnDataChangeListener();
     }
 
@@ -92,12 +104,9 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
             case 1:
                 repository
                         .remove(userSentence)
-                        .doOnComplete(() -> view.removeItem(userSentence))
-                        .subscribe();
+                        .subscribe(
+                                () -> view.removeItem(userSentence),
+                                error -> Log.d(TAG, "onSentenceOptionSelected: " + error.getMessage()));
         }
-    }
-
-    private void cleanup() {
-        view.clearData();
     }
 }
