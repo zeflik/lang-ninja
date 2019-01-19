@@ -8,13 +8,13 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import pl.jozefniemiec.langninja.data.repository.NoInternetConnectionException;
 import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.User;
 import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.di.profile.UserProfileActivityScope;
 import pl.jozefniemiec.langninja.service.AuthService;
 import pl.jozefniemiec.langninja.storage.ImagesStorage;
-import pl.jozefniemiec.langninja.storage.NoInternetException;
 
 @UserProfileActivityScope
 public class UserProfilePresenter implements UserProfileContract.Presenter {
@@ -74,6 +74,7 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
 
     @Override
     public void onSaveUserProfileButtonClicked(String userNameField, Uri imageUri) {
+        view.showProgress();
         if (imageUri != null
                 && imageUri.getScheme() != null
                 && imageUri.getScheme().equals(URI_LOCAL_FILE_SCHEME)) {
@@ -102,16 +103,16 @@ public class UserProfilePresenter implements UserProfileContract.Presenter {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnComplete(view::notifyDataChanged)
-                .doOnComplete(view::close)
-                .subscribe();
+                .doFinally(view::hideProgress)
+                .subscribe(view::close, this::onError);
     }
 
     private void onError(Throwable throwable) {
         view.hideProgress();
-        if (throwable instanceof NoInternetException) {
-            view.showNeedInternetDialog();
+        if (throwable instanceof NoInternetConnectionException) {
+            view.showNeedInternetInfo();
         } else {
-            view.showErrorMessage(resourcesManager.getUnknownErrorMessage());
+            view.showErrorMessage(resourcesManager.getUnknownUploadErrorMessage());
             Log.e(TAG, String.format(UPLOAD_ERROR_MESSAGE, throwable.getMessage()));
         }
     }

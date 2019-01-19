@@ -20,11 +20,15 @@ public interface CommunityCardContract {
 
         void showSignInDialog();
 
-        void showNeedInternetDialog();
+        void showNeedInternetInfo();
 
         void showLikesCount(String value);
 
         void notifyDataChanged();
+
+        void showProgress();
+
+        void hideProgress();
     }
 
     interface Presenter {

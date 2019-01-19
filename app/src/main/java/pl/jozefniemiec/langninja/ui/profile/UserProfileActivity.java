@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
@@ -118,7 +119,7 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
                                         }
                                     });
                         } else {
-                            showNeedInternetDialog();
+                            showNeedInternetInfo();
                         }
 
                     }
@@ -203,7 +204,7 @@ public class UserProfileActivity extends BaseSecuredActivity implements UserProf
     }
 
     @Override
-    public void showNeedInternetDialog() {
-        Utility.showNeedInternetDialog(this);
+    public void showNeedInternetInfo() {
+        Toast.makeText(this, R.string.missing_internet_connection, Toast.LENGTH_SHORT).show();
     }
 }

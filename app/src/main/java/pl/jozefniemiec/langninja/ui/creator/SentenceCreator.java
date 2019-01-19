@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -41,6 +43,9 @@ public class SentenceCreator extends BaseSecuredActivity
 
     @BindView(R.id.sentenceCandidateSendButton)
     Button sentenceCreateButton;
+
+    @BindView(R.id.newSentenceProgressBar)
+    ProgressBar progressBar;
 
     @OnClick(R.id.sentenceCandidateSendButton)
     public void submit(View view) {
@@ -143,5 +148,23 @@ public class SentenceCreator extends BaseSecuredActivity
     public void onPause() {
         super.onPause();
         hideKeyboard();
+    }
+
+    @Override
+    public void showNeedInternetInfo() {
+        Toast.makeText(this, R.string.missing_internet_connection, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showProgress() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -8,6 +8,7 @@ import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
+import pl.jozefniemiec.langninja.data.repository.NoInternetConnectionException;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.RepositoryQueryFactory;
 import pl.jozefniemiec.langninja.data.repository.firebase.SearchStrategy;
@@ -104,9 +105,15 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
             case 1:
                 repository
                         .remove(userSentence)
+                        .doOnSubscribe(observable -> view.showProgress())
+                        .doFinally(view::hideProgress)
                         .subscribe(
                                 () -> view.removeItem(userSentence),
-                                error -> Log.d(TAG, "onSentenceOptionSelected: " + error.getMessage()));
+                                error -> {
+                                    if (error instanceof NoInternetConnectionException) {
+                                        view.showErrorMessage("Brak połaczenia.");
+                                    }
+                                });
         }
     }
 }

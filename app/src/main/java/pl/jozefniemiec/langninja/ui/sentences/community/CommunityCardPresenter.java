@@ -1,12 +1,16 @@
 package pl.jozefniemiec.langninja.ui.sentences.community;
 
+import android.util.Log;
+
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import pl.jozefniemiec.langninja.data.repository.NoInternetConnectionException;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
+import pl.jozefniemiec.langninja.data.resources.ResourcesManager;
 import pl.jozefniemiec.langninja.di.sentences.community.CommunityCardScope;
 import pl.jozefniemiec.langninja.service.AuthService;
 import pl.jozefniemiec.langninja.service.InternetConnectionService;
@@ -19,18 +23,22 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     private final UserSentenceRepository userSentenceRepository;
     private final AuthService authService;
     private final InternetConnectionService internetConnectionService;
+    private final ResourcesManager resourcesManager;
     private Disposable sentencesSubscription;
     private Disposable likesSubscription;
+    private Disposable likeSubscription;
+    private Disposable dislikeSubscription;
 
     @Inject
     CommunityCardPresenter(CommunityCardContract.View view,
                            UserSentenceRepository userSentenceRepository,
                            AuthService authService,
-                           InternetConnectionService internetConnectionService) {
+                           InternetConnectionService internetConnectionService, ResourcesManager resourcesManager) {
         this.view = view;
         this.userSentenceRepository = userSentenceRepository;
         this.authService = authService;
         this.internetConnectionService = internetConnectionService;
+        this.resourcesManager = resourcesManager;
     }
 
     @Override
@@ -68,19 +76,16 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     @Override
     public void onLikeButtonClicked(UserSentence userSentence) {
         if (authService.isSignedIn()) {
-            if (internetConnectionService.isInternetOn()) {
-                String sentenceId = userSentence.getId();
-                String languageCode = userSentence.getLanguageCode();
-                String userUid = authService.getCurrentUserUid();
-                userSentenceRepository
-                        .like(sentenceId, languageCode, userUid)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete(view::notifyDataChanged)
-                        .subscribe();
-            } else {
-                view.showNeedInternetDialog();
-            }
+            String sentenceId = userSentence.getId();
+            String languageCode = userSentence.getLanguageCode();
+            String userUid = authService.getCurrentUserUid();
+            likeSubscription = userSentenceRepository
+                    .like(sentenceId, languageCode, userUid)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(completable -> view.showProgress())
+                    .doFinally(view::hideProgress)
+                    .subscribe(view::notifyDataChanged, this::onError);
         } else {
             view.showSignInDialog();
         }
@@ -89,16 +94,16 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     @Override
     public void onDislikeButtonClicked(UserSentence userSentence) {
         if (authService.isSignedIn()) {
-            if (internetConnectionService.isInternetOn()) {
-                userSentenceRepository
-                        .dislike(userSentence.getId(), userSentence.getLanguageCode(), authService.getCurrentUserUid())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnComplete(view::notifyDataChanged)
-                        .subscribe();
-            } else {
-                view.showNeedInternetDialog();
-            }
+            String sentenceId = userSentence.getId();
+            String languageCode = userSentence.getLanguageCode();
+            String userUid = authService.getCurrentUserUid();
+            dislikeSubscription = userSentenceRepository
+                    .dislike(sentenceId, languageCode, userUid)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(completable -> view.showProgress())
+                    .doFinally(view::hideProgress)
+                    .subscribe(view::notifyDataChanged, this::onError);
         } else {
             view.showSignInDialog();
         }
@@ -106,8 +111,26 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
 
     @Override
     public void onViewClose() {
-        sentencesSubscription.dispose();
-        likesSubscription.dispose();
         userSentenceRepository.dispose();
+        if (sentencesSubscription != null && !sentencesSubscription.isDisposed()) {
+            sentencesSubscription.dispose();
+        }
+        if (likesSubscription != null && !likesSubscription.isDisposed()) {
+            likesSubscription.dispose();
+        }
+        if (likeSubscription != null && !likeSubscription.isDisposed()) {
+            likeSubscription.dispose();
+        }
+        if (dislikeSubscription != null && !dislikeSubscription.isDisposed()) {
+            dislikeSubscription.dispose();
+        }
+    }
+
+    private void onError(Throwable throwable) {
+        if (throwable instanceof NoInternetConnectionException) {
+            view.showNeedInternetInfo();
+        } else {
+            Log.d(TAG, "onError: " + throwable.getMessage());
+        }
     }
 }

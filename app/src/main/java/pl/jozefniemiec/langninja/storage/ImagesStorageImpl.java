@@ -8,6 +8,7 @@ import com.google.firebase.storage.StorageReference;
 import javax.inject.Inject;
 
 import io.reactivex.Single;
+import pl.jozefniemiec.langninja.data.repository.NoInternetConnectionException;
 import pl.jozefniemiec.langninja.service.InternetConnectionService;
 
 public class ImagesStorageImpl implements ImagesStorage {
@@ -32,7 +33,7 @@ public class ImagesStorageImpl implements ImagesStorage {
                         .addOnCompleteListener(uriTask -> subscriber.onSuccess(uriTask.getResult()))
                         .addOnFailureListener(subscriber::onError);
             } else {
-                subscriber.onError(new NoInternetException("Need internet connection"));
+                subscriber.onError(new NoInternetConnectionException());
             }
         });
     }

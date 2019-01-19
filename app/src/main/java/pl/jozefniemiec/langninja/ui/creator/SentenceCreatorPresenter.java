@@ -52,20 +52,32 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
 
     @Override
     public void onCreateButtonClicked(Language language, String sentence) {
+        view.showProgress();
         if (validateData(sentence)) {
             userRepository.getUser(authService.getCurrentUserUid())
                     .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
                     .map(author -> new UserSentence(null, sentence, language.getCode(), author))
-                    .subscribe(userSentence -> {
-                        userSentenceRepository
-                                .insert(userSentence)
-                                .subscribe(id -> {
-                                    userSentence.setId(id);
-                                    view.notifyDataChanged();
-                                    view.close();
-                                });//TODO - refactor
-                    });
-
+                    .subscribe(
+                            userSentence -> {
+                                userSentenceRepository
+                                        .insert(userSentence)
+                                        .subscribe(
+                                                id -> {
+                                                    view.notifyDataChanged();
+                                                    view.hideKeyboard();
+                                                    view.close();
+                                                },
+                                                error -> {
+                                                    view.hideProgress();
+                                                    view.showNeedInternetInfo();
+                                                }
+                                        );
+                            }//TODO - refactor
+                            , error -> {
+                                view.hideProgress();
+                                view.showNeedInternetInfo();
+                            }
+                    );
         }
     }
 

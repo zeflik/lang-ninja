@@ -22,7 +22,7 @@ public interface UserProfileContract extends BaseContract {
 
         void close();
 
-        void showNeedInternetDialog();
+        void showNeedInternetInfo();
     }
 
     interface Presenter {

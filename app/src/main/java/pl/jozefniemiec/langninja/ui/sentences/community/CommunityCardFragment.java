@@ -6,8 +6,10 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +59,9 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
 
     @BindView(R.id.communityFeedbackThumbUpImageButton)
     ImageButton communityFeedbackThumbUpImageView;
+
+    @BindView(R.id.communityFeedbackProgressBar)
+    ProgressBar progressBar;
 
     @OnClick(R.id.communityFeedbackThumbUpImageButton)
     void dislike() {
@@ -149,8 +154,8 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     }
 
     @Override
-    public void showNeedInternetDialog() {
-        Utility.showNeedInternetDialog(requireContext());
+    public void showNeedInternetInfo() {
+        Toast.makeText(requireContext(), R.string.missing_internet_connection, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -179,5 +184,18 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     public void onDestroyView() {
         unbinder.unbind();
         super.onDestroyView();
+    }
+
+    @Override
+    public void showProgress() {
+        requireActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                                               WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+        progressBar.setVisibility(View.GONE);
     }
 }

@@ -22,6 +22,12 @@ public interface SentenceCreatorContract {
 
         void notifyDataChanged();
 
+        void showNeedInternetInfo();
+
+        void showProgress();
+
+        void hideProgress();
+
         void close();
     }
 

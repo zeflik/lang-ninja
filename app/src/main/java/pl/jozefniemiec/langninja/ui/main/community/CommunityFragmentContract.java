@@ -31,6 +31,8 @@ public interface CommunityFragmentContract {
 
         void hideNeedInternetInfo();
 
+        void showErrorMessage(String message);
+
         void showProgress();
 
         void hideProgress();

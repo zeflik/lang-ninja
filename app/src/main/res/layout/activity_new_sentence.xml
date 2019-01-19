@@ -66,4 +66,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentenceCandidateSendButton" />
 
+    <ProgressBar
+        android:id="@+id/newSentenceProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/sentenceCandidateTextInput"
+        app:layout_constraintEnd_toEndOf="@+id/sentenceCandidateTextInput"
+        app:layout_constraintStart_toStartOf="@+id/sentenceCandidateTextInput"
+        app:layout_constraintTop_toTopOf="@+id/sentenceCandidateTextInput" />
+
 </android.support.constraint.ConstraintLayout>

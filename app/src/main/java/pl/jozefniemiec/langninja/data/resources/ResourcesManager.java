@@ -12,5 +12,7 @@ public interface ResourcesManager {
 
     String getLanguageNotSupportedMessage();
 
+    String getUnknownUploadErrorMessage();
+
     String getUnknownErrorMessage();
 }

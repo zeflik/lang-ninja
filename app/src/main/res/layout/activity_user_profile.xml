@@ -80,10 +80,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/userProfilePhoto"
+        app:layout_constraintBottom_toBottomOf="@+id/userProfileName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/userProfilePhoto" />
+        app:layout_constraintTop_toTopOf="@+id/userProfileName" />
 
 </android.support.constraint.ConstraintLayout>

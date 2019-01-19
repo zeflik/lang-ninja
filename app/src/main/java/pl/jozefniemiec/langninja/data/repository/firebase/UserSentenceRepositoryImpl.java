@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import pl.jozefniemiec.langninja.data.repository.NoInternetConnectionException;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
@@ -55,11 +56,17 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     @Inject
     UserSentenceRepositoryImpl(InternetConnectionService internetConnectionService) {
         this.internetConnectionService = internetConnectionService;
+        publicSentencesByLanguageReference.keepSynced(true);
+        publicSentencesReference.keepSynced(true);
     }
 
     @Override
     public Single<String> insert(UserSentence userSentence) {
         return Single.create(subscriber -> {
+            if (!internetConnectionService.isInternetOn()) {
+                subscriber.onError(new NoInternetConnectionException());
+                return;
+            }
             String userSentenceKey = Objects.requireNonNull(publicSentencesReference.push().getKey());
             Map<String, Object> updateMap = new HashMap<>();
             String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentenceKey);
@@ -144,28 +151,32 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     public Completable remove(UserSentence userSentence) {
         return Completable.create(subscriber -> {
             if (!internetConnectionService.isInternetOn()) {
-                subscriber.onError(new RuntimeException("Need Internet"));
-            } else {
-                Map<String, Object> updateMap = new HashMap<>();
-                String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentence.getId());
-                updateMap.put(sentenceWithKeyPath, null);
-                String sentenceWithLangAndKeyPath =
-                        String.format(SENTENCE_BY_LANG_KEY_PATH,
-                                      userSentence.getLanguageCode(),
-                                      userSentence.getId());
-                updateMap.put(sentenceWithLangAndKeyPath, null);
-                String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentence.getId());
-                updateMap.put(sentenceLikesWithKeyPath, null);
-                databaseReference.updateChildren(updateMap)
-                        .addOnSuccessListener(aVoid -> subscriber.onComplete())
-                        .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+                subscriber.onError(new NoInternetConnectionException());
+                return;
             }
+            Map<String, Object> updateMap = new HashMap<>();
+            String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentence.getId());
+            updateMap.put(sentenceWithKeyPath, null);
+            String sentenceWithLangAndKeyPath =
+                    String.format(SENTENCE_BY_LANG_KEY_PATH,
+                                  userSentence.getLanguageCode(),
+                                  userSentence.getId());
+            updateMap.put(sentenceWithLangAndKeyPath, null);
+            String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentence.getId());
+            updateMap.put(sentenceLikesWithKeyPath, null);
+            databaseReference.updateChildren(updateMap)
+                    .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                    .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
         });
     }
 
     @Override
     public Completable like(String sentenceKey, String languageCode, String userUid) {
         return Completable.create(subscriber -> {
+            if (!internetConnectionService.isInternetOn()) {
+                subscriber.onError(new NoInternetConnectionException());
+                return;
+            }
             likesReference
                     .child(sentenceKey)
                     .runTransaction(new Transaction.Handler() {
@@ -214,51 +225,56 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
     @Override
     public Completable dislike(String sentenceKey, String languageCode, String userUid) {
         return Completable.create(
-                subscriber ->
-                        likesReference
-                                .child(sentenceKey)
-                                .runTransaction(new Transaction.Handler() {
-                                    @NonNull
-                                    @Override
-                                    public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
-                                        Likes likes = mutableData.getValue(Likes.class);
-                                        if (likes == null) {
-                                            return Transaction.success(mutableData);
-                                        }
-                                        if (likes.getDislikesMap().containsKey(userUid)
-                                                && likes.getDislikesMap().get(userUid)) {
-                                            likes.setCount(likes.getCount() + 1);
-                                            likes.getDislikesMap().put(userUid, false);
-                                        } else if (likes.getLikesMap().containsKey(userUid)
-                                                && likes.getLikesMap().get(userUid)) {
-                                            likes.setCount(likes.getCount() - 2);
-                                            likes.getLikesMap().put(userUid, false);
-                                            likes.getDislikesMap().put(userUid, true);
-                                        } else {
-                                            likes.setCount(likes.getCount() - 1);
-                                            likes.getDislikesMap().put(userUid, true);
-                                        }
-                                        mutableData.setValue(likes);
+                subscriber -> {
+                    if (!internetConnectionService.isInternetOn()) {
+                        subscriber.onError(new NoInternetConnectionException());
+                        return;
+                    }
+                    likesReference
+                            .child(sentenceKey)
+                            .runTransaction(new Transaction.Handler() {
+                                @NonNull
+                                @Override
+                                public Transaction.Result doTransaction(@NonNull MutableData mutableData) {
+                                    Likes likes = mutableData.getValue(Likes.class);
+                                    if (likes == null) {
                                         return Transaction.success(mutableData);
                                     }
-
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, boolean b,
-                                                           DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.exists()) {
-                                            int count = Objects.requireNonNull(dataSnapshot.getValue(Likes.class)).getCount();
-                                            Map<String, Object> updateMap = new HashMap<>();
-                                            String sentenceCountPath = String.format(SENTENCE_LIKES_COUNT_PATH, sentenceKey);
-                                            updateMap.put(sentenceCountPath, count);
-                                            String sentenceByLangCountPath = String.format(SENTENCE_BY_LANG_LIKES_COUNT_PATH, languageCode, sentenceKey);
-                                            updateMap.put(sentenceByLangCountPath, count);
-                                            databaseReference
-                                                    .updateChildren(updateMap)
-                                                    .addOnSuccessListener(aVoid -> subscriber.onComplete())
-                                                    .addOnFailureListener(subscriber::onError);
-                                        }
+                                    if (likes.getDislikesMap().containsKey(userUid)
+                                            && likes.getDislikesMap().get(userUid)) {
+                                        likes.setCount(likes.getCount() + 1);
+                                        likes.getDislikesMap().put(userUid, false);
+                                    } else if (likes.getLikesMap().containsKey(userUid)
+                                            && likes.getLikesMap().get(userUid)) {
+                                        likes.setCount(likes.getCount() - 2);
+                                        likes.getLikesMap().put(userUid, false);
+                                        likes.getDislikesMap().put(userUid, true);
+                                    } else {
+                                        likes.setCount(likes.getCount() - 1);
+                                        likes.getDislikesMap().put(userUid, true);
                                     }
-                                }));
+                                    mutableData.setValue(likes);
+                                    return Transaction.success(mutableData);
+                                }
+
+                                @Override
+                                public void onComplete(DatabaseError databaseError, boolean b,
+                                                       DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        int count = Objects.requireNonNull(dataSnapshot.getValue(Likes.class)).getCount();
+                                        Map<String, Object> updateMap = new HashMap<>();
+                                        String sentenceCountPath = String.format(SENTENCE_LIKES_COUNT_PATH, sentenceKey);
+                                        updateMap.put(sentenceCountPath, count);
+                                        String sentenceByLangCountPath = String.format(SENTENCE_BY_LANG_LIKES_COUNT_PATH, languageCode, sentenceKey);
+                                        updateMap.put(sentenceByLangCountPath, count);
+                                        databaseReference
+                                                .updateChildren(updateMap)
+                                                .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                                                .addOnFailureListener(subscriber::onError);
+                                    }
+                                }
+                            });
+                });
     }
 
     @Override

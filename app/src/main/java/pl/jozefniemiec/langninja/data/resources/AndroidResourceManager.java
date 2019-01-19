@@ -90,6 +90,11 @@ public class AndroidResourceManager implements ResourcesManager {
     }
 
     @Override
+    public String getUnknownUploadErrorMessage() {
+        return resources.getString(R.string.message_unknown_upload_error);
+    }
+
+    @Override
     public String getUnknownErrorMessage() {
         return resources.getString(R.string.message_unknown_upload_error);
     }
