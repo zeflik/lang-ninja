@@ -24,9 +24,35 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/sentencePageAnswerTv"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sentenceCommunityFragmentContainer" />
+
+    <ImageButton
+        android:id="@+id/sentencePageRemoveButton"
+        android:layout_width="@dimen/buttons_sentence_card_size"
+        android:layout_height="@dimen/buttons_sentence_card_size"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_delete"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        app:layout_constraintEnd_toEndOf="@+id/sentenceCardFragmentContainer"
+        app:layout_constraintTop_toTopOf="@+id/sentenceCardFragmentContainer"
+        android:contentDescription="@string/content_description_remove_button" />
+
+    <ImageButton
+        android:id="@+id/sentencePageEditButton"
+        android:layout_width="@dimen/buttons_sentence_card_size"
+        android:layout_height="@dimen/buttons_sentence_card_size"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/ic_mode_edit"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        app:layout_constraintBottom_toBottomOf="@+id/sentencePageRemoveButton"
+        app:layout_constraintEnd_toStartOf="@+id/sentencePageRemoveButton"
+        app:layout_constraintTop_toTopOf="@+id/sentencePageRemoveButton"
+        android:contentDescription="@string/content_description_edit_button" />
 
     <TextView
         android:id="@+id/sentencePageAnswerTv"
@@ -92,5 +118,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_end="80dp" />
+
+    <android.support.constraint.Group
+        android:id="@+id/sentencePageEditButtons"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="sentencePageEditButton,sentencePageRemoveButton" />
 
 </android.support.constraint.ConstraintLayout>

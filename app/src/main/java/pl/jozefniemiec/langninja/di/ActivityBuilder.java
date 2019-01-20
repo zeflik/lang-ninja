@@ -4,6 +4,8 @@ import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorModule;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
+import pl.jozefniemiec.langninja.di.editor.SentenceEditorModule;
+import pl.jozefniemiec.langninja.di.editor.SentenceEditorScope;
 import pl.jozefniemiec.langninja.di.login.LoginActivityModule;
 import pl.jozefniemiec.langninja.di.login.LoginActivityScope;
 import pl.jozefniemiec.langninja.di.main.MainActivityModule;
@@ -20,6 +22,7 @@ import pl.jozefniemiec.langninja.di.sentences.community.CommunityCardProvider;
 import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentModule;
 import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentScope;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
+import pl.jozefniemiec.langninja.ui.editor.SentenceEditor;
 import pl.jozefniemiec.langninja.ui.login.LoginActivity;
 import pl.jozefniemiec.langninja.ui.main.MainActivity;
 import pl.jozefniemiec.langninja.ui.profile.UserProfileActivity;
@@ -63,4 +66,8 @@ abstract class ActivityBuilder {
     @ContributesAndroidInjector(modules = UserProfileActivityModule.class)
     @UserProfileActivityScope
     abstract UserProfileActivity bindUserProfileActivity();
+
+    @ContributesAndroidInjector(modules = SentenceEditorModule.class)
+    @SentenceEditorScope
+    abstract SentenceEditor bindSentenceEditorActivity();
 }

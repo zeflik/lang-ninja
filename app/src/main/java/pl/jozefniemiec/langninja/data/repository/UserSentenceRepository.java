@@ -18,6 +18,8 @@ public interface UserSentenceRepository {
 
     Observable<UserSentence> getSentence(String sentenceKey);
 
+    Single<UserSentence> getSentenceOnce(String sentenceId);
+
     Completable like(String sentenceKey, String languageCode, String userUid);
 
     Completable dislike(String sentenceKey, String languageCode, String userUid);
@@ -27,4 +29,6 @@ public interface UserSentenceRepository {
     Completable remove(UserSentence userSentence);
 
     void dispose();
+
+    Completable update(UserSentence userSentence);
 }

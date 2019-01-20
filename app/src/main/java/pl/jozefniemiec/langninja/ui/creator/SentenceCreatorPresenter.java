@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
@@ -12,6 +14,7 @@ import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.data.repository.model.Language;
 import pl.jozefniemiec.langninja.di.creator.SentenceCreatorScope;
 import pl.jozefniemiec.langninja.service.AuthService;
+import pl.jozefniemiec.langninja.utils.Utility;
 
 @SentenceCreatorScope
 public class SentenceCreatorPresenter implements SentenceCreatorContract.Presenter {
@@ -52,15 +55,23 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
 
     @Override
     public void onCreateButtonClicked(Language language, String sentence) {
-        view.showProgress();
-        if (validateData(sentence)) {
-            userRepository.getUser(authService.getCurrentUserUid())
+        if (Utility.validateSentenceText(sentence)) {
+            userRepository
+                    .getUser(authService.getCurrentUserUid())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
                     .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
                     .map(author -> new UserSentence(null, sentence, language.getCode(), author))
+                    .doOnSubscribe(disposable -> view.showProgress())
+                    .doFinally(view::hideProgress)
                     .subscribe(
                             userSentence -> {
                                 userSentenceRepository
                                         .insert(userSentence)
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .doOnSubscribe(disposable -> view.showProgress())
+                                        .doFinally(view::hideProgress)
                                         .subscribe(
                                                 id -> {
                                                     view.notifyDataChanged();
@@ -68,31 +79,26 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
                                                     view.close();
                                                 },
                                                 error -> {
-                                                    view.hideProgress();
                                                     view.showNeedInternetInfo();
                                                 }
                                         );
                             }//TODO - refactor
                             , error -> {
-                                view.hideProgress();
                                 view.showNeedInternetInfo();
                             }
                     );
+        } else {
+            view.showErrorMessage("Wprowadź tekst!");
         }
     }
 
-    private boolean validateData(String sentence) {
-        if (sentence.trim().isEmpty()) {
-            view.showErrorMessage("Wprowadź tekst!");
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public void onTestButtonClicked(Language language, String sentence) {
-        if (validateData(sentence)) {
+        if (Utility.validateSentenceText(sentence)) {
             view.showSentenceCard(language.getCode(), sentence);
+        } else {
+            view.showErrorMessage("Wprowadź tekst!");
         }
     }
 }

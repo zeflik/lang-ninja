@@ -39,4 +39,14 @@ public class SentenceCardViewerPresenter implements SentenceCardViewerContract.P
         view.stopListening();
         view.updateNumbering(position, pageCount);
     }
+
+    @Override
+    public void onSentenceEditButtonClicked(String sentenceId) {
+        view.editSentence(sentenceId);
+    }
+
+    @Override
+    public void onSentenceRemoveButtonClicked(String sentenceId) {
+        view.showErrorMessage("Remove sentence: " + sentenceId);
+    }
 }

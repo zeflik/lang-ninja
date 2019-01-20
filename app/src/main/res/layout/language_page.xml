@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/cardView2"
+        android:id="@+id/languagePageCardView"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         card_view:cardCornerRadius="5dp"

@@ -1,13 +1,16 @@
 package pl.jozefniemiec.langninja.ui.sentences;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.constraint.Group;
 import android.support.transition.TransitionManager;
 import android.support.v4.app.FragmentManager;
+import android.view.View;
 import android.widget.TextView;
 
 import java.util.List;
@@ -17,9 +20,11 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.base.BaseActivity;
 import pl.jozefniemiec.langninja.ui.base.Constants;
+import pl.jozefniemiec.langninja.ui.editor.SentenceEditor;
 import pl.jozefniemiec.langninja.ui.reader.OnReaderFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
 import pl.jozefniemiec.langninja.ui.sentences.card.OnSentenceCardFragmentInteractionListener;
@@ -42,6 +47,7 @@ public class SentenceCardViewerActivity extends BaseActivity
     private static final String READER_TAG = "reader tag";
     private static final String SPEECH_TAG = "speech tag";
     private static final String SENTENCE_CARD_TAG = SentenceCardFragment.class.getSimpleName();
+    public static final int EDIT_REQUEST_CODE = 1;
 
     private SentenceCardFragment sentenceCard;
     private ReaderFragment reader;
@@ -49,12 +55,16 @@ public class SentenceCardViewerActivity extends BaseActivity
     private CommunityCardFragment communityCardFragment;
     private String languageCode;
     private String sentence;
+    private String sentenceId;
 
     private ConstraintSet layoutNoSpokenTextSet = new ConstraintSet();
     private ConstraintSet layoutWithSpokenTextSet = new ConstraintSet();
 
     @BindView(R.id.sentencePageCount)
     TextView sentencePageCountTextView;
+
+    @BindView(R.id.sentencePageEditButtons)
+    Group senteneEditButtons;
 
     @BindView(R.id.sentenceCardViewerWithoutSpokenTextLayout)
     ConstraintLayout layout;
@@ -64,6 +74,16 @@ public class SentenceCardViewerActivity extends BaseActivity
 
     @Inject
     SentenceCardViewerContract.Presenter presenter;
+
+    @OnClick(R.id.sentencePageEditButton)
+    void onSentenceEditButtonClicked(View view) {
+        presenter.onSentenceEditButtonClicked(sentenceId);
+    }
+
+    @OnClick(R.id.sentencePageRemoveButton)
+    void onSentenceRemoveButtonClicked(View view) {
+        presenter.onSentenceRemoveButtonClicked(sentenceId);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,7 +123,7 @@ public class SentenceCardViewerActivity extends BaseActivity
                 .add(R.id.speechRecognizerFragmentContainer, speechRecognizer, SPEECH_TAG)
                 .commit();
 
-        String sentenceId = getIntent().getStringExtra(SENTENCE_ID_KEY);
+        sentenceId = getIntent().getStringExtra(SENTENCE_ID_KEY);
         if (sentenceId != null) {
             communityCardFragment = CommunityCardFragment.newInstance(sentenceId);
             supportFragmentManager
@@ -170,6 +190,13 @@ public class SentenceCardViewerActivity extends BaseActivity
         sentencePageCountTextView.setText(String.format(pageCountFormat, position, pageCount));
     }
 
+    @Override
+    public void editSentence(String sentenceId) {
+        Intent intent = new Intent(this, SentenceEditor.class);
+        intent.putExtra(SENTENCE_ID_KEY, sentenceId);
+        startActivityForResult(intent, EDIT_REQUEST_CODE);
+    }
+
     private void applyConstraintSetToLayout(ConstraintSet constraintSet) {
         new Handler().postDelayed(() -> {
             TransitionManager.beginDelayedTransition(layout);
@@ -187,5 +214,13 @@ public class SentenceCardViewerActivity extends BaseActivity
         super.onSaveInstanceState(outState);
         outState.putString(LANGUAGE_CODE_KEY, languageCode);
         outState.putString(SENTENCE_KEY, sentence);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            sentenceCard.setCurrentSentence(data.getStringExtra(SENTENCE_KEY));
+        }
     }
 }

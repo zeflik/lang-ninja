@@ -9,7 +9,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import pl.jozefniemiec.langninja.R;
@@ -94,5 +97,14 @@ public class Utility {
         Intent intent = new Intent();
         intent.setAction(ACTION_USER_SENTENCES_CHANGED);
         context.sendBroadcast(intent);
+    }
+
+    public static void enableDoneButtonForMultilineEditText(EditText editText) {
+        editText.setImeOptions(EditorInfo.IME_ACTION_DONE);
+        editText.setRawInputType(InputType.TYPE_CLASS_TEXT);
+    }
+
+    public static boolean validateSentenceText(String sentence) {
+        return !sentence.trim().isEmpty();
     }
 }

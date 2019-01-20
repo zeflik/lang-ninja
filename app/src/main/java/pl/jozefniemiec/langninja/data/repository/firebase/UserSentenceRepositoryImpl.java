@@ -94,6 +94,7 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
         return getPublicSentencesByLanguageAndChildValueOnce(languageCode, "dateCreated", null);
     }
 
+    @Override
     public Observable<UserSentence> getSentence(String key) {
         return Observable.create(
                 subscriber -> {
@@ -117,6 +118,33 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                                 }
                             });
                     valueEventListenersMap.put(databaseReference, listener);
+                }
+        );
+    }
+
+    @Override
+    public Single<UserSentence> getSentenceOnce(String key) {
+        return Single.create(
+                subscriber -> {
+                    DatabaseReference databaseReference = publicSentencesReference.child(key);
+                    databaseReference
+                            .addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        UserSentence userSentence = Objects.requireNonNull(
+                                                dataSnapshot.getValue(UserSentence.class)
+                                        );
+                                        userSentence.setId(dataSnapshot.getKey());
+                                        subscriber.onSuccess(userSentence);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Log.d(TAG, "onCancelled: " + databaseError.getMessage());
+                                }
+                            });
                 }
         );
     }
@@ -283,6 +311,28 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
             reference.getKey().removeEventListener(reference.getValue());
         }
         valueEventListenersMap.clear();
+    }
+
+    @Override
+    public Completable update(UserSentence userSentence) {
+        return Completable.create(subscriber -> {
+            if (!internetConnectionService.isInternetOn()) {
+                subscriber.onError(new NoInternetConnectionException());
+                return;
+            }
+            String userSentenceKey = userSentence.getId();
+            Map<String, Object> updateMap = new HashMap<>();
+            String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentenceKey);
+            updateMap.put(sentenceWithKeyPath, userSentence);
+            String sentenceWithLangAndKeyPath =
+                    String.format(SENTENCE_BY_LANG_KEY_PATH,
+                                  userSentence.getLanguageCode(),
+                                  userSentenceKey);
+            updateMap.put(sentenceWithLangAndKeyPath, userSentence);
+            databaseReference.updateChildren(updateMap)
+                    .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                    .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+        });
     }
 
     private Single<List<UserSentence>> getPublicSentencesByLanguageAndChildValueOnce(String languageCode, String childKey, String childValue) {

@@ -3,10 +3,8 @@ package pl.jozefniemiec.langninja.ui.creator;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.InputType;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,13 +76,13 @@ public class SentenceCreator extends BaseSecuredActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_sentence);
+        setContentView(R.layout.activity_sentence_creator);
         ButterKnife.bind(this);
         String languageCode = null;
         if (savedInstanceState == null) {
             languageCode = getIntent().getStringExtra(LANGUAGE_CODE_KEY);
         }
-        enableDoneButtonForMultilineEditText();
+        Utility.enableDoneButtonForMultilineEditText(sentenceTextInput);
         presenter.onViewCreated(languageCode);
     }
 
@@ -99,10 +97,6 @@ public class SentenceCreator extends BaseSecuredActivity
         languagesSpinner.setSelection(position);
     }
 
-    private void enableDoneButtonForMultilineEditText() {
-        sentenceTextInput.setImeOptions(EditorInfo.IME_ACTION_DONE);
-        sentenceTextInput.setRawInputType(InputType.TYPE_CLASS_TEXT);
-    }
 
     @Override
     public void onResume() {

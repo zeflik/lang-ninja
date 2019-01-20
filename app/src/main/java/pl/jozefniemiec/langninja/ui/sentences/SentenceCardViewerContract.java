@@ -19,6 +19,10 @@ public interface SentenceCardViewerContract {
         void stopListening();
 
         void updateNumbering(int position, int pageCount);
+
+        void showErrorMessage(String message);
+
+        void editSentence(String bla);
     }
 
     interface Presenter {
@@ -28,5 +32,9 @@ public interface SentenceCardViewerContract {
         void onTextSpokenResult(List<String> spokenTextsList);
 
         void onSentencePageChanged(int position, int pageCount);
+
+        void onSentenceEditButtonClicked(String sentenceId);
+
+        void onSentenceRemoveButtonClicked(String sentenceId);
     }
 }
