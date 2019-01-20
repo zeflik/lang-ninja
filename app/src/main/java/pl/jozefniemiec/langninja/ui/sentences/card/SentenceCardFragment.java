@@ -129,6 +129,11 @@ public class SentenceCardFragment extends DaggerFragment
     }
 
     @Override
+    public void notifyDataChanged() {
+        languagePageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onDestroyView() {
         unbinder.unbind();
         presenter.onViewDestroy();
@@ -139,8 +144,12 @@ public class SentenceCardFragment extends DaggerFragment
         return presenter.getCurrentSentence();
     }
 
+    public void setCurrentSentence(String sentence) {
+        presenter.setCurrentSentence(sentence);
+    }
+
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(LANGUAGE_CODE_KEY, languageCode);
         outState.putString(SENTENCE_KEY, sentence);

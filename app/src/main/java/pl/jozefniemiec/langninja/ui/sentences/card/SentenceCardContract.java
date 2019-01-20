@@ -17,6 +17,8 @@ public interface SentenceCardContract {
         void showErrorMessage(String message);
 
         void showNumbering(int currentPage, int pageCount);
+
+        void notifyDataChanged();
     }
 
     interface Presenter {
@@ -32,5 +34,7 @@ public interface SentenceCardContract {
         void pageChanged(int newPosition);
 
         void onViewDestroy();
+
+        void setCurrentSentence(String sentence);
     }
 }

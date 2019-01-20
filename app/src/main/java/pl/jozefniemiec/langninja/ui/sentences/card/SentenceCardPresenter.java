@@ -66,4 +66,12 @@ public class SentenceCardPresenter implements SentenceCardContract.Presenter {
     public void onViewDestroy() {
         sentenceRepository.close();
     }
+
+    @Override
+    public void setCurrentSentence(String quote) {
+        Sentence sentence = sentences.get(0);
+        sentence.setSentence(quote);
+        sentences.set(0, sentence);
+        view.notifyDataChanged();
+    }
 }
