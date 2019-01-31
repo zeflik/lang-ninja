@@ -98,22 +98,29 @@ public class CommunityPresenter implements CommunityFragmentContract.Presenter {
     }
 
     @Override
+    public void removeSentence(UserSentence userSentence) {
+        repository
+                .remove(userSentence)
+                .doOnSubscribe(observable -> view.showProgress())
+                .doFinally(view::hideProgress)
+                .subscribe(
+                        () -> view.removeItem(userSentence),
+                        error -> {
+                            if (error instanceof NoInternetConnectionException) {
+                                view.showErrorMessage("Brak połaczenia.");
+                            }
+                        });
+    }
+
+    @Override
     public void onSentenceOptionSelected(int optionIndex, UserSentence userSentence) {
         switch (optionIndex) {
             case 0:
                 view.showSentenceDetails(userSentence);
+                break;
             case 1:
-                repository
-                        .remove(userSentence)
-                        .doOnSubscribe(observable -> view.showProgress())
-                        .doFinally(view::hideProgress)
-                        .subscribe(
-                                () -> view.removeItem(userSentence),
-                                error -> {
-                                    if (error instanceof NoInternetConnectionException) {
-                                        view.showErrorMessage("Brak połaczenia.");
-                                    }
-                                });
+                view.showRemoveSentenceAlert(userSentence);
+                break;
         }
     }
 }

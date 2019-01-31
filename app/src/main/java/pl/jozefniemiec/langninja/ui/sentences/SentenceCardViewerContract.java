@@ -31,6 +31,8 @@ public interface SentenceCardViewerContract {
         void showEditButtons();
 
         void hideEditButtons();
+
+        void showRemoveSentenceAlert();
     }
 
     interface Presenter {
@@ -43,6 +45,8 @@ public interface SentenceCardViewerContract {
 
         void onSentenceEditButtonClicked(String sentenceId);
 
-        void onSentenceRemoveButtonClicked(String sentenceId);
+        void onSentenceRemoveButtonClicked();
+
+        void removeSentence(String sentenceId);
     }
 }

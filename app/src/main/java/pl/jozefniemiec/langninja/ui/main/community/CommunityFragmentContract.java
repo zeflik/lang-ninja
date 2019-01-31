@@ -36,6 +36,8 @@ public interface CommunityFragmentContract {
         void showProgress();
 
         void hideProgress();
+
+        void showRemoveSentenceAlert(UserSentence userSentence);
     }
 
     interface Presenter {
@@ -55,5 +57,7 @@ public interface CommunityFragmentContract {
         void onInappropriateContentSelected(int reasonIndex, UserSentence userSentence);
 
         void onSentenceOptionSelected(int optionIndex, UserSentence userSentence);
+
+        void removeSentence(UserSentence userSentence);
     }
 }

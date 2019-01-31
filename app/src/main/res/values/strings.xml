@@ -121,4 +121,6 @@
     <string name="menu_sentence_edit">Edytuj</string>
     <string name="menu_sentence_delete">Usuń</string>
     <string name="alert_title_send_sentence_feedback">Przekaż opinię dotyczącą zdania: \"%s\"</string>
+    <string name="alert_title_removing">Usuwanie</string>
+    <string name="alert_message_removing_sentence">Czy na pewno chcesz usunąć tego łamańca?</string>
 </resources>

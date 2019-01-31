@@ -72,7 +72,12 @@ public class SentenceCardViewerPresenter implements SentenceCardViewerContract.P
     }
 
     @Override
-    public void onSentenceRemoveButtonClicked(String sentenceId) {
+    public void onSentenceRemoveButtonClicked() {
+        view.showRemoveSentenceAlert();
+    }
+
+    @Override
+    public void removeSentence(String sentenceId) {
         userSentenceRepository
                 .remove(sentenceId)
                 .subscribe(() -> {

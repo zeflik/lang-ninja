@@ -207,6 +207,11 @@ public class SentenceCardViewerActivity extends BaseActivity
         deleteMenuItem.setVisible(false);
     }
 
+    @Override
+    public void showRemoveSentenceAlert() {
+        Utility.showRemoveSentenceAlert(this, (dialog, whichButton) -> presenter.removeSentence(sentenceId));
+    }
+
     private void applyConstraintSetToLayout(ConstraintSet constraintSet) {
         new Handler().postDelayed(() -> {
             TransitionManager.beginDelayedTransition(layout);
@@ -250,7 +255,7 @@ public class SentenceCardViewerActivity extends BaseActivity
                 presenter.onSentenceEditButtonClicked(sentenceId);
                 break;
             case R.id.menu_sentence_delete:
-                presenter.onSentenceRemoveButtonClicked(sentenceId);
+                presenter.onSentenceRemoveButtonClicked();
                 break;
             case R.id.menu_sentence_feedback:
                 break;

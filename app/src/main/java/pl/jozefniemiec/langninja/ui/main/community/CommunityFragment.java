@@ -38,6 +38,7 @@ import pl.jozefniemiec.langninja.data.repository.room.RoomLanguageRepository;
 import pl.jozefniemiec.langninja.ui.base.spinner.LanguagesSpinnerAdapter;
 import pl.jozefniemiec.langninja.ui.creator.SentenceCreator;
 import pl.jozefniemiec.langninja.ui.sentences.SentenceCardViewerActivity;
+import pl.jozefniemiec.langninja.utils.Utility;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.ACTION_USER_SENTENCES_CHANGED;
 import static pl.jozefniemiec.langninja.ui.base.Constants.DEFAULT_LANG_KEY;
@@ -259,5 +260,10 @@ public class CommunityFragment extends DaggerFragment implements CommunityFragme
         if (progressBar != null) {
             progressBar.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void showRemoveSentenceAlert(UserSentence userSentence) {
+        Utility.showRemoveSentenceAlert(requireContext(), (dialog, whichButton) -> presenter.removeSentence(userSentence));
     }
 }
