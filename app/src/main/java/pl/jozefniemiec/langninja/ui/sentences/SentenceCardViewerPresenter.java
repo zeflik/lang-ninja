@@ -4,22 +4,48 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardViewerActivityScope;
+import pl.jozefniemiec.langninja.service.FirebaseAuthService;
 import pl.jozefniemiec.langninja.utils.Utility;
 
 @SentenceCardViewerActivityScope
 public class SentenceCardViewerPresenter implements SentenceCardViewerContract.Presenter {
 
     private final SentenceCardViewerContract.View view;
+    private final UserSentenceRepository userSentenceRepository;
+    private final FirebaseAuthService authService;
 
     @Inject
-    SentenceCardViewerPresenter(SentenceCardViewerContract.View view) {
+    SentenceCardViewerPresenter(SentenceCardViewerContract.View view,
+                                UserSentenceRepository userSentenceRepository,
+                                FirebaseAuthService authService) {
         this.view = view;
+        this.userSentenceRepository = userSentenceRepository;
+        this.authService = authService;
     }
 
     @Override
-    public void onViewCreated() {
-
+    public void onMenuCreated(String sentenceId) {
+        if (sentenceId != null && authService.isSignedIn()) {
+            userSentenceRepository
+                    .getSentenceOnce(sentenceId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .map(userSentence -> userSentence.getAuthor().getUid())
+                    .map(uid -> authService.getCurrentUserUid().equals(uid))
+                    .subscribe(isUidMatch -> {
+                        if (isUidMatch) {
+                            view.showEditButtons();
+                        } else {
+                            view.hideEditButtons();
+                        }
+                    });
+        } else {
+            view.hideEditButtons();
+        }
     }
 
     @Override
@@ -47,6 +73,13 @@ public class SentenceCardViewerPresenter implements SentenceCardViewerContract.P
 
     @Override
     public void onSentenceRemoveButtonClicked(String sentenceId) {
-        view.showErrorMessage("Remove sentence: " + sentenceId);
+        userSentenceRepository
+                .remove(sentenceId)
+                .subscribe(() -> {
+                               view.notifyDataChanged();
+                               view.close();
+                           },
+                           error -> view.showErrorMessage(error.getMessage())
+                );
     }
 }

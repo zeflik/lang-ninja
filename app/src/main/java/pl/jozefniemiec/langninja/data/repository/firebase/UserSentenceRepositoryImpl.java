@@ -182,20 +182,56 @@ public class UserSentenceRepositoryImpl implements UserSentenceRepository {
                 subscriber.onError(new NoInternetConnectionException());
                 return;
             }
-            Map<String, Object> updateMap = new HashMap<>();
-            String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentence.getId());
-            updateMap.put(sentenceWithKeyPath, null);
-            String sentenceWithLangAndKeyPath =
-                    String.format(SENTENCE_BY_LANG_KEY_PATH,
-                                  userSentence.getLanguageCode(),
-                                  userSentence.getId());
-            updateMap.put(sentenceWithLangAndKeyPath, null);
-            String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentence.getId());
-            updateMap.put(sentenceLikesWithKeyPath, null);
+            Map<String, Object> updateMap = generateRemoveUpdateMap(userSentence);
             databaseReference.updateChildren(updateMap)
                     .addOnSuccessListener(aVoid -> subscriber.onComplete())
                     .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
         });
+    }
+
+    @Override
+    public Completable remove(String key) {
+        return Completable.create(subscriber -> {
+            if (!internetConnectionService.isInternetOn()) {
+                subscriber.onError(new NoInternetConnectionException());
+                return;
+            }
+            publicSentencesReference
+                    .child(key)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                UserSentence userSentence = Objects.requireNonNull(
+                                        dataSnapshot.getValue(UserSentence.class));
+                                userSentence.setId(dataSnapshot.getKey());
+                                Map<String, Object> updateMap = generateRemoveUpdateMap(userSentence);
+                                databaseReference.updateChildren(updateMap)
+                                        .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                                        .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            subscriber.onError(new RuntimeException(databaseError.getMessage()));
+                        }
+                    });
+        });
+    }
+
+    private Map<String, Object> generateRemoveUpdateMap(UserSentence userSentence) {
+        HashMap<String, Object> updateMap = new HashMap<>();
+        String sentenceWithKeyPath = String.format(SENTENCE_BY_KEY_PATH, userSentence.getId());
+        updateMap.put(sentenceWithKeyPath, null);
+        String sentenceWithLangAndKeyPath =
+                String.format(SENTENCE_BY_LANG_KEY_PATH,
+                              userSentence.getLanguageCode(),
+                              userSentence.getId());
+        updateMap.put(sentenceWithLangAndKeyPath, null);
+        String sentenceLikesWithKeyPath = String.format(LIKES_PATH, userSentence.getId());
+        updateMap.put(sentenceLikesWithKeyPath, null);
+        return updateMap;
     }
 
     @Override

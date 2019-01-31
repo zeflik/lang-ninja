@@ -28,6 +28,8 @@ public interface UserSentenceRepository {
 
     Completable remove(UserSentence userSentence);
 
+    Completable remove(String id);
+
     void dispose();
 
     Completable update(UserSentence userSentence);

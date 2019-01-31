@@ -7,10 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.constraint.Group;
 import android.support.transition.TransitionManager;
 import android.support.v4.app.FragmentManager;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.util.List;
@@ -20,7 +20,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.base.BaseActivity;
 import pl.jozefniemiec.langninja.ui.base.Constants;
@@ -32,6 +31,7 @@ import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardFragment;
 import pl.jozefniemiec.langninja.ui.sentences.community.CommunityCardFragment;
 import pl.jozefniemiec.langninja.ui.speech.OnSpeechRecognitionFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
+import pl.jozefniemiec.langninja.utils.Utility;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.LANGUAGE_CODE_KEY;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
@@ -56,15 +56,14 @@ public class SentenceCardViewerActivity extends BaseActivity
     private String languageCode;
     private String sentence;
     private String sentenceId;
+    private MenuItem editMenuItem;
+    private MenuItem deleteMenuItem;
 
     private ConstraintSet layoutNoSpokenTextSet = new ConstraintSet();
     private ConstraintSet layoutWithSpokenTextSet = new ConstraintSet();
 
     @BindView(R.id.sentencePageCount)
     TextView sentencePageCountTextView;
-
-    @BindView(R.id.sentencePageEditButtons)
-    Group senteneEditButtons;
 
     @BindView(R.id.sentenceCardViewerWithoutSpokenTextLayout)
     ConstraintLayout layout;
@@ -74,16 +73,6 @@ public class SentenceCardViewerActivity extends BaseActivity
 
     @Inject
     SentenceCardViewerContract.Presenter presenter;
-
-    @OnClick(R.id.sentencePageEditButton)
-    void onSentenceEditButtonClicked(View view) {
-        presenter.onSentenceEditButtonClicked(sentenceId);
-    }
-
-    @OnClick(R.id.sentencePageRemoveButton)
-    void onSentenceRemoveButtonClicked(View view) {
-        presenter.onSentenceRemoveButtonClicked(sentenceId);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +88,6 @@ public class SentenceCardViewerActivity extends BaseActivity
             sentence = getIntent().getStringExtra(SENTENCE_KEY);
             attachFragments();
         }
-        presenter.onViewCreated();
     }
 
     private void findFragmentReferences() {
@@ -197,6 +185,28 @@ public class SentenceCardViewerActivity extends BaseActivity
         startActivityForResult(intent, EDIT_REQUEST_CODE);
     }
 
+    @Override
+    public void notifyDataChanged() {
+        Utility.sendBroadcastUserSentencesChanged(this);
+    }
+
+    @Override
+    public void close() {
+        finish();
+    }
+
+    @Override
+    public void showEditButtons() {
+        editMenuItem.setVisible(true);
+        deleteMenuItem.setVisible(true);
+    }
+
+    @Override
+    public void hideEditButtons() {
+        editMenuItem.setVisible(false);
+        deleteMenuItem.setVisible(false);
+    }
+
     private void applyConstraintSetToLayout(ConstraintSet constraintSet) {
         new Handler().postDelayed(() -> {
             TransitionManager.beginDelayedTransition(layout);
@@ -222,5 +232,31 @@ public class SentenceCardViewerActivity extends BaseActivity
         if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
             sentenceCard.setCurrentSentence(data.getStringExtra(SENTENCE_KEY));
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.sentence_menu, menu);
+        editMenuItem = menu.findItem(R.id.menu_sentence_edit);
+        deleteMenuItem = menu.findItem(R.id.menu_sentence_delete);
+        presenter.onMenuCreated(sentenceId);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_sentence_edit:
+                presenter.onSentenceEditButtonClicked(sentenceId);
+                break;
+            case R.id.menu_sentence_delete:
+                presenter.onSentenceRemoveButtonClicked(sentenceId);
+                break;
+            case R.id.menu_sentence_feedback:
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }

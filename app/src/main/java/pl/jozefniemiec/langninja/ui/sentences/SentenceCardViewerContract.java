@@ -23,11 +23,19 @@ public interface SentenceCardViewerContract {
         void showErrorMessage(String message);
 
         void editSentence(String bla);
+
+        void notifyDataChanged();
+
+        void close();
+
+        void showEditButtons();
+
+        void hideEditButtons();
     }
 
     interface Presenter {
 
-        void onViewCreated();
+        void onMenuCreated(String sentenceId);
 
         void onTextSpokenResult(List<String> spokenTextsList);
 

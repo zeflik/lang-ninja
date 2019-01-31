@@ -117,7 +117,8 @@
     <string name="date_util_unit_year">rok</string>
     <string name="date_util_unit_years_to_4">lata</string>
     <string name="date_util_unit_years_from_5">lat</string>
+    <string name="menu_sentence_feedback">Przekaż opinię</string>
+    <string name="menu_sentence_edit">Edytuj</string>
+    <string name="menu_sentence_delete">Usuń</string>
     <string name="alert_title_send_sentence_feedback">Przekaż opinię dotyczącą zdania: \"%s\"</string>
-    <string name="content_description_edit_button">Przycisk edycji</string>
-    <string name="content_description_remove_button">Przycisk usuń</string>
 </resources>
