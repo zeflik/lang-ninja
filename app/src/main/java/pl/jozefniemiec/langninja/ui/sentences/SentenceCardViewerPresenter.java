@@ -87,4 +87,9 @@ public class SentenceCardViewerPresenter implements SentenceCardViewerContract.P
                            error -> view.showErrorMessage(error.getMessage())
                 );
     }
+
+    @Override
+    public void onCommentsButtonPressed() {
+        view.showComments();
+    }
 }

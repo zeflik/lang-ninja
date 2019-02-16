@@ -48,7 +48,7 @@ dependencies {
     implementation "com.jakewharton:butterknife:$butterKnife_version"
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterKnife_version"
 
-    def dagger_version = "2.17"
+    def dagger_version = "2.21"
     implementation "com.google.dagger:dagger:$dagger_version"
     implementation "com.google.dagger:dagger-android-support:$dagger_version"
     annotationProcessor "com.google.dagger:dagger-compiler:$dagger_version"

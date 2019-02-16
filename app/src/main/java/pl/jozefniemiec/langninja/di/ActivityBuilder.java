@@ -18,6 +18,7 @@ import pl.jozefniemiec.langninja.di.reader.ReaderFragmentProvider;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardViewerActivityModule;
 import pl.jozefniemiec.langninja.di.sentences.SentenceCardViewerActivityScope;
 import pl.jozefniemiec.langninja.di.sentences.card.SentenceCardProvider;
+import pl.jozefniemiec.langninja.di.sentences.comments.CommentsFragmentProvider;
 import pl.jozefniemiec.langninja.di.sentences.community.CommunityCardProvider;
 import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentModule;
 import pl.jozefniemiec.langninja.di.speech.SpeechRecognizerFragmentScope;
@@ -44,7 +45,8 @@ abstract class ActivityBuilder {
             SentenceCardViewerActivityModule.class,
             SentenceCardProvider.class,
             ReaderFragmentProvider.class,
-            CommunityCardProvider.class
+            CommunityCardProvider.class,
+            CommentsFragmentProvider.class
     })
     @SentenceCardViewerActivityScope
     abstract SentenceCardViewerActivity bindSentenceViewer();

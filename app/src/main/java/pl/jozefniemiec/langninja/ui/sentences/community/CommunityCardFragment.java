@@ -1,5 +1,6 @@
 package pl.jozefniemiec.langninja.ui.sentences.community;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,6 +63,7 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
 
     @BindView(R.id.communityFeedbackProgressBar)
     ProgressBar progressBar;
+    private OnCommunityCardFragmentInteractionListener listener;
 
     @OnClick(R.id.communityFeedbackThumbUpImageButton)
     void dislike() {
@@ -74,6 +76,11 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     @OnClick(R.id.communityFeedbackThumbDownImageView)
     void like() {
         presenter.onDislikeButtonClicked(userSentence);
+    }
+
+    @OnClick(R.id.communityFeedbackCommentsImage)
+    void openComments() {
+        listener.onCommentsButtonPressed();
     }
 
     public CommunityCardFragment() {
@@ -92,6 +99,17 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             sentenceKey = getArguments().getString(SENTENCE_KEY);
+        }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCommunityCardFragmentInteractionListener) {
+            listener = (OnCommunityCardFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                                               + " must implement OnSentenceCardFragmentInteractionListener");
         }
     }
 

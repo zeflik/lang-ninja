@@ -8,9 +8,11 @@ import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.transition.TransitionManager;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import java.util.List;
@@ -28,7 +30,9 @@ import pl.jozefniemiec.langninja.ui.reader.OnReaderFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.reader.ReaderFragment;
 import pl.jozefniemiec.langninja.ui.sentences.card.OnSentenceCardFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.sentences.card.SentenceCardFragment;
+import pl.jozefniemiec.langninja.ui.sentences.comments.CommentsFragment;
 import pl.jozefniemiec.langninja.ui.sentences.community.CommunityCardFragment;
+import pl.jozefniemiec.langninja.ui.sentences.community.OnCommunityCardFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.speech.OnSpeechRecognitionFragmentInteractionListener;
 import pl.jozefniemiec.langninja.ui.speech.SpeechRecognizerFragment;
 import pl.jozefniemiec.langninja.utils.Utility;
@@ -42,12 +46,15 @@ public class SentenceCardViewerActivity extends BaseActivity
         SentenceCardViewerContract.View,
         OnReaderFragmentInteractionListener,
         OnSpeechRecognitionFragmentInteractionListener,
-        OnSentenceCardFragmentInteractionListener {
+        OnSentenceCardFragmentInteractionListener,
+        OnCommunityCardFragmentInteractionListener {
 
+    private static final String TAG = SentenceCardViewerActivity.class.getSimpleName();
     private static final String READER_TAG = "reader tag";
     private static final String SPEECH_TAG = "speech tag";
     private static final String SENTENCE_CARD_TAG = SentenceCardFragment.class.getSimpleName();
     public static final int EDIT_REQUEST_CODE = 1;
+    public static final String COMMENTS_TAG = "comments tag";
 
     private SentenceCardFragment sentenceCard;
     private ReaderFragment reader;
@@ -70,6 +77,9 @@ public class SentenceCardViewerActivity extends BaseActivity
 
     @BindView(R.id.sentencePageAnswerTv)
     TextView sentencePageAnswerTextView;
+
+    @BindView(R.id.commentsContainer)
+    FrameLayout commentsFrameLayout;
 
     @Inject
     SentenceCardViewerContract.Presenter presenter;
@@ -263,5 +273,23 @@ public class SentenceCardViewerActivity extends BaseActivity
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void onCommentsButtonPressed() {
+        presenter.onCommentsButtonPressed();
+    }
+
+    @Override
+    public void showComments() {
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        Fragment commentsFragment = supportFragmentManager.findFragmentByTag(COMMENTS_TAG);
+        if (commentsFragment == null) {
+            commentsFragment = CommentsFragment.newInstance(sentenceId);
+            supportFragmentManager
+                    .beginTransaction()
+                    .add(R.id.commentsContainer, commentsFragment, COMMENTS_TAG)
+                    .commit();
+        }
     }
 }
