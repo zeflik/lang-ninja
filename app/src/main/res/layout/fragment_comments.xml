@@ -1,36 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/commentsLayoutBackgroundLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.sentences.comments.CommentsFragment"
+    android:id="@+id/commentsLayoutBackgroundLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginStart="0dp"
     android:layout_marginTop="0dp"
     android:layout_marginEnd="0dp"
     android:layout_marginBottom="0dp"
+    android:background="#40000000"
     android:clickable="true"
     android:focusable="true"
-    android:background="#40000000">
+    tools:context=".ui.sentences.comments.CommentsFragment">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/commentsLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="72dp"
-        android:layout_marginBottom="72dp"
         android:layout_marginLeft="16dp"
+        android:layout_marginTop="72dp"
         android:layout_marginRight="16dp"
-        android:padding="20dp"
-        android:clickable="true"
+        android:layout_marginBottom="72dp"
         android:background="@drawable/dialog_background"
-        android:focusable="true">
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="20dp">
 
-        <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textColor="#000"
-            android:text="Content goes here!" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/commentsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
 </FrameLayout>

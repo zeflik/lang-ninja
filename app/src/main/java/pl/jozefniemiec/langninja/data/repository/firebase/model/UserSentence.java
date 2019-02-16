@@ -2,9 +2,6 @@ package pl.jozefniemiec.langninja.data.repository.firebase.model;
 
 import com.google.firebase.database.ServerValue;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class UserSentence {
 
     private String id;
@@ -13,7 +10,6 @@ public class UserSentence {
     private Object dateEdited = ServerValue.TIMESTAMP;
     private Object dateCreated = ServerValue.TIMESTAMP;
     private int likesCount;
-    private Map<String, Integer> comments = new HashMap<>();
     private int commentsCount;
     private Author author;
 
@@ -83,14 +79,6 @@ public class UserSentence {
         this.commentsCount = commentsCount;
     }
 
-    public Map<String, Integer> getComments() {
-        return comments;
-    }
-
-    public void setComments(Map<String, Integer> comments) {
-        this.comments = comments;
-    }
-
     public int getLikesCount() {
         return likesCount;
     }
@@ -108,7 +96,6 @@ public class UserSentence {
                 ", dateEdited=" + dateEdited +
                 ", dateCreated=" + dateCreated +
                 ", likesCount=" + likesCount +
-                ", comments=" + comments +
                 ", commentsCount=" + commentsCount +
                 ", author=" + author +
                 '}';

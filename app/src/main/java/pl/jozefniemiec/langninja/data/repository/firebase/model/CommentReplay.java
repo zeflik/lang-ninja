@@ -2,16 +2,15 @@ package pl.jozefniemiec.langninja.data.repository.firebase.model;
 
 import com.google.firebase.database.ServerValue;
 
-public class Comment {
+public class CommentReplay {
 
     private String id;
-    private String sentenceId;
+    private String commentId;
     private String content;
     private Object dateEdited = ServerValue.TIMESTAMP;
     private Object dateCreated = ServerValue.TIMESTAMP;
     private Author author;
     private int likesCount;
-    private int repliesCount;
 
     public String getId() {
         return id;
@@ -19,6 +18,14 @@ public class Comment {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
     public String getContent() {
@@ -59,35 +66,5 @@ public class Comment {
 
     public void setLikesCount(int likesCount) {
         this.likesCount = likesCount;
-    }
-
-    public int getRepliesCount() {
-        return repliesCount;
-    }
-
-    public void setRepliesCount(int repliesCount) {
-        this.repliesCount = repliesCount;
-    }
-
-    public String getSentenceId() {
-        return sentenceId;
-    }
-
-    public void setSentenceId(String sentenceId) {
-        this.sentenceId = sentenceId;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "id='" + id + '\'' +
-                ", sentenceId='" + sentenceId + '\'' +
-                ", content='" + content + '\'' +
-                ", dateEdited=" + dateEdited +
-                ", dateCreated=" + dateCreated +
-                ", author=" + author +
-                ", likesCount=" + likesCount +
-                ", repliesCount=" + repliesCount +
-                '}';
     }
 }
