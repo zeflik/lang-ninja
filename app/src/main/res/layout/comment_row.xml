@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="-8dp">
+
+    <TextView
+        android:id="@+id/commentsOptionsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:text="&#8942;"
+        android:textAlignment="viewStart"
+        android:textAppearance="?android:textAppearanceLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/commentBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_comment_background"
+        app:layout_constraintBottom_toBottomOf="@+id/commentBodyTextView"
+        app:layout_constraintEnd_toEndOf="@+id/commentBodyTextView"
+        app:layout_constraintStart_toStartOf="@+id/commentAuthorTextView"
+        app:layout_constraintTop_toTopOf="@+id/commentAuthorTextView" />
+
+    <TextView
+        android:id="@+id/commentBodyTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:text="sdfsdf  sfews fsd fsd fsd fsd fsd fsd fsdf sdfwerts fsdf sdf sdfsd fsd fdfs sd ff"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/commentsOptionsTextView"
+        app:layout_constraintStart_toEndOf="@+id/commentAuthorPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/commentAuthorTextView" />
+
+    <TextView
+        android:id="@+id/commentAuthorTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="8dp"
+        android:text="Author df dfd hgdf ett htt htfggggfgffh gfhfg"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/commentCalendarTextView"
+        app:layout_constraintStart_toEndOf="@+id/commentAuthorPhoto"
+        app:layout_constraintTop_toTopOf="@+id/commentAuthorPhoto" />
+
+    <ImageView
+        android:id="@+id/commentAuthorPhoto"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/shape_user_photo_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.023" />
+
+    <TextView
+        android:id="@+id/commentCalendarTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:text="1 godzina"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/commentBodyTextView"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/commentLikesCountTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="15"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/commentsThumbUpCommentIcon"
+        app:layout_constraintStart_toEndOf="@+id/commentsThumbUpCommentIcon"
+        app:layout_constraintTop_toTopOf="@+id/commentsThumbUpCommentIcon" />
+
+    <ImageView
+        android:id="@+id/commentsThumbUpCommentIcon"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="fitXY"
+        android:layout_margin="-8dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_keyboard_arrow_up"
+        app:layout_constraintStart_toEndOf="@+id/commentAuthorPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/commentBodyTextView" />
+
+    <ImageView
+        android:id="@+id/commentsThumbDownCommentIcon"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:scaleType="fitXY"
+        android:layout_margin="-8dp"
+        android:padding="4dp"
+        android:src="@drawable/ic_keyboard_arrow_down"
+        app:layout_constraintBottom_toBottomOf="@+id/commentLikesCountTextView"
+        app:layout_constraintStart_toEndOf="@+id/commentLikesCountTextView"
+        app:layout_constraintTop_toTopOf="@+id/commentLikesCountTextView" />
+
+    <Button
+        android:id="@+id/commentsReplayButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Odpowiedz"
+        android:textSize="12sp"
+        android:background="@android:color/transparent"
+        android:textColor="@color/colorPrimaryDark"
+        app:layout_constraintEnd_toEndOf="@+id/commentBackground"
+        app:layout_constraintTop_toBottomOf="@+id/commentBodyTextView" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/commentsReplaysRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/commentBackground"
+        app:layout_constraintStart_toStartOf="@+id/commentBackground"
+        app:layout_constraintTop_toBottomOf="@+id/commentsReplayButton" />
+
+</android.support.constraint.ConstraintLayout>

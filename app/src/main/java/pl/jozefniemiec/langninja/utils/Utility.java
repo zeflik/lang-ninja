@@ -117,4 +117,8 @@ public class Utility {
     public static boolean validateSentenceText(String sentence) {
         return !sentence.trim().isEmpty();
     }
+
+    public static boolean validateCommentText(String commentText) {
+        return true;
+    }
 }

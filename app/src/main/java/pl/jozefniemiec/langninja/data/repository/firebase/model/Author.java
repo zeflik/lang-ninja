@@ -2,9 +2,9 @@ package pl.jozefniemiec.langninja.data.repository.firebase.model;
 
 public class Author {
 
-    private String uid;
-    private String name;
-    private String photo;
+    protected String uid;
+    protected String name;
+    protected String photo;
 
     public Author() {
     }

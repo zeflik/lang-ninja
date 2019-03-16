@@ -27,7 +27,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.creator.SentenceCreator" />
-        <activity android:name=".ui.sentences.SentenceCardViewerActivity" />
+        <activity
+            android:name=".ui.sentences.SentenceCardViewerActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.login.LoginActivity"
             android:label="@string/title_activity_login" />

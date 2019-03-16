@@ -123,7 +123,6 @@
     <string name="alert_title_send_sentence_feedback">Przekaż opinię dotyczącą zdania: \"%s\"</string>
     <string name="alert_title_removing">Usuwanie</string>
     <string name="alert_message_removing_sentence">Czy na pewno chcesz usunąć tego łamańca?</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="content_description_user_photo">Zdjęcie profilowe użytkownika</string>
+    <string name="hint_enter_comment_here">Napisz komentarz..</string>
 </resources>

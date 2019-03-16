@@ -1,42 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/commentsLayoutBackgroundLayout"
+    android:id="@+id/commentsLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginStart="0dp"
-    android:layout_marginTop="0dp"
-    android:layout_marginEnd="0dp"
-    android:layout_marginBottom="0dp"
-    android:background="#40000000"
+    android:background="@drawable/dialog_background"
     android:clickable="true"
     android:focusable="true"
+    android:padding="4dp"
     tools:context=".ui.sentences.comments.CommentsFragment">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/commentsLayout"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/commentsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="72dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginBottom="72dp"
-        android:background="@drawable/dialog_background"
-        android:clickable="true"
-        android:focusable="true"
-        android:padding="20dp">
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/commentContentEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/commentsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+    <ImageView
+        android:id="@+id/newSentenceRowUserPhoto"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="4dp"
+        android:background="@drawable/shape_user_photo_background"
+        android:contentDescription="@string/content_description_user_photo"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Caption"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/commentContentEditText" />
 
-    </android.support.constraint.ConstraintLayout>
+    <EditText
+        android:id="@+id/commentContentEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/shape_commentinput_background"
+        android:hint="@string/hint_enter_comment_here"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:textSize="14sp"
+        android:windowSoftInputMode="adjustResize"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/newSentenceRowUserPhoto" />
 
-</FrameLayout>
+    <ImageButton
+        android:id="@+id/commentCreateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/ic_send"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/commentContentEditText"
+        app:layout_constraintEnd_toEndOf="@+id/commentContentEditText"
+        app:layout_constraintTop_toTopOf="@+id/commentContentEditText"
+        app:layout_constraintVertical_bias="1.0" />
+
+</android.support.constraint.ConstraintLayout>

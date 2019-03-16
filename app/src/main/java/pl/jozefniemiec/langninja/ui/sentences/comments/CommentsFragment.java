@@ -2,18 +2,26 @@ package pl.jozefniemiec.langninja.ui.sentences.comments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerDialogFragment;
 import pl.jozefniemiec.langninja.R;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 
@@ -26,10 +34,20 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @Inject
     CommentsFragmentContract.Presenter presenter;
 
-    @OnClick(R.id.commentsLayoutBackgroundLayout)
-    void onBackgroundClick() {
-        presenter.onBackgroundClicked();
+    @Inject
+    CommentsListAdapter adapter;
+
+    @BindView(R.id.commentsRecyclerView)
+    RecyclerView recyclerView;
+
+    @BindView(R.id.commentContentEditText)
+    EditText commentContentEditText;
+
+    @OnClick(R.id.commentCreateButton)
+    void onCommentCreateButtonClicked() {
+        presenter.onCreateCommentClicked(sentenceId, commentContentEditText.getText().toString());
     }
+
 
     public static CommentsFragment newInstance(String sentenceId) {
         CommentsFragment fragment = new CommentsFragment();
@@ -64,6 +82,13 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        initializeRecyclerView();
+        presenter.onViewCreated();
+    }
+
+    @Override
     public void onDestroyView() {
         unbinder.unbind();
         super.onDestroyView();
@@ -72,5 +97,44 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @Override
     public void close() {
         requireActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void notifyDataChanged() {
+
+    }
+
+    @Override
+    public void showNeedInternetInfo() {
+
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+
+    }
+
+    private void initializeRecyclerView() {
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void showData(List<Comment> comments) {
+        adapter.setComments(comments);
     }
 }

@@ -14,10 +14,12 @@ import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
 import pl.jozefniemiec.langninja.BuildConfig;
+import pl.jozefniemiec.langninja.data.repository.CommentsRepository;
 import pl.jozefniemiec.langninja.data.repository.LanguageRepository;
 import pl.jozefniemiec.langninja.data.repository.SentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
+import pl.jozefniemiec.langninja.data.repository.firebase.CommentsRepositoryImpl;
 import pl.jozefniemiec.langninja.data.repository.firebase.UserRepositoryImpl;
 import pl.jozefniemiec.langninja.data.repository.firebase.UserSentenceRepositoryImpl;
 import pl.jozefniemiec.langninja.data.repository.room.RoomLanguageRepository;
@@ -84,4 +86,7 @@ abstract class AppModule {
 
     @Binds
     abstract ImagesStorage bindImagesStorage(ImagesStorageImpl storage);
+
+    @Binds
+    abstract CommentsRepository bindCommentsRepository(CommentsRepositoryImpl commentsRepository);
 }

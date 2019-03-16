@@ -17,6 +17,12 @@ public class Comment {
         return id;
     }
 
+    public Comment(String sentenceId, String content, Author author) {
+        this.sentenceId = sentenceId;
+        this.content = content;
+        this.author = author;
+    }
+
     public void setId(String id) {
         this.id = id;
     }

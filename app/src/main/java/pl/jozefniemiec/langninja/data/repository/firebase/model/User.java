@@ -1,20 +1,17 @@
 package pl.jozefniemiec.langninja.data.repository.firebase.model;
 
-public class User {
+public class User extends Author {
 
-    private String uid;
-    private String name;
     private String email;
-    private String photo;
 
     public User() {
     }
 
     public User(String uid, String name, String email, String photo) {
-        this.uid = uid;
-        this.name = name;
+        super.uid = uid;
+        super.name = name;
         this.email = email;
-        this.photo = photo;
+        super.photo = photo;
     }
 
     public String getUid() {
