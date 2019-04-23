@@ -288,8 +288,17 @@ public class SentenceCardViewerActivity extends BaseActivity
             commentsFragment = CommentsFragment.newInstance(sentenceId);
             supportFragmentManager
                     .beginTransaction()
+                    .addToBackStack(COMMENTS_TAG)
                     .add(R.id.commentsContainer, commentsFragment, COMMENTS_TAG)
                     .commit();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager supportFragmentManager = getSupportFragmentManager();
+        if (supportFragmentManager.getBackStackEntryCount() > 0)
+            supportFragmentManager.popBackStackImmediate();
+        else super.onBackPressed();
     }
 }
