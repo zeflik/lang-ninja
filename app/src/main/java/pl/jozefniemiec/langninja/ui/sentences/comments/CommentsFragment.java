@@ -1,15 +1,19 @@
 package pl.jozefniemiec.langninja.ui.sentences.comments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -43,11 +47,13 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @BindView(R.id.commentContentEditText)
     EditText commentContentEditText;
 
+    @BindView(R.id.commentTextInputGroup)
+    Group inputGroup;
+
     @OnClick(R.id.commentCreateButton)
     void onCommentCreateButtonClicked() {
         presenter.onCreateCommentClicked(sentenceId, commentContentEditText.getText().toString());
     }
-
 
     public static CommentsFragment newInstance(String sentenceId) {
         CommentsFragment fragment = new CommentsFragment();
@@ -85,7 +91,7 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initializeRecyclerView();
-        presenter.onViewCreated();
+        presenter.onViewCreated(sentenceId);
     }
 
     @Override
@@ -111,7 +117,6 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
 
     @Override
     public void notifyDataChanged() {
-
     }
 
     @Override
@@ -121,14 +126,12 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
 
     @Override
     public void showErrorMessage(String message) {
-
+        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     private void initializeRecyclerView() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
-        linearLayoutManager.setReverseLayout(true);
-        linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapter);
     }
@@ -136,5 +139,33 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @Override
     public void showData(List<Comment> comments) {
         adapter.setComments(comments);
+    }
+
+    @Override
+    public void clearInputField() {
+        commentContentEditText.getText().clear();
+    }
+
+    @Override
+    public void showNewItem(Comment comment) {
+        presenter.onViewCreated(sentenceId);
+        //adapter.addItem(comment);
+        // recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
+    }
+
+    @Override
+    public void showInputPanel() {
+        inputGroup.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideInputPanel() {
+        inputGroup.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(commentContentEditText.getWindowToken(), 0);
     }
 }

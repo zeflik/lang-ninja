@@ -56,12 +56,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginBottom="8dp"
         android:background="@drawable/ic_send"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="@+id/commentContentEditText"
         app:layout_constraintEnd_toEndOf="@+id/commentContentEditText"
         app:layout_constraintTop_toTopOf="@+id/commentContentEditText"
         app:layout_constraintVertical_bias="1.0" />
+
+    <android.support.constraint.Group
+        android:id="@+id/commentTextInputGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="commentCreateButton,commentContentEditText,newSentenceRowUserPhoto" />
 
 </android.support.constraint.ConstraintLayout>

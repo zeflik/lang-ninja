@@ -1,7 +1,5 @@
 package pl.jozefniemiec.langninja.ui.sentences.comments;
 
-import java.util.ArrayList;
-
 import javax.inject.Inject;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -34,20 +32,24 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
     }
 
     @Override
-    public void onViewCreated() {
-        ArrayList<Comment> comments = new ArrayList<>();
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-        comments.add(new Comment("xxxx", "abc", new Author("asdf", "name", "photo")));
-
-        view.showData(comments);
+    public void onViewCreated(String sentenceId) {
+        if (authService.isSignedIn()) {
+            view.showInputPanel();
+        } else {
+            view.hideInputPanel();
+        }
+        commentsRepository
+                .getCommentsBySentenceId(sentenceId)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> view.showProgress())
+                .doFinally(view::hideProgress)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        view::showData
+                        , error -> {
+                            view.showNeedInternetInfo();
+                        }
+                );
     }
 
     @Override
@@ -58,9 +60,9 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                     .subscribeOn(Schedulers.io())
                     .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
                     .map(author -> new Comment(sentenceId, commentText, author))
-                    .observeOn(AndroidSchedulers.mainThread())
                     .doOnSubscribe(disposable -> view.showProgress())
                     .doFinally(view::hideProgress)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                             comment -> {
                                 commentsRepository
@@ -70,7 +72,12 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                                         .doOnSubscribe(disposable -> view.showProgress())
                                         .doFinally(view::hideProgress)
                                         .subscribe(
-                                                id -> view.notifyDataChanged(),
+                                                id -> {
+                                                    view.notifyDataChanged();
+                                                    view.clearInputField();
+                                                    view.hideKeyboard();
+                                                    view.showNewItem(comment);
+                                                },
                                                 error -> view.showNeedInternetInfo()
                                         );
                             }//TODO - refactor
@@ -81,5 +88,19 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
         } else {
             view.showErrorMessage("Niewłaściwy format.");
         }
+    }
+
+    @Override
+    public void onVoteUpButtonClicked(Comment comment) {
+        commentsRepository
+                .like(comment.getSentenceId(), comment.getId(), authService.getCurrentUserUid())
+                .subscribe();
+    }
+
+    @Override
+    public void onVoteDownButtonClicked(Comment comment) {
+        commentsRepository
+                .dislike(comment.getSentenceId(), comment.getId(), authService.getCurrentUserUid())
+                .subscribe();
     }
 }

@@ -21,12 +21,26 @@ public interface CommentsFragmentContract {
         void showErrorMessage(String message);
 
         void showData(List<Comment> comments);
+
+        void clearInputField();
+
+        void hideKeyboard();
+
+        void showNewItem(Comment comment);
+
+        void showInputPanel();
+
+        void hideInputPanel();
     }
 
     interface Presenter {
 
-        void onViewCreated();
+        void onViewCreated(String sentenceId);
 
         void onCreateCommentClicked(String sentenceId, String commentText);
+
+        void onVoteUpButtonClicked(Comment comment);
+
+        void onVoteDownButtonClicked(Comment comment);
     }
 }

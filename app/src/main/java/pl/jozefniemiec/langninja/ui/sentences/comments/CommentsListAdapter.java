@@ -1,6 +1,7 @@
 package pl.jozefniemiec.langninja.ui.sentences.comments;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,17 +17,20 @@ import javax.inject.Inject;
 
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
+import pl.jozefniemiec.langninja.utils.DateUtils;
 
 public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder> {
 
     private final Picasso picasso;
     private final Context context;
+    private final CommentsFragmentContract.Presenter presenter;
     private List<Comment> comments = new ArrayList<>();
 
     @Inject
-    public CommentsListAdapter(Picasso picasso, Context context) {
+    public CommentsListAdapter(Picasso picasso, Context context, CommentsFragmentContract.Presenter presenter) {
         this.picasso = picasso;
         this.context = context;
+        this.presenter = presenter;
     }
 
     @NonNull
@@ -41,11 +45,13 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
     public void onBindViewHolder(@NonNull CommentsViewHolder holder, int position) {
         holder.setAuthor(comments.get(position).getAuthor().getName());
         holder.setComment(comments.get(position).getContent());
-        //  holder.setAuthorPhoto(Uri.parse(comments.get(position).getAuthor().getPhoto()));
+        holder.setAuthorPhoto(Uri.parse(comments.get(position).getAuthor().getPhoto()));
         holder.setCommentLikesCount(String.valueOf(comments.get(position).getLikesCount()));
-        // Long timestamp = (Long) comments.get(position).getDateEdited();
-        // String timeAgo = DateUtils.generateTimePeriodDescription(timestamp, context);
-        // holder.setDateText(timeAgo);
+        Long timestamp = (Long) comments.get(position).getDateEdited();
+        String timeAgo = DateUtils.generateTimePeriodDescription(timestamp, context);
+        holder.setDateText(timeAgo);
+        holder.voteUpButton.setOnClickListener(view -> presenter.onVoteUpButtonClicked(comments.get(position)));
+        holder.voteDownButton.setOnClickListener(view -> presenter.onVoteDownButtonClicked(comments.get(position)));
     }
 
     @Override
@@ -54,7 +60,13 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
     }
 
     public void setComments(List<Comment> comments) {
-        this.comments = comments;
+        this.comments.clear();
+        this.comments.addAll(comments);
         notifyDataSetChanged();
+    }
+
+    public void addItem(Comment comment) {
+        comments.add(comment);
+        notifyItemInserted(comments.size() - 1);
     }
 }

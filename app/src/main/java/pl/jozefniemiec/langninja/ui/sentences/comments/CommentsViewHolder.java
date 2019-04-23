@@ -35,8 +35,14 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.commentLikesCountTextView)
     TextView commentLikesCount;
 
+    @BindView(R.id.commentsThumbUpCommentIcon)
+    ImageView voteUpButton;
 
-    public CommentsViewHolder(View itemView, Picasso picasso) {
+    @BindView(R.id.commentsThumbDownCommentIcon)
+    ImageView voteDownButton;
+
+
+    CommentsViewHolder(View itemView, Picasso picasso) {
         super(itemView);
         this.picasso = picasso;
         ButterKnife.bind(this, itemView);
@@ -50,7 +56,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
         this.comment.setText(text);
     }
 
-    public void setAuthorPhoto(Uri uri) {
+    void setAuthorPhoto(Uri uri) {
         picasso
                 .load(uri)
                 .networkPolicy(NetworkPolicy.OFFLINE)
@@ -84,11 +90,11 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
                 });
     }
 
-    public void setDateText(String dateText) {
+    void setDateText(String dateText) {
         this.dateText.setText(dateText);
     }
 
-    public void setCommentLikesCount(String count) {
+    void setCommentLikesCount(String count) {
         this.commentLikesCount.setText(count);
     }
 }

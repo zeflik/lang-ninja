@@ -119,6 +119,6 @@ public class Utility {
     }
 
     public static boolean validateCommentText(String commentText) {
-        return true;
+        return !commentText.trim().isEmpty();
     }
 }

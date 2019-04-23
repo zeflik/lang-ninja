@@ -16,11 +16,11 @@ public interface CommentsRepository {
 
     Single<UserSentence> getComment(String commentId);
 
-    Completable like(String commentId, String userUid);
+    Completable like(String sentenceKey, String commentKey, String userUid);
 
-    Completable dislike(String commentId, String userUid);
+    Completable dislike(String sentenceKey, String commentKey, String userUid);
 
-    Single<Likes> getLikes(String commentId);
+    Single<List<Likes>> getLikes(String commentId);
 
     Completable update(Comment comment);
 

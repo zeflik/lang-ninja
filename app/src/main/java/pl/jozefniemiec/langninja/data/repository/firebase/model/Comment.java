@@ -13,14 +13,17 @@ public class Comment {
     private int likesCount;
     private int repliesCount;
 
-    public String getId() {
-        return id;
+    public Comment() {
     }
 
     public Comment(String sentenceId, String content, Author author) {
         this.sentenceId = sentenceId;
         this.content = content;
         this.author = author;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public void setId(String id) {
