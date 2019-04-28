@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/newSentenceRowUserPhoto"
+        android:id="@+id/commentInputPhotoImageView"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="4dp"
@@ -49,7 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/newSentenceRowUserPhoto" />
+        app:layout_constraintStart_toEndOf="@+id/commentInputPhotoImageView" />
 
     <ImageButton
         android:id="@+id/commentCreateButton"
@@ -68,6 +68,6 @@
         android:id="@+id/commentTextInputGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="commentCreateButton,commentContentEditText,newSentenceRowUserPhoto" />
+        app:constraint_referenced_ids="commentCreateButton,commentContentEditText,commentInputPhotoImageView" />
 
 </android.support.constraint.ConstraintLayout>

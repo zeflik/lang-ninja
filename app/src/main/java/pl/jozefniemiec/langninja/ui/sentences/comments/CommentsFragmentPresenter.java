@@ -8,6 +8,7 @@ import pl.jozefniemiec.langninja.data.repository.CommentsRepository;
 import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Author;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.User;
 import pl.jozefniemiec.langninja.di.sentences.comments.CommentsFragmentScope;
 import pl.jozefniemiec.langninja.service.AuthService;
 import pl.jozefniemiec.langninja.utils.Utility;
@@ -35,6 +36,14 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
     public void onViewCreated(String sentenceId) {
         if (authService.isSignedIn()) {
             view.showInputPanel();
+            userRepository
+                    .getUser(authService.getCurrentUserUid())
+                    .subscribeOn(Schedulers.io())
+                    .map(User::getPhoto)
+                    .doOnSubscribe(disposable -> view.showProgress())
+                    .doFinally(view::hideProgress)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(photo -> view.showUserPhoto(photo));
         } else {
             view.hideInputPanel();
         }

@@ -31,6 +31,8 @@ public interface CommentsFragmentContract {
         void showInputPanel();
 
         void hideInputPanel();
+
+        void showUserPhoto(String photo);
     }
 
     interface Presenter {

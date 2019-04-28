@@ -13,7 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -26,6 +31,8 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerDialogFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
+import pl.jozefniemiec.langninja.utils.Utility;
+import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 
@@ -41,6 +48,9 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @Inject
     CommentsListAdapter adapter;
 
+    @Inject
+    Picasso picasso;
+
     @BindView(R.id.commentsRecyclerView)
     RecyclerView recyclerView;
 
@@ -49,6 +59,9 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
 
     @BindView(R.id.commentTextInputGroup)
     Group inputGroup;
+
+    @BindView(R.id.commentInputPhotoImageView)
+    ImageView commentInputPhotoImageView;
 
     @OnClick(R.id.commentCreateButton)
     void onCommentCreateButtonClicked() {
@@ -161,6 +174,41 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @Override
     public void hideInputPanel() {
         inputGroup.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showUserPhoto(String authorPhotoUri) {
+        picasso
+                .load(authorPhotoUri)
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .fit()
+                .transform(new CircleTransform())
+                .into(commentInputPhotoImageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        if (Utility.isNetworkAvailable(requireContext())) {
+                            picasso
+                                    .load(authorPhotoUri)
+                                    .fit()
+                                    .transform(new CircleTransform())
+                                    .into(commentInputPhotoImageView, new Callback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError() {
+                                        }
+                                    });
+                        }
+                    }
+                });
     }
 
     @Override
