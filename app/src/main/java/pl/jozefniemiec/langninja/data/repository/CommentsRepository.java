@@ -25,4 +25,6 @@ public interface CommentsRepository {
     Completable update(Comment comment);
 
     Completable remove(String commentId);
+
+    Single<Integer> getCommentsCount(String commentId);
 }

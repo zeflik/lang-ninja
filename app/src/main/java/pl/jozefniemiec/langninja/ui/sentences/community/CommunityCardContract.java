@@ -29,6 +29,8 @@ public interface CommunityCardContract {
         void showProgress();
 
         void hideProgress();
+
+        void showCommentsCount(Integer count);
     }
 
     interface Presenter {

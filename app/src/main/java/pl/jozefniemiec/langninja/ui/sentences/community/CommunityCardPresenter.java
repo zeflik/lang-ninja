@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import pl.jozefniemiec.langninja.data.repository.CommentsRepository;
 import pl.jozefniemiec.langninja.data.repository.NoInternetConnectionException;
 import pl.jozefniemiec.langninja.data.repository.UserSentenceRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
@@ -21,6 +22,7 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     private final String TAG = CommunityCardPresenter.class.getSimpleName();
     private final CommunityCardContract.View view;
     private final UserSentenceRepository userSentenceRepository;
+    private final CommentsRepository commentsRepository;
     private final AuthService authService;
     private final InternetConnectionService internetConnectionService;
     private final ResourcesManager resourcesManager;
@@ -28,14 +30,18 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
     private Disposable likesSubscription;
     private Disposable likeSubscription;
     private Disposable dislikeSubscription;
+    private Disposable commentsCountSubscription;
 
     @Inject
     CommunityCardPresenter(CommunityCardContract.View view,
                            UserSentenceRepository userSentenceRepository,
+                           CommentsRepository commentsRepository,
                            AuthService authService,
-                           InternetConnectionService internetConnectionService, ResourcesManager resourcesManager) {
+                           InternetConnectionService internetConnectionService,
+                           ResourcesManager resourcesManager) {
         this.view = view;
         this.userSentenceRepository = userSentenceRepository;
+        this.commentsRepository = commentsRepository;
         this.authService = authService;
         this.internetConnectionService = internetConnectionService;
         this.resourcesManager = resourcesManager;
@@ -71,6 +77,11 @@ public class CommunityCardPresenter implements CommunityCardContract.Presenter {
                         }
                     }
                 });
+        commentsCountSubscription = commentsRepository
+                .getCommentsCount(sentenceKey)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(view::showCommentsCount);
     }
 
     @Override

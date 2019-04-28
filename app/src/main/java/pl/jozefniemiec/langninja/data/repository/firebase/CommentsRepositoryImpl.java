@@ -32,9 +32,12 @@ public class CommentsRepositoryImpl implements CommentsRepository {
     private static final String TAG = CommentsRepositoryImpl.class.getSimpleName();
     private static final String COMMENTS_NODE = "comments";
     private static final String LIKES_NODE = "comment_likes";
+    private static final String COMMENTS_COUNT_NODE = "comment_count";
     private static final String COMMENT_BY_KEY_PATH = "/" + COMMENTS_NODE + "/%s/%s/";
+    private static final String COMMENT_COUNT_FIELD = "/%s/commentsCount/";
     private static final String COMMENT_LIKES_PATH = "/" + LIKES_NODE + "/%s/";
     private static final String COMMENT_COUNT_LIKES_PATH = "/" + COMMENTS_NODE + "/%s/%s/likesCount/";
+    public static final int EMPTY_LIST_VALUE = 0;
     private final InternetConnectionService internetConnectionService;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -42,6 +45,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
             firebaseDatabase.getReference(COMMENTS_NODE);
     private DatabaseReference likesReference =
             firebaseDatabase.getReference(LIKES_NODE);
+    private DatabaseReference commentCountReference = firebaseDatabase.getReference(COMMENTS_COUNT_NODE);
 
     @Inject
     CommentsRepositoryImpl(InternetConnectionService internetConnectionService) {
@@ -64,7 +68,24 @@ public class CommentsRepositoryImpl implements CommentsRepository {
             String commentLikesWithKeyPath = String.format(COMMENT_LIKES_PATH, commentKey);
             updateMap.put(commentLikesWithKeyPath, new Likes());
             databaseReference.updateChildren(updateMap)
-                    .addOnSuccessListener(aVoid -> subscriber.onSuccess(commentKey))
+                    .addOnSuccessListener(aVoid -> {
+                        commentsReference
+                                .child(comment.getSentenceId())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        commentCountReference
+                                                .child(String.format(COMMENT_COUNT_FIELD, comment.getSentenceId()))
+                                                .setValue(dataSnapshot.getChildrenCount());
+                                        subscriber.onSuccess(commentKey);
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                    })
                     .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
         });
     }
@@ -229,5 +250,29 @@ public class CommentsRepositoryImpl implements CommentsRepository {
     @Override
     public Completable remove(String commentId) {
         return null;
+    }
+
+    @Override
+    public Single<Integer> getCommentsCount(String commentId) {
+        return Single.create(subscriber -> {
+            commentCountReference
+                    .child(commentId)
+                    .child("commentsCount")
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                subscriber.onSuccess(dataSnapshot.getValue(Integer.class));
+                            } else {
+                                subscriber.onSuccess(EMPTY_LIST_VALUE);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            subscriber.onError(databaseError.toException());
+                        }
+                    });
+        });
     }
 }

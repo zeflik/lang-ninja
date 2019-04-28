@@ -216,4 +216,9 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
         requireActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         progressBar.setVisibility(View.GONE);
     }
+
+    @Override
+    public void showCommentsCount(Integer count) {
+        communityFeedbackCommentsCountTextView.setText(String.valueOf(count));
+    }
 }
