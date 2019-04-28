@@ -16,7 +16,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
-import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorByValue;
+import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorIfNegativeNumber;
 
 public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements UserSentenceItemView {
 
@@ -63,7 +63,7 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
 
     public void setLikesCountTextView(String value) {
         likesCountTextView.setText(value);
-        changeTextViewColorByValue(likesCountTextView, Integer.valueOf(value));
+        changeTextViewColorIfNegativeNumber(likesCountTextView, Integer.valueOf(value));
     }
 
     public void setDateText(String timeAgo) {

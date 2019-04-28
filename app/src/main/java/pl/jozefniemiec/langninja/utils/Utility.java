@@ -123,10 +123,8 @@ public class Utility {
         return !commentText.trim().isEmpty();
     }
 
-    public static void changeTextViewColorByValue(TextView textView, int value) {
-        if (value > 0) {
-            textView.setTextColor(textView.getContext().getResources().getColor(R.color.colorPrimary));
-        } else if (value < 0) {
+    public static void changeTextViewColorIfNegativeNumber(TextView textView, int number) {
+        if (number < 0) {
             textView.setTextColor(Color.RED);
         } else {
             textView.setTextColor(Color.GRAY);

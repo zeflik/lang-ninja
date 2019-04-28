@@ -16,7 +16,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
-import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorByValue;
+import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorIfNegativeNumber;
 
 public class CommentsViewHolder extends RecyclerView.ViewHolder {
 
@@ -98,6 +98,6 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
 
     void setCommentLikesCount(String count) {
         this.commentLikesCount.setText(count);
-        changeTextViewColorByValue(commentLikesCount, Integer.valueOf(count));
+        changeTextViewColorIfNegativeNumber(commentLikesCount, Integer.valueOf(count));
     }
 }

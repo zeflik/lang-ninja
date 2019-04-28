@@ -29,7 +29,7 @@ import pl.jozefniemiec.langninja.utils.DateUtils;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
-import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorByValue;
+import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorIfNegativeNumber;
 
 public class CommunityCardFragment extends DaggerFragment implements CommunityCardContract.View {
 
@@ -180,7 +180,7 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     @Override
     public void showLikesCount(String value) {
         communityFeedbackThumbsCountTextView.setText(value);
-        changeTextViewColorByValue(communityFeedbackThumbsCountTextView, Integer.valueOf(value));
+        changeTextViewColorIfNegativeNumber(communityFeedbackThumbsCountTextView, Integer.valueOf(value));
     }
 
     @Override
