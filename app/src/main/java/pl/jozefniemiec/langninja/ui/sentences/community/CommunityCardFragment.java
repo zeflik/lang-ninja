@@ -29,6 +29,8 @@ import pl.jozefniemiec.langninja.utils.DateUtils;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
+import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorByValue;
+
 public class CommunityCardFragment extends DaggerFragment implements CommunityCardContract.View {
 
     private static final String TAG = CommunityCardFragment.class.getSimpleName();
@@ -130,7 +132,6 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     public void showData(UserSentence userSentence) {
         this.userSentence = userSentence;
         communityFeedbackAuthorTextView.setText(userSentence.getAuthor().getName());
-        communityFeedbackCommentsCountTextView.setText("12");
         communityFeedbackThumbsCountTextView.setText(String.valueOf(userSentence.getLikesCount()));
         Long timestamp = (Long) userSentence.getDateEdited();
         communityFeedbackDateTextView.setText(DateUtils.generateTimePeriodDescription(timestamp, requireContext()));
@@ -179,6 +180,7 @@ public class CommunityCardFragment extends DaggerFragment implements CommunityCa
     @Override
     public void showLikesCount(String value) {
         communityFeedbackThumbsCountTextView.setText(value);
+        changeTextViewColorByValue(communityFeedbackThumbsCountTextView, Integer.valueOf(value));
     }
 
     @Override

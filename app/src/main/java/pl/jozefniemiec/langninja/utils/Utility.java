@@ -15,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.ui.login.LoginActivity;
@@ -120,5 +121,15 @@ public class Utility {
 
     public static boolean validateCommentText(String commentText) {
         return !commentText.trim().isEmpty();
+    }
+
+    public static void changeTextViewColorByValue(TextView textView, int value) {
+        if (value > 0) {
+            textView.setTextColor(textView.getContext().getResources().getColor(R.color.colorPrimary));
+        } else if (value < 0) {
+            textView.setTextColor(Color.RED);
+        } else {
+            textView.setTextColor(Color.GRAY);
+        }
     }
 }

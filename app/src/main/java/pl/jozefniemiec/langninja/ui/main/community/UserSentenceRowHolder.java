@@ -16,6 +16,8 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
+import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorByValue;
+
 public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements UserSentenceItemView {
 
     private final Picasso picasso;
@@ -59,8 +61,9 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
         authorTextView.setText(name);
     }
 
-    public void setLikesCountTextView(String text) {
-        likesCountTextView.setText(text);
+    public void setLikesCountTextView(String value) {
+        likesCountTextView.setText(value);
+        changeTextViewColorByValue(likesCountTextView, Integer.valueOf(value));
     }
 
     public void setDateText(String timeAgo) {
