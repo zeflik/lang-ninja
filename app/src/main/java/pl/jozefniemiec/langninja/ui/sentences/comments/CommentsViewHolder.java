@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -44,11 +45,17 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
     @BindView(R.id.commentsThumbDownCommentIcon)
     ImageButton voteDownButton;
 
+    @BindView(R.id.commentsReplayButton)
+    Button commentsReplayButton;
+
     @BindView(R.id.commentVoteUpProgressBar)
     ProgressBar voteUpProgressBar;
 
     @BindView(R.id.commentVoteDownProgressBar)
     ProgressBar voteDownProgressBar;
+
+    @BindView(R.id.commentsReplaysRecyclerView)
+    RecyclerView replaysRecyclerView;
 
     CommentsViewHolder(View itemView, Picasso picasso) {
         super(itemView);
@@ -163,5 +170,14 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
 
     public void hideVoteDownProgress() {
         voteDownProgressBar.setVisibility(View.GONE);
+    }
+
+    public void showReplaysList() {
+        replaysRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideReplaysList() {
+        replaysRecyclerView.setVisibility(View.GONE);
     }
 }

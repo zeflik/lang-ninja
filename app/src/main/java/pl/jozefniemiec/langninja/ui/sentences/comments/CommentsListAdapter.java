@@ -52,6 +52,7 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
         holder.setDateText(timeAgo);
         holder.voteUpButton.setOnClickListener(view -> presenter.onVoteUpButtonClicked(holder, comments.get(position)));
         holder.voteDownButton.setOnClickListener(view -> presenter.onVoteDownButtonClicked(holder, comments.get(position)));
+        holder.commentsReplayButton.setOnClickListener(view -> presenter.onItemViewReplayButtonPressed(holder));
         presenter.onItemViewLikesBind(holder, comments.get(position).getLikes());
     }
 

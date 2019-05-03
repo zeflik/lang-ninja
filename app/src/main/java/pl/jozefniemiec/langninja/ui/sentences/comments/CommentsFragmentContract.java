@@ -47,5 +47,7 @@ public interface CommentsFragmentContract {
         void onVoteDownButtonClicked(CommentsItemView holder, Comment comment);
 
         void onItemViewLikesBind(CommentsItemView itemView, Likes likes);
+
+        void onItemViewReplayButtonPressed(CommentsItemView itemView);
     }
 }

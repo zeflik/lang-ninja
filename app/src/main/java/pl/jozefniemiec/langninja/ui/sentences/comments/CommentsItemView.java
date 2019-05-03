@@ -25,4 +25,8 @@ public interface CommentsItemView {
     void showVoteDownProgress();
 
     void hideVoteDownProgress();
+
+    void showReplaysList();
+
+    void hideReplaysList();
 }

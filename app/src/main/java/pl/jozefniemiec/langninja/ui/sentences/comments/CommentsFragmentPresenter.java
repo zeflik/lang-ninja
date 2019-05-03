@@ -44,7 +44,7 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                     .doOnSubscribe(disposable -> view.showProgress())
                     .doFinally(view::hideProgress)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(photo -> view.showUserPhoto(photo));
+                    .subscribe(view::showUserPhoto);
         } else {
             view.hideInputPanel();
         }
@@ -160,5 +160,10 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                 itemView.selectVoteDownButton(likes.getDislikesMap().get(currentUserUid));
             }
         }
+    }
+
+    @Override
+    public void onItemViewReplayButtonPressed(CommentsItemView itemView) {
+        itemView.showReplaysList();
     }
 }
