@@ -3,6 +3,7 @@ package pl.jozefniemiec.langninja.ui.sentences.comments;
 import java.util.List;
 
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
 
 public interface CommentsFragmentContract {
 
@@ -41,8 +42,10 @@ public interface CommentsFragmentContract {
 
         void onCreateCommentClicked(String sentenceId, String commentText);
 
-        void onVoteUpButtonClicked(Comment comment);
+        void onVoteUpButtonClicked(CommentsItemView holder, Comment comment);
 
-        void onVoteDownButtonClicked(Comment comment);
+        void onVoteDownButtonClicked(CommentsItemView holder, Comment comment);
+
+        void onItemViewLikesBind(CommentsItemView itemView, Likes likes);
     }
 }

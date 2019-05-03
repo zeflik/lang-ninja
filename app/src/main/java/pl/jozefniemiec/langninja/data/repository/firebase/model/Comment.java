@@ -10,10 +10,27 @@ public class Comment {
     private Object dateEdited = ServerValue.TIMESTAMP;
     private Object dateCreated = ServerValue.TIMESTAMP;
     private Author author;
-    private int likesCount;
     private int repliesCount;
+    private int likesCount;
+    private Likes likes;
 
     public Comment() {
+    }
+
+    public Likes getLikes() {
+        return likes;
+    }
+
+    public int getLikesCount() {
+        return likesCount;
+    }
+
+    public void setLikesCount(int likesCount) {
+        this.likesCount = likesCount;
+    }
+
+    public void setLikes(Likes likes) {
+        this.likes = likes;
     }
 
     public Comment(String sentenceId, String content, Author author) {
@@ -62,14 +79,6 @@ public class Comment {
         this.author = author;
     }
 
-    public int getLikesCount() {
-        return likesCount;
-    }
-
-    public void setLikesCount(int likesCount) {
-        this.likesCount = likesCount;
-    }
-
     public int getRepliesCount() {
         return repliesCount;
     }
@@ -88,15 +97,15 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment{" +
-                "id='" + id + '\'' +
-                ", sentenceId='" + sentenceId + '\'' +
-                ", content='" + content + '\'' +
-                ", dateEdited=" + dateEdited +
-                ", dateCreated=" + dateCreated +
-                ", author=" + author +
-                ", likesCount=" + likesCount +
-                ", repliesCount=" + repliesCount +
-                '}';
+        return "\nComment{" +
+                "\n id='" + id + '\'' +
+                "\n sentenceId='" + sentenceId + '\'' +
+                "\n content='" + content + '\'' +
+                "\n dateEdited=" + dateEdited +
+                "\n dateCreated=" + dateCreated +
+                "\n author=" + author +
+                "\n repliesCount=" + repliesCount +
+                "\n likes=" + likes +
+                "\n}";
     }
 }

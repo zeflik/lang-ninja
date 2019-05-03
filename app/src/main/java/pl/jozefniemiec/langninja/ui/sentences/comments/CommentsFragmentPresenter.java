@@ -8,6 +8,7 @@ import pl.jozefniemiec.langninja.data.repository.CommentsRepository;
 import pl.jozefniemiec.langninja.data.repository.UserRepository;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Author;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
+import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.User;
 import pl.jozefniemiec.langninja.di.sentences.comments.CommentsFragmentScope;
 import pl.jozefniemiec.langninja.service.AuthService;
@@ -54,10 +55,8 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                 .doFinally(view::hideProgress)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
-                        view::showData
-                        , error -> {
-                            view.showNeedInternetInfo();
-                        }
+                        view::showData,
+                        error -> view.showNeedInternetInfo()
                 );
     }
 
@@ -100,16 +99,66 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
     }
 
     @Override
-    public void onVoteUpButtonClicked(Comment comment) {
+    public void onVoteUpButtonClicked(CommentsItemView holder, Comment comment) {
         commentsRepository
                 .like(comment.getSentenceId(), comment.getId(), authService.getCurrentUserUid())
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> holder.showVoteUpProgress())
+                .doOnComplete(() -> changeButtonStatesOnVoteUp(holder))
+                .doOnComplete(() -> changeLikesCountColor(holder))
+                .doFinally(holder::hideVoteUpProgress)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
     }
 
+    private void changeButtonStatesOnVoteUp(CommentsItemView holder) {
+        holder.changeLikesCountByValue(holder.isVoteUpButtonSelected() ? -1 : 1);
+        holder.selectVoteUpButton(!holder.isVoteUpButtonSelected());
+        holder.changeLikesCountByValue(holder.isVoteDownButtonSelected() ? 1 : 0);
+        holder.selectVoteDownButton(false);
+    }
+
     @Override
-    public void onVoteDownButtonClicked(Comment comment) {
+    public void onVoteDownButtonClicked(CommentsItemView holder, Comment comment) {
         commentsRepository
                 .dislike(comment.getSentenceId(), comment.getId(), authService.getCurrentUserUid())
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(disposable -> holder.showVoteDownProgress())
+                .doOnComplete(() -> changeButtonStatesOnVoteDown(holder))
+                .doOnComplete(() -> changeLikesCountColor(holder))
+                .doFinally(holder::hideVoteDownProgress)
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe();
+    }
+
+    private void changeButtonStatesOnVoteDown(CommentsItemView holder) {
+        holder.changeLikesCountByValue(holder.isVoteDownButtonSelected() ? 1 : -1);
+        holder.selectVoteDownButton(!holder.isVoteDownButtonSelected());
+        holder.changeLikesCountByValue(holder.isVoteUpButtonSelected() ? -1 : 0);
+        holder.selectVoteUpButton(false);
+    }
+
+    private void changeLikesCountColor(CommentsItemView holder) {
+        if (holder.getLikesCount() < 0) {
+            holder.indicateNegativeNumber();
+        } else {
+            holder.indicatePositiveNumber();
+        }
+    }
+
+    @Override
+    public void onItemViewLikesBind(CommentsItemView itemView, Likes likes) {
+        if (authService.isSignedIn() && likes != null) {
+            if (likes.getCount() < 0) {
+                itemView.indicateNegativeNumber();
+            }
+            String currentUserUid = authService.getCurrentUserUid();
+            if (likes.getLikesMap() != null && likes.getLikesMap().containsKey(currentUserUid)) {
+                itemView.selectVoteUpButton(likes.getLikesMap().get(currentUserUid));
+            }
+            if (likes.getDislikesMap() != null && likes.getDislikesMap().containsKey(currentUserUid)) {
+                itemView.selectVoteDownButton(likes.getDislikesMap().get(currentUserUid));
+            }
+        }
     }
 }

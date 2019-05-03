@@ -92,25 +92,27 @@
         app:layout_constraintStart_toEndOf="@+id/commentsThumbUpCommentIcon"
         app:layout_constraintTop_toTopOf="@+id/commentsThumbUpCommentIcon" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/commentsThumbUpCommentIcon"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:scaleType="fitXY"
         android:layout_margin="-8dp"
         android:padding="4dp"
-        android:src="@drawable/ic_keyboard_arrow_up"
+        android:src="@drawable/vote_up_image_button"
+        android:background="@android:color/transparent"
         app:layout_constraintStart_toEndOf="@+id/commentAuthorPhoto"
         app:layout_constraintTop_toBottomOf="@+id/commentBodyTextView" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/commentsThumbDownCommentIcon"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:scaleType="fitXY"
         android:layout_margin="-8dp"
         android:padding="4dp"
-        android:src="@drawable/ic_keyboard_arrow_down"
+        android:src="@drawable/vote_down_image_button"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="@+id/commentLikesCountTextView"
         app:layout_constraintStart_toEndOf="@+id/commentLikesCountTextView"
         app:layout_constraintTop_toTopOf="@+id/commentLikesCountTextView" />
@@ -136,5 +138,27 @@
         app:layout_constraintEnd_toEndOf="@+id/commentBackground"
         app:layout_constraintStart_toStartOf="@+id/commentBackground"
         app:layout_constraintTop_toBottomOf="@+id/commentsReplayButton" />
+
+    <ProgressBar
+        android:id="@+id/commentVoteUpProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="@dimen/size_vote_up_progress_bar"
+        android:layout_height="@dimen/size_vote_up_progress_bar"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/commentsThumbUpCommentIcon"
+        app:layout_constraintEnd_toEndOf="@+id/commentsThumbUpCommentIcon"
+        app:layout_constraintStart_toStartOf="@+id/commentsThumbUpCommentIcon"
+        app:layout_constraintTop_toTopOf="@+id/commentsThumbUpCommentIcon" />
+
+    <ProgressBar
+        android:id="@+id/commentVoteDownProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="@dimen/size_vote_up_progress_bar"
+        android:layout_height="@dimen/size_vote_up_progress_bar"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/commentsThumbDownCommentIcon"
+        app:layout_constraintEnd_toEndOf="@+id/commentsThumbDownCommentIcon"
+        app:layout_constraintStart_toStartOf="@+id/commentsThumbDownCommentIcon"
+        app:layout_constraintTop_toTopOf="@+id/commentsThumbDownCommentIcon" />
 
 </android.support.constraint.ConstraintLayout>

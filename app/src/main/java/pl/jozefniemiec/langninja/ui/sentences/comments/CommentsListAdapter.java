@@ -46,12 +46,13 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
         holder.setAuthor(comments.get(position).getAuthor().getName());
         holder.setComment(comments.get(position).getContent());
         holder.setAuthorPhoto(Uri.parse(comments.get(position).getAuthor().getPhoto()));
-        holder.setCommentLikesCount(String.valueOf(comments.get(position).getLikesCount()));
+        holder.setCommentLikesCount(comments.get(position).getLikes().getCount());
         Long timestamp = (Long) comments.get(position).getDateEdited();
         String timeAgo = DateUtils.generateTimePeriodDescription(timestamp, context);
         holder.setDateText(timeAgo);
-        holder.voteUpButton.setOnClickListener(view -> presenter.onVoteUpButtonClicked(comments.get(position)));
-        holder.voteDownButton.setOnClickListener(view -> presenter.onVoteDownButtonClicked(comments.get(position)));
+        holder.voteUpButton.setOnClickListener(view -> presenter.onVoteUpButtonClicked(holder, comments.get(position)));
+        holder.voteDownButton.setOnClickListener(view -> presenter.onVoteDownButtonClicked(holder, comments.get(position)));
+        presenter.onItemViewLikesBind(holder, comments.get(position).getLikes());
     }
 
     @Override

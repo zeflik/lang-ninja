@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorLight">#9FA8DA</color>
     <color name="stroke">@android:color/darker_gray</color>
+    <color name="text_default">@android:color/darker_gray</color>
 </resources>

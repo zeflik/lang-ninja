@@ -20,7 +20,7 @@ public interface CommentsRepository {
 
     Completable dislike(String sentenceKey, String commentKey, String userUid);
 
-    Single<List<Likes>> getLikes(String commentId);
+    Single<Likes> getLikes(String commentId);
 
     Completable update(Comment comment);
 

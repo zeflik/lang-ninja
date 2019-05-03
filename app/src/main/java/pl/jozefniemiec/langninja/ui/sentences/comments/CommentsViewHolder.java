@@ -1,9 +1,12 @@
 package pl.jozefniemiec.langninja.ui.sentences.comments;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Callback;
@@ -16,9 +19,7 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
-import static pl.jozefniemiec.langninja.utils.Utility.changeTextViewColorIfNegativeNumber;
-
-public class CommentsViewHolder extends RecyclerView.ViewHolder {
+public class CommentsViewHolder extends RecyclerView.ViewHolder implements CommentsItemView {
 
     private final Picasso picasso;
 
@@ -38,11 +39,16 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
     TextView commentLikesCount;
 
     @BindView(R.id.commentsThumbUpCommentIcon)
-    ImageView voteUpButton;
+    ImageButton voteUpButton;
 
     @BindView(R.id.commentsThumbDownCommentIcon)
-    ImageView voteDownButton;
+    ImageButton voteDownButton;
 
+    @BindView(R.id.commentVoteUpProgressBar)
+    ProgressBar voteUpProgressBar;
+
+    @BindView(R.id.commentVoteDownProgressBar)
+    ProgressBar voteDownProgressBar;
 
     CommentsViewHolder(View itemView, Picasso picasso) {
         super(itemView);
@@ -96,8 +102,66 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder {
         this.dateText.setText(dateText);
     }
 
-    void setCommentLikesCount(String count) {
-        this.commentLikesCount.setText(count);
-        changeTextViewColorIfNegativeNumber(commentLikesCount, Integer.valueOf(count));
+    void setCommentLikesCount(int count) {
+        this.commentLikesCount.setText(String.valueOf(count));
+    }
+
+    @Override
+    public void indicateNegativeNumber() {
+        commentLikesCount.setTextColor(Color.RED);
+    }
+
+    @Override
+    public void indicatePositiveNumber() {
+        commentLikesCount.setTextColor(Color.GRAY);
+    }
+
+    @Override
+    public void selectVoteUpButton(boolean state) {
+        voteUpButton.setSelected(state);
+    }
+
+    @Override
+    public void selectVoteDownButton(boolean state) {
+        voteDownButton.setSelected(state);
+    }
+
+    @Override
+    public boolean isVoteUpButtonSelected() {
+        return voteUpButton.isSelected();
+    }
+
+    @Override
+    public boolean isVoteDownButtonSelected() {
+        return voteDownButton.isSelected();
+    }
+
+    @Override
+    public void changeLikesCountByValue(int value) {
+        setCommentLikesCount(Integer.valueOf(commentLikesCount.getText().toString()) + value);
+    }
+
+    @Override
+    public int getLikesCount() {
+        return Integer.valueOf(commentLikesCount.getText().toString());
+    }
+
+    @Override
+    public void showVoteUpProgress() {
+        voteUpProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideVoteUpProgress() {
+        voteUpProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showVoteDownProgress() {
+        voteDownProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    public void hideVoteDownProgress() {
+        voteDownProgressBar.setVisibility(View.GONE);
     }
 }

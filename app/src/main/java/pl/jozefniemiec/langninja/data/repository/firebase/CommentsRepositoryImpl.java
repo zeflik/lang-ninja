@@ -37,7 +37,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
     private static final String COMMENT_COUNT_FIELD = "/%s/commentsCount/";
     private static final String COMMENT_LIKES_PATH = "/" + LIKES_NODE + "/%s/";
     private static final String COMMENT_COUNT_LIKES_PATH = "/" + COMMENTS_NODE + "/%s/%s/likesCount/";
-    public static final int EMPTY_LIST_VALUE = 0;
+    private static final int EMPTY_LIST_VALUE = 0;
     private final InternetConnectionService internetConnectionService;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
@@ -93,7 +93,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
 
     @Override
     public Single<List<Comment>> getCommentsBySentenceId(String sentenceId) {
-        return Single.create(subscriber -> {
+        Single<List<Comment>> result = Single.create(subscriber -> {
             if (!internetConnectionService.isInternetOn()) {
                 subscriber.onError(new NoInternetConnectionException());
                 return;
@@ -126,6 +126,17 @@ public class CommentsRepositoryImpl implements CommentsRepository {
                         }
                     });
         });
+        return result
+                .toObservable()
+                .flatMapIterable(comments -> comments)
+                .flatMap(comment ->
+                                 getLikes(comment.getId())
+                                         .toObservable()
+                                         .map(likes -> {
+                                             comment.setLikes(likes);
+                                             return comment;
+                                         }))
+                .toList();
     }
 
     @Override
@@ -218,7 +229,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
     }
 
     @Override
-    public Single<List<Likes>> getLikes(String commentId) {
+    public Single<Likes> getLikes(String commentId) {
         return Single.create(subscriber -> {
             likesReference
                     .child(commentId)
@@ -226,11 +237,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
-                                List<Likes> likesList = new ArrayList<>();
-                                for (DataSnapshot childSnapshot : dataSnapshot.getChildren()) {
-                                    likesList.add(childSnapshot.getValue(Likes.class));
-                                }
-                                subscriber.onSuccess(likesList);
+                                subscriber.onSuccess(dataSnapshot.getValue(Likes.class));
                             }
                         }
 

@@ -8,6 +8,7 @@ import android.support.constraint.Group;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -151,6 +152,7 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
 
     @Override
     public void showData(List<Comment> comments) {
+        Log.d("XXXXXXXXXXXXXX", comments.toString());
         adapter.setComments(comments);
     }
 
