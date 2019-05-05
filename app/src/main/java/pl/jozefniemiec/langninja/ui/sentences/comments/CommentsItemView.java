@@ -10,14 +10,6 @@ public interface CommentsItemView {
 
     void selectVoteDownButton(boolean state);
 
-    boolean isVoteUpButtonSelected();
-
-    boolean isVoteDownButtonSelected();
-
-    void changeLikesCountByValue(int value);
-
-    int getLikesCount();
-
     void showVoteUpProgress();
 
     void hideVoteUpProgress();
@@ -29,4 +21,6 @@ public interface CommentsItemView {
     void showReplaysList();
 
     void hideReplaysList();
+
+    void resetViewState();
 }

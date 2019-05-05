@@ -21,16 +21,22 @@ import pl.jozefniemiec.langninja.utils.DateUtils;
 
 public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder> {
 
+    public static final String TAG = CommentsListAdapter.class.getSimpleName();
     private final Picasso picasso;
     private final Context context;
     private final CommentsFragmentContract.Presenter presenter;
+    private final CommentsViewHolder.ViewHolderClicks listener;
     private List<Comment> comments = new ArrayList<>();
 
     @Inject
-    public CommentsListAdapter(Picasso picasso, Context context, CommentsFragmentContract.Presenter presenter) {
+    public CommentsListAdapter(Picasso picasso,
+                               Context context,
+                               CommentsFragmentContract.Presenter presenter,
+                               CommentsViewHolder.ViewHolderClicks listener) {
         this.picasso = picasso;
         this.context = context;
         this.presenter = presenter;
+        this.listener = listener;
     }
 
     @NonNull
@@ -38,11 +44,12 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
     public CommentsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.comment_row, parent, false);
-        return new CommentsViewHolder(view, picasso);
+        return new CommentsViewHolder(view, picasso, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull CommentsViewHolder holder, int position) {
+        holder.resetViewState();
         holder.setAuthor(comments.get(position).getAuthor().getName());
         holder.setComment(comments.get(position).getContent());
         holder.setAuthorPhoto(Uri.parse(comments.get(position).getAuthor().getPhoto()));
@@ -50,9 +57,6 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
         Long timestamp = (Long) comments.get(position).getDateEdited();
         String timeAgo = DateUtils.generateTimePeriodDescription(timestamp, context);
         holder.setDateText(timeAgo);
-        holder.voteUpButton.setOnClickListener(view -> presenter.onVoteUpButtonClicked(holder, comments.get(position)));
-        holder.voteDownButton.setOnClickListener(view -> presenter.onVoteDownButtonClicked(holder, comments.get(position)));
-        holder.commentsReplayButton.setOnClickListener(view -> presenter.onItemViewReplayButtonPressed(holder));
         presenter.onItemViewLikesBind(holder, comments.get(position).getLikes());
     }
 
@@ -67,8 +71,25 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
         notifyDataSetChanged();
     }
 
-    public void addItem(Comment comment) {
+    void addItem(Comment comment) {
         comments.add(comment);
         notifyItemInserted(comments.size() - 1);
+    }
+
+    void removeItem(Comment comment) {
+        int i = comments.indexOf(comment);
+        comments.remove(i);
+        notifyItemRemoved(i);
+        notifyItemRangeChanged(i, comments.size());
+    }
+
+    void updateItem(Comment newComment, Comment comment) {
+        int index = comments.indexOf(comment);
+        comments.set(index, newComment);
+        notifyItemChanged(index);
+    }
+
+    Comment getItemAtPosition(int position) {
+        return comments.get(position);
     }
 }

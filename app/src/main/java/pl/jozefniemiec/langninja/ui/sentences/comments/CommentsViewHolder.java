@@ -20,9 +20,10 @@ import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 
-public class CommentsViewHolder extends RecyclerView.ViewHolder implements CommentsItemView {
+public class CommentsViewHolder extends RecyclerView.ViewHolder implements CommentsItemView, View.OnClickListener, View.OnLongClickListener {
 
     private final Picasso picasso;
+    private ViewHolderClicks listener;
 
     @BindView(R.id.commentAuthorTextView)
     TextView author;
@@ -57,10 +58,17 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
     @BindView(R.id.commentsReplaysRecyclerView)
     RecyclerView replaysRecyclerView;
 
-    CommentsViewHolder(View itemView, Picasso picasso) {
+    @BindView(R.id.commentBackground)
+    View commentBackground;
+
+    CommentsViewHolder(View itemView, Picasso picasso, ViewHolderClicks listener) {
         super(itemView);
         this.picasso = picasso;
+        this.listener = listener;
         ButterKnife.bind(this, itemView);
+        voteUpButton.setOnClickListener(this);
+        voteDownButton.setOnClickListener(this);
+        commentBackground.setOnLongClickListener(this);
     }
 
     public void setAuthor(String name) {
@@ -134,26 +142,6 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
     }
 
     @Override
-    public boolean isVoteUpButtonSelected() {
-        return voteUpButton.isSelected();
-    }
-
-    @Override
-    public boolean isVoteDownButtonSelected() {
-        return voteDownButton.isSelected();
-    }
-
-    @Override
-    public void changeLikesCountByValue(int value) {
-        setCommentLikesCount(Integer.valueOf(commentLikesCount.getText().toString()) + value);
-    }
-
-    @Override
-    public int getLikesCount() {
-        return Integer.valueOf(commentLikesCount.getText().toString());
-    }
-
-    @Override
     public void showVoteUpProgress() {
         voteUpProgressBar.setVisibility(View.VISIBLE);
     }
@@ -168,10 +156,12 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
         voteDownProgressBar.setVisibility(View.VISIBLE);
     }
 
+    @Override
     public void hideVoteDownProgress() {
         voteDownProgressBar.setVisibility(View.GONE);
     }
 
+    @Override
     public void showReplaysList() {
         replaysRecyclerView.setVisibility(View.VISIBLE);
     }
@@ -179,5 +169,38 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
     @Override
     public void hideReplaysList() {
         replaysRecyclerView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void resetViewState() {
+        voteUpButton.setSelected(false);
+        voteDownButton.setSelected(false);
+        indicatePositiveNumber();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.commentsThumbUpCommentIcon:
+                listener.onVoteUp(this, getAdapterPosition());
+                break;
+            case R.id.commentsThumbDownCommentIcon:
+                listener.onVoteDown(this, getAdapterPosition());
+                break;
+        }
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        listener.onBackground(getAdapterPosition());
+        return true;
+    }
+
+    public interface ViewHolderClicks {
+        void onVoteUp(CommentsItemView holder, int position);
+
+        void onVoteDown(CommentsItemView holder, int position);
+
+        void onBackground(int position);
     }
 }

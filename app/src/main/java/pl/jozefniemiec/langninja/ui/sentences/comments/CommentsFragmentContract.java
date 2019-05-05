@@ -34,6 +34,16 @@ public interface CommentsFragmentContract {
         void hideInputPanel();
 
         void showUserPhoto(String photo);
+
+        void showSentenceOptionsDialog(String[] menuOptions, Comment comment);
+
+        void showInappropriateContentDialog(String[] inappropriateContentOptions, Comment comment);
+
+        void showRemoveCommentAlert(Comment comment);
+
+        void removeComment(Comment comment);
+
+        void replaceComment(Comment newComment, Comment comment);
     }
 
     interface Presenter {
@@ -49,5 +59,13 @@ public interface CommentsFragmentContract {
         void onItemViewLikesBind(CommentsItemView itemView, Likes likes);
 
         void onItemViewReplayButtonPressed(CommentsItemView itemView);
+
+        void onItemLongButtonClicked(Comment comment);
+
+        void onCommentOptionSelected(int item, Comment comment);
+
+        void onInappropriateContentSelected(int item, Comment comment);
+
+        void onRemoveButtonClicked(Comment comment);
     }
 }

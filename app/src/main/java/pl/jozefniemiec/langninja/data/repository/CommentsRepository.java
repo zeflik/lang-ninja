@@ -6,7 +6,6 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
-import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 
 public interface CommentsRepository {
 
@@ -14,17 +13,17 @@ public interface CommentsRepository {
 
     Single<List<Comment>> getCommentsBySentenceId(String sentenceId);
 
-    Single<UserSentence> getComment(String commentId);
+    Single<Comment> getComment(String commentId);
 
-    Completable like(String sentenceKey, String commentKey, String userUid);
+    Single<Comment> like(Comment comment, String userUid);
 
-    Completable dislike(String sentenceKey, String commentKey, String userUid);
+    Single<Comment> dislike(Comment comment, String userUid);
 
     Single<Likes> getLikes(String commentId);
 
     Completable update(Comment comment);
 
-    Completable remove(String commentId);
+    Completable remove(Comment comment);
 
     Single<Integer> getCommentsCount(String commentId);
 }

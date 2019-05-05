@@ -24,23 +24,29 @@ import pl.jozefniemiec.langninja.data.repository.CommentsRepository;
 import pl.jozefniemiec.langninja.data.repository.NoInternetConnectionException;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Likes;
-import pl.jozefniemiec.langninja.data.repository.firebase.model.UserSentence;
 import pl.jozefniemiec.langninja.service.InternetConnectionService;
 
 public class CommentsRepositoryImpl implements CommentsRepository {
 
     private static final String TAG = CommentsRepositoryImpl.class.getSimpleName();
+    private static final String COMMENTS_BY_SENTENCE_NODE = "comments_by_sentence";
     private static final String COMMENTS_NODE = "comments";
     private static final String LIKES_NODE = "comment_likes";
     private static final String COMMENTS_COUNT_NODE = "comment_count";
-    private static final String COMMENT_BY_KEY_PATH = "/" + COMMENTS_NODE + "/%s/%s/";
-    private static final String COMMENT_COUNT_FIELD = "/%s/commentsCount/";
-    private static final String COMMENT_LIKES_PATH = "/" + LIKES_NODE + "/%s/";
-    private static final String COMMENT_COUNT_LIKES_PATH = "/" + COMMENTS_NODE + "/%s/%s/likesCount/";
+    private static final String COMMENT_KEY_PATH = "/" + COMMENTS_NODE + "/%s";
+    private static final String COMMENT_BY_SENTENCE_KEY_PATH = "/" + COMMENTS_BY_SENTENCE_NODE + "/%s/%s/";
+    private static final String COMMENT_COUNT_PATH = "/%s/commentsCount/";
+    private static final String LIKES_PATH = "/" + LIKES_NODE + "/%s/";
+    private static final String COMMENT_BY_SENTENCE_COUNT_LIKES_PATH = "/" + COMMENTS_BY_SENTENCE_NODE + "/%s/%s/likesCount/";
+    private static final String COMMENT_COUNT_LIKES_PATH = "/" + COMMENTS_NODE + "/%s/likesCount/";
     private static final int EMPTY_LIST_VALUE = 0;
+    private static final String COMMENTS_COUNT_FIELD = "commentsCount";
+    private static final String CONTENT_FIELD = "content";
     private final InternetConnectionService internetConnectionService;
     private FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference = firebaseDatabase.getReference();
+    private DatabaseReference commentsBySentenceReference =
+            firebaseDatabase.getReference(COMMENTS_BY_SENTENCE_NODE);
     private DatabaseReference commentsReference =
             firebaseDatabase.getReference(COMMENTS_NODE);
     private DatabaseReference likesReference =
@@ -50,7 +56,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
     @Inject
     CommentsRepositoryImpl(InternetConnectionService internetConnectionService) {
         this.internetConnectionService = internetConnectionService;
-        commentsReference.keepSynced(true);
+        commentsBySentenceReference.keepSynced(true);
         likesReference.keepSynced(true);
     }
 
@@ -61,21 +67,16 @@ public class CommentsRepositoryImpl implements CommentsRepository {
                 subscriber.onError(new NoInternetConnectionException());
                 return;
             }
-            String commentKey = Objects.requireNonNull(commentsReference.push().getKey());
-            Map<String, Object> updateMap = new HashMap<>();
-            String commentWithKeyPath = String.format(COMMENT_BY_KEY_PATH, comment.getSentenceId(), commentKey);
-            updateMap.put(commentWithKeyPath, comment);
-            String commentLikesWithKeyPath = String.format(COMMENT_LIKES_PATH, commentKey);
-            updateMap.put(commentLikesWithKeyPath, new Likes());
-            databaseReference.updateChildren(updateMap)
+            String commentKey = Objects.requireNonNull(commentsBySentenceReference.push().getKey());
+            databaseReference.updateChildren(generateUpdateMap(commentKey, comment))
                     .addOnSuccessListener(aVoid -> {
-                        commentsReference
+                        commentsBySentenceReference
                                 .child(comment.getSentenceId())
                                 .addListenerForSingleValueEvent(new ValueEventListener() {
                                     @Override
                                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                         commentCountReference
-                                                .child(String.format(COMMENT_COUNT_FIELD, comment.getSentenceId()))
+                                                .child(String.format(COMMENT_COUNT_PATH, comment.getSentenceId()))
                                                 .setValue(dataSnapshot.getChildrenCount());
                                         subscriber.onSuccess(commentKey);
                                     }
@@ -90,6 +91,28 @@ public class CommentsRepositoryImpl implements CommentsRepository {
         });
     }
 
+    private Map<String, Object> generateUpdateMap(String commentKey, Comment comment) {
+        Map<String, Object> updateMap = new HashMap<>();
+        String commentWithKeyPath = String.format(COMMENT_BY_SENTENCE_KEY_PATH, comment.getSentenceId(), commentKey);
+        updateMap.put(commentWithKeyPath, comment);
+        String commentPath = String.format(COMMENT_KEY_PATH, commentKey);
+        updateMap.put(commentPath, comment);
+        String commentLikesWithKeyPath = String.format(LIKES_PATH, commentKey);
+        updateMap.put(commentLikesWithKeyPath, comment.getLikes() == null ? new Likes() : comment.getLikes());
+        return updateMap;
+    }
+
+    private Map<String, Object> generateDeleteUpdateMap(String commentKey, Comment comment) {
+        Map<String, Object> updateMap = generateUpdateMap(commentKey, comment);
+        resetAllMapValuesToNull(updateMap);
+        return updateMap;
+    }
+
+    private void resetAllMapValuesToNull(Map<String, Object> map) {
+        for (Map.Entry<String, Object> item : map.entrySet()) {
+            item.setValue(null);
+        }
+    }
 
     @Override
     public Single<List<Comment>> getCommentsBySentenceId(String sentenceId) {
@@ -98,7 +121,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
                 subscriber.onError(new NoInternetConnectionException());
                 return;
             }
-            commentsReference
+            commentsBySentenceReference
                     .child(sentenceId)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -140,28 +163,53 @@ public class CommentsRepositoryImpl implements CommentsRepository {
     }
 
     @Override
-    public Single<UserSentence> getComment(String commentId) {
-        return null;
+    public Single<Comment> getComment(String commentId) {
+        Single<Comment> result = Single.create(subscriber -> {
+            commentsReference
+                    .child(commentId)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            if (dataSnapshot.exists()) {
+                                Comment comment = dataSnapshot.getValue(Comment.class);
+                                comment.setId(dataSnapshot.getKey());
+                                subscriber.onSuccess(comment);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            subscriber.onError(databaseError.toException());
+                        }
+                    });
+        });
+        return result
+                .flatMap(comment -> getLikes(comment.getId())
+                        .map(likes -> {
+                            comment.setLikes(likes);
+                            return comment;
+                        })
+                );
     }
 
     @Override
-    public Completable like(String sentenceKey, String commentKey, String userUid) {
-        return saveLikeOrDislike(true, sentenceKey, commentKey, userUid);
+    public Single<Comment> like(Comment comment, String userUid) {
+        return saveLikeOrDislike(true, comment, userUid);
     }
 
     @Override
-    public Completable dislike(String sentenceKey, String commentKey, String userUid) {
-        return saveLikeOrDislike(false, sentenceKey, commentKey, userUid);
+    public Single<Comment> dislike(Comment comment, String userUid) {
+        return saveLikeOrDislike(false, comment, userUid);
     }
 
-    private Completable saveLikeOrDislike(boolean isLike, String sentenceKey, String commentKey, String userUid) {
-        return Completable.create(subscriber -> {
+    private Single<Comment> saveLikeOrDislike(boolean isLike, Comment comment, String userUid) {
+        return Single.create(subscriber -> {
             if (!internetConnectionService.isInternetOn()) {
                 subscriber.onError(new NoInternetConnectionException());
                 return;
             }
             likesReference
-                    .child(commentKey)
+                    .child(comment.getId())
                     .runTransaction(new Transaction.Handler() {
                         @NonNull
                         @Override
@@ -171,21 +219,23 @@ public class CommentsRepositoryImpl implements CommentsRepository {
                                 return Transaction.success(mutableData);
                             }
                             Likes result = isLike ? calculateLikes(likes, userUid) : calculateDislikes(likes, userUid);
+                            comment.setLikes(result);
                             mutableData.setValue(result);
                             return Transaction.success(mutableData);
                         }
 
                         @Override
-                        public void onComplete(DatabaseError databaseError, boolean b,
-                                               DataSnapshot dataSnapshot) {
+                        public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                             if (dataSnapshot.exists()) {
                                 int count = Objects.requireNonNull(dataSnapshot.getValue(Likes.class)).getCount();
                                 Map<String, Object> updateMap = new HashMap<>();
-                                String sentenceCountPath = String.format(COMMENT_COUNT_LIKES_PATH, sentenceKey, commentKey);
-                                updateMap.put(sentenceCountPath, count);
+                                String commentBySentenceLikesCountPath = String.format(COMMENT_BY_SENTENCE_COUNT_LIKES_PATH, comment.getSentenceId(), comment.getId());
+                                updateMap.put(commentBySentenceLikesCountPath, count);
+                                String commentLikesCountPath = String.format(COMMENT_COUNT_LIKES_PATH, comment.getId());
+                                updateMap.put(commentLikesCountPath, count);
                                 databaseReference
                                         .updateChildren(updateMap)
-                                        .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                                        .addOnSuccessListener(aVoid -> subscriber.onSuccess(comment))
                                         .addOnFailureListener(subscriber::onError);
                             } else {
                                 subscriber.onError(databaseError.toException());
@@ -194,7 +244,6 @@ public class CommentsRepositoryImpl implements CommentsRepository {
                     });
         });
     }
-
 
     private Likes calculateDislikes(Likes likes, String userUid) {
         if (likes.getDislikesMap().containsKey(userUid)
@@ -251,12 +300,41 @@ public class CommentsRepositoryImpl implements CommentsRepository {
 
     @Override
     public Completable update(Comment comment) {
-        return null;
+        return Completable.create(subscriber ->
+                                          commentsBySentenceReference
+                                                  .child(comment.getId())
+                                                  .child(CONTENT_FIELD)
+                                                  .setValue(comment.getContent())
+                                                  .addOnSuccessListener(aVoid -> subscriber.onComplete())
+                                                  .addOnFailureListener(subscriber::onError)
+        );
     }
 
     @Override
-    public Completable remove(String commentId) {
-        return null;
+    public Completable remove(Comment comment) {
+        return Completable.create(subscriber -> {
+            String commentKey = comment.getId();
+            databaseReference.updateChildren(generateDeleteUpdateMap(commentKey, comment))
+                    .addOnSuccessListener(aVoid -> {
+                        commentsBySentenceReference
+                                .child(comment.getSentenceId())
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        commentCountReference
+                                                .child(String.format(COMMENT_COUNT_PATH, comment.getSentenceId()))
+                                                .setValue(dataSnapshot.getChildrenCount());
+                                        subscriber.onComplete();
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
+                    })
+                    .addOnFailureListener(e -> subscriber.onError(new RuntimeException(e.getMessage())));
+        });
     }
 
     @Override
@@ -264,7 +342,7 @@ public class CommentsRepositoryImpl implements CommentsRepository {
         return Single.create(subscriber -> {
             commentCountReference
                     .child(commentId)
-                    .child("commentsCount")
+                    .child(COMMENTS_COUNT_FIELD)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

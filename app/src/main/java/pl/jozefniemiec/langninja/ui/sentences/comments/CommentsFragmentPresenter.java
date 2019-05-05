@@ -17,10 +17,13 @@ import pl.jozefniemiec.langninja.utils.Utility;
 @CommentsFragmentScope
 public class CommentsFragmentPresenter implements CommentsFragmentContract.Presenter {
 
+    public static final String TAG = CommentsFragmentPresenter.class.getSimpleName();
     private final CommentsFragmentContract.View view;
     private final CommentsRepository commentsRepository;
     private final UserRepository userRepository;
     private final AuthService authService;
+    private String[] menuOptions = {"Edytuj", "Usuń"};
+    private String[] inappropriateContentOptions = {"Propagowanie nienawiści", "Niecenzuralne wyrazy", "Inne"};
 
     @Inject
     CommentsFragmentPresenter(CommentsFragmentContract.View view,
@@ -66,32 +69,20 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
             userRepository
                     .getUser(authService.getCurrentUserUid())
                     .subscribeOn(Schedulers.io())
+                    .doOnSubscribe(disposable -> view.showProgress())
                     .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
                     .map(author -> new Comment(sentenceId, commentText, author))
-                    .doOnSubscribe(disposable -> view.showProgress())
-                    .doFinally(view::hideProgress)
+                    .flatMap(commentsRepository::insert)
+                    .flatMap(commentsRepository::getComment)
                     .observeOn(AndroidSchedulers.mainThread())
+                    .doFinally(view::hideProgress)
                     .subscribe(
                             comment -> {
-                                commentsRepository
-                                        .insert(comment)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .doOnSubscribe(disposable -> view.showProgress())
-                                        .doFinally(view::hideProgress)
-                                        .subscribe(
-                                                id -> {
-                                                    view.notifyDataChanged();
-                                                    view.clearInputField();
-                                                    view.hideKeyboard();
-                                                    view.showNewItem(comment);
-                                                },
-                                                error -> view.showNeedInternetInfo()
-                                        );
-                            }//TODO - refactor
-                            , error -> {
-                                view.showNeedInternetInfo();
-                            }
+                                view.clearInputField();
+                                view.hideKeyboard();
+                                view.showNewItem(comment);
+                            },
+                            error -> view.showNeedInternetInfo()
                     );
         } else {
             view.showErrorMessage("Niewłaściwy format.");
@@ -101,49 +92,23 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
     @Override
     public void onVoteUpButtonClicked(CommentsItemView holder, Comment comment) {
         commentsRepository
-                .like(comment.getSentenceId(), comment.getId(), authService.getCurrentUserUid())
+                .like(comment, authService.getCurrentUserUid())
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> holder.showVoteUpProgress())
-                .doOnComplete(() -> changeButtonStatesOnVoteUp(holder))
-                .doOnComplete(() -> changeLikesCountColor(holder))
                 .doFinally(holder::hideVoteUpProgress)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-    }
-
-    private void changeButtonStatesOnVoteUp(CommentsItemView holder) {
-        holder.changeLikesCountByValue(holder.isVoteUpButtonSelected() ? -1 : 1);
-        holder.selectVoteUpButton(!holder.isVoteUpButtonSelected());
-        holder.changeLikesCountByValue(holder.isVoteDownButtonSelected() ? 1 : 0);
-        holder.selectVoteDownButton(false);
+                .subscribe(newComment -> view.replaceComment(newComment, comment));
     }
 
     @Override
     public void onVoteDownButtonClicked(CommentsItemView holder, Comment comment) {
         commentsRepository
-                .dislike(comment.getSentenceId(), comment.getId(), authService.getCurrentUserUid())
+                .dislike(comment, authService.getCurrentUserUid())
                 .subscribeOn(Schedulers.io())
                 .doOnSubscribe(disposable -> holder.showVoteDownProgress())
-                .doOnComplete(() -> changeButtonStatesOnVoteDown(holder))
-                .doOnComplete(() -> changeLikesCountColor(holder))
                 .doFinally(holder::hideVoteDownProgress)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe();
-    }
-
-    private void changeButtonStatesOnVoteDown(CommentsItemView holder) {
-        holder.changeLikesCountByValue(holder.isVoteDownButtonSelected() ? 1 : -1);
-        holder.selectVoteDownButton(!holder.isVoteDownButtonSelected());
-        holder.changeLikesCountByValue(holder.isVoteUpButtonSelected() ? -1 : 0);
-        holder.selectVoteUpButton(false);
-    }
-
-    private void changeLikesCountColor(CommentsItemView holder) {
-        if (holder.getLikesCount() < 0) {
-            holder.indicateNegativeNumber();
-        } else {
-            holder.indicatePositiveNumber();
-        }
+                .subscribe(newComment -> view.replaceComment(newComment, comment));
     }
 
     @Override
@@ -165,5 +130,44 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
     @Override
     public void onItemViewReplayButtonPressed(CommentsItemView itemView) {
         itemView.showReplaysList();
+    }
+
+    @Override
+    public void onItemLongButtonClicked(Comment comment) {
+        String sentenceAuthorUid = comment.getAuthor().getUid();
+        if (authService.isSignedIn() && authService.getCurrentUserUid().equals(sentenceAuthorUid)) {
+            view.showSentenceOptionsDialog(menuOptions, comment);
+        } else {
+            view.showInappropriateContentDialog(inappropriateContentOptions, comment);
+        }
+    }
+
+    @Override
+    public void onCommentOptionSelected(int optionIndex, Comment comment) {
+        switch (optionIndex) {
+            case 0:
+                //view.showSentenceDetails(userSentence);
+                break;
+            case 1:
+                //view.showRemoveSentenceAlert(userSentence);
+                view.showRemoveCommentAlert(comment);
+                break;
+        }
+    }
+
+    @Override
+    public void onInappropriateContentSelected(int item, Comment comment) {
+
+    }
+
+    @Override
+    public void onRemoveButtonClicked(Comment comment) {
+        commentsRepository
+                .remove(comment)
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(x -> view.showProgress())
+                .doFinally(view::hideProgress)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(() -> view.removeComment(comment));
     }
 }

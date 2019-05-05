@@ -6,9 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,8 +38,9 @@ import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
 import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 
 
-public class CommentsFragment extends DaggerDialogFragment implements CommentsFragmentContract.View {
+public class CommentsFragment extends DaggerDialogFragment implements CommentsFragmentContract.View, CommentsViewHolder.ViewHolderClicks {
 
+    public static final String TAG = CommentsFragment.class.getSimpleName();
     private String sentenceId;
     private Unbinder unbinder;
 
@@ -152,7 +153,6 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
 
     @Override
     public void showData(List<Comment> comments) {
-        Log.d("XXXXXXXXXXXXXX", comments.toString());
         adapter.setComments(comments);
     }
 
@@ -163,8 +163,9 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
 
     @Override
     public void showNewItem(Comment comment) {
-        presenter.onViewCreated(sentenceId);
-        //adapter.addItem(comment);
+        //presenter.onViewCreated(sentenceId);
+
+        adapter.addItem(comment);
         // recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
     }
 
@@ -214,8 +215,59 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     }
 
     @Override
+    public void showSentenceOptionsDialog(String[] menuOptions, Comment comment) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle(comment.getContent());
+        builder.setItems(menuOptions, (dialog, item) -> presenter.onCommentOptionSelected(item, comment));
+        builder.show();
+    }
+
+    @Override
+    public void showInappropriateContentDialog(String[] reasons, Comment comment) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setTitle(
+                String.format(
+                        getString(R.string.alert_title_send_comment_feedback),
+                        comment.getContent()
+                ));
+        builder.setItems(reasons, (dialog, item) -> presenter.onCommentOptionSelected(item, comment));
+        builder.show();
+    }
+
+
+    @Override
     public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(commentContentEditText.getWindowToken(), 0);
+    }
+
+    @Override
+    public void showRemoveCommentAlert(Comment comment) {
+        Utility.showRemoveCommentAlert(requireContext(), (dialog, whichButton) -> presenter.onRemoveButtonClicked(comment));
+    }
+
+    @Override
+    public void removeComment(Comment comment) {
+        adapter.removeItem(comment);
+    }
+
+    @Override
+    public void replaceComment(Comment newComment, Comment comment) {
+        adapter.updateItem(newComment, comment);
+    }
+
+    @Override
+    public void onVoteUp(CommentsItemView holder, int position) {
+        presenter.onVoteUpButtonClicked(holder, adapter.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onVoteDown(CommentsItemView holder, int position) {
+        presenter.onVoteDownButtonClicked(holder, adapter.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onBackground(int position) {
+        presenter.onItemLongButtonClicked(adapter.getItemAtPosition(position));
     }
 }
