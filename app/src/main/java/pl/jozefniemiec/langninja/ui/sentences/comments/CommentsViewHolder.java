@@ -2,9 +2,11 @@ package pl.jozefniemiec.langninja.ui.sentences.comments;
 
 import android.graphics.Color;
 import android.net.Uri;
+import android.support.constraint.Group;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -31,6 +33,9 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
     @BindView(R.id.commentBodyTextView)
     TextView comment;
 
+    @BindView(R.id.commentBodyEditText)
+    EditText commentExitText;
+
     @BindView(R.id.commentAuthorPhoto)
     ImageView authorPhoto;
 
@@ -49,6 +54,9 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
     @BindView(R.id.commentsReplayButton)
     Button commentsReplayButton;
 
+    @BindView(R.id.commentsEditCancelButton)
+    Button commentsEditCancelButton;
+
     @BindView(R.id.commentVoteUpProgressBar)
     ProgressBar voteUpProgressBar;
 
@@ -61,6 +69,12 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
     @BindView(R.id.commentBackground)
     View commentBackground;
 
+    @BindView(R.id.commentViewGroup)
+    Group commentViewGroup;
+
+    @BindView(R.id.commentEditGroup)
+    Group commentEditGroup;
+
     CommentsViewHolder(View itemView, Picasso picasso, ViewHolderClicks listener) {
         super(itemView);
         this.picasso = picasso;
@@ -69,6 +83,7 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
         voteUpButton.setOnClickListener(this);
         voteDownButton.setOnClickListener(this);
         commentBackground.setOnLongClickListener(this);
+        commentsEditCancelButton.setOnClickListener(this);
     }
 
     public void setAuthor(String name) {
@@ -119,6 +134,11 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
 
     void setCommentLikesCount(int count) {
         this.commentLikesCount.setText(String.valueOf(count));
+    }
+
+    void setCommentExitText(String text) {
+        this.commentExitText.setText(text);
+        this.commentExitText.setSelection(text.length());
     }
 
     @Override
@@ -178,29 +198,45 @@ public class CommentsViewHolder extends RecyclerView.ViewHolder implements Comme
         indicatePositiveNumber();
     }
 
+    public void changeViewToEdit() {
+        commentViewGroup.setVisibility(View.GONE);
+        commentEditGroup.setVisibility(View.VISIBLE);
+    }
+
+    public void changeViewToNormal() {
+        commentViewGroup.setVisibility(View.VISIBLE);
+        commentEditGroup.setVisibility(View.GONE);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.commentsThumbUpCommentIcon:
-                listener.onVoteUp(this, getAdapterPosition());
+                listener.onVoteUpButtonClicked(this, getAdapterPosition());
                 break;
             case R.id.commentsThumbDownCommentIcon:
-                listener.onVoteDown(this, getAdapterPosition());
+                listener.onVoteDownButtonClicked(this, getAdapterPosition());
+                break;
+            case R.id.commentsEditCancelButton:
+                listener.onEditCancelButtonClicked(getAdapterPosition());
                 break;
         }
     }
 
     @Override
     public boolean onLongClick(View view) {
-        listener.onBackground(getAdapterPosition());
+        listener.onBackgroundClicked(getAdapterPosition());
         return true;
     }
 
     public interface ViewHolderClicks {
-        void onVoteUp(CommentsItemView holder, int position);
 
-        void onVoteDown(CommentsItemView holder, int position);
+        void onVoteUpButtonClicked(CommentsItemView holder, int position);
 
-        void onBackground(int position);
+        void onVoteDownButtonClicked(CommentsItemView holder, int position);
+
+        void onEditCancelButtonClicked(int position);
+
+        void onBackgroundClicked(int position);
     }
 }

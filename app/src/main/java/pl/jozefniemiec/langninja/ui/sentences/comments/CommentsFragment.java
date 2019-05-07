@@ -41,8 +41,6 @@ import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 public class CommentsFragment extends DaggerDialogFragment implements CommentsFragmentContract.View, CommentsViewHolder.ViewHolderClicks {
 
     public static final String TAG = CommentsFragment.class.getSimpleName();
-    private String sentenceId;
-    private Unbinder unbinder;
 
     @Inject
     CommentsFragmentContract.Presenter presenter;
@@ -65,10 +63,9 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @BindView(R.id.commentInputPhotoImageView)
     ImageView commentInputPhotoImageView;
 
-    @OnClick(R.id.commentCreateButton)
-    void onCommentCreateButtonClicked() {
-        presenter.onCreateCommentClicked(sentenceId, commentContentEditText.getText().toString());
-    }
+    private String sentenceId;
+    private Unbinder unbinder;
+    private InputMethodManager imm;
 
     public static CommentsFragment newInstance(String sentenceId) {
         CommentsFragment fragment = new CommentsFragment();
@@ -77,6 +74,11 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
         fragment.setArguments(args);
         fragment.setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_DeviceDefault_Dialog);
         return fragment;
+    }
+
+    @OnClick(R.id.commentCreateButton)
+    void onCommentCreateButtonClicked() {
+        presenter.onCreateCommentClicked(sentenceId, commentContentEditText.getText().toString());
     }
 
     @Override
@@ -92,6 +94,7 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
                                                    + " must pass valid sentence Key");
             }
         }
+        imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
     }
 
     @Override
@@ -120,30 +123,6 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
         requireActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 
-    @Override
-    public void showProgress() {
-
-    }
-
-    @Override
-    public void hideProgress() {
-
-    }
-
-    @Override
-    public void notifyDataChanged() {
-    }
-
-    @Override
-    public void showNeedInternetInfo() {
-
-    }
-
-    @Override
-    public void showErrorMessage(String message) {
-        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show();
-    }
-
     private void initializeRecyclerView() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(requireContext());
@@ -162,11 +141,58 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     }
 
     @Override
-    public void showNewItem(Comment comment) {
-        //presenter.onViewCreated(sentenceId);
-
+    public void addComment(Comment comment) {
         adapter.addItem(comment);
-        // recyclerView.smoothScrollToPosition(adapter.getItemCount()-1);
+        recyclerView.smoothScrollToPosition(adapter.getItemPosition(comment));
+    }
+
+    @Override
+    public void replaceComment(Comment newComment, Comment comment) {
+        adapter.updateItem(newComment, comment);
+    }
+
+    @Override
+    public void editComment(Comment comment) {
+        int position = adapter.getItemPosition(comment);
+        CommentsViewHolder viewHolder = (CommentsViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        viewHolder.changeViewToEdit();
+        viewHolder.setCommentExitText(adapter.getItemAtPosition(position).getContent());
+        viewHolder.commentExitText.post(() -> {
+            focusOnEditText(viewHolder.commentExitText);
+            showKeyboardForced();
+        });
+    }
+
+    private void focusOnEditText(EditText commentExitText) {
+        commentExitText.setFocusableInTouchMode(true);
+        commentExitText.requestFocus();
+        commentExitText.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                commentExitText.setFocusableInTouchMode(false);
+                imm.hideSoftInputFromWindow(commentExitText.getWindowToken(), 0);
+            }
+        });
+    }
+
+    @Override
+    public void collapseCommentEdit(int position) {
+        CommentsViewHolder viewHolder = (CommentsViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
+        viewHolder.changeViewToNormal();
+    }
+
+    @Override
+    public void removeComment(Comment comment) {
+        adapter.removeItem(comment);
+    }
+
+    @Override
+    public void onVoteUpButtonClicked(CommentsItemView holder, int position) {
+        presenter.onVoteUpButtonClicked(holder, adapter.getItemAtPosition(position));
+    }
+
+    @Override
+    public void onVoteDownButtonClicked(CommentsItemView holder, int position) {
+        presenter.onVoteDownButtonClicked(holder, adapter.getItemAtPosition(position));
     }
 
     @Override
@@ -180,7 +206,7 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     }
 
     @Override
-    public void showUserPhoto(String authorPhotoUri) {
+    public void showLoggedUserPhoto(String authorPhotoUri) {
         picasso
                 .load(authorPhotoUri)
                 .networkPolicy(NetworkPolicy.OFFLINE)
@@ -234,40 +260,56 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
         builder.show();
     }
 
+    @Override
+    public void showRemoveCommentAlert(Comment comment) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle(R.string.alert_title_removing)
+                .setMessage(R.string.alert_message_removing_comment)
+                .setPositiveButton(R.string.button_ok, (dialog, whichButton) -> presenter.onRemoveButtonClicked(comment))
+                .setNegativeButton(R.string.button_cancel, (dialog, whichButton) -> dialog.dismiss())
+                .show();
+    }
+
+    @Override
+    public void onEditCancelButtonClicked(int position) {
+        presenter.onCancelButtonClicked(position);
+    }
+
+    @Override
+    public void onBackgroundClicked(int position) {
+        presenter.onCommentClicked(adapter.getItemAtPosition(position));
+    }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
+    public void notifyDataChanged() {
+    }
+
+    @Override
+    public void showNeedInternetInfo() {
+
+    }
+
+    @Override
+    public void showErrorMessage(String message) {
+        Toast.makeText(requireActivity(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void showKeyboardForced() {
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
 
     @Override
     public void hideKeyboard() {
-        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(commentContentEditText.getWindowToken(), 0);
-    }
-
-    @Override
-    public void showRemoveCommentAlert(Comment comment) {
-        Utility.showRemoveCommentAlert(requireContext(), (dialog, whichButton) -> presenter.onRemoveButtonClicked(comment));
-    }
-
-    @Override
-    public void removeComment(Comment comment) {
-        adapter.removeItem(comment);
-    }
-
-    @Override
-    public void replaceComment(Comment newComment, Comment comment) {
-        adapter.updateItem(newComment, comment);
-    }
-
-    @Override
-    public void onVoteUp(CommentsItemView holder, int position) {
-        presenter.onVoteUpButtonClicked(holder, adapter.getItemAtPosition(position));
-    }
-
-    @Override
-    public void onVoteDown(CommentsItemView holder, int position) {
-        presenter.onVoteDownButtonClicked(holder, adapter.getItemAtPosition(position));
-    }
-
-    @Override
-    public void onBackground(int position) {
-        presenter.onItemLongButtonClicked(adapter.getItemAtPosition(position));
     }
 }

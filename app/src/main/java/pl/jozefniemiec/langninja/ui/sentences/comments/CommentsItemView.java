@@ -23,4 +23,8 @@ public interface CommentsItemView {
     void hideReplaysList();
 
     void resetViewState();
+
+    void changeViewToEdit();
+
+    void changeViewToNormal();
 }

@@ -104,15 +104,6 @@ public class Utility {
                 .show();
     }
 
-    public static void showRemoveCommentAlert(Context context, DialogInterface.OnClickListener listener) {
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.alert_title_removing)
-                .setMessage(R.string.alert_message_removing_comment)
-                .setPositiveButton(R.string.button_ok, listener)
-                .setNegativeButton(R.string.button_cancel, (dialog, whichButton) -> dialog.dismiss())
-                .show();
-    }
-
     public static void sendBroadcastUserSentencesChanged(Context context) {
         Intent intent = new Intent();
         intent.setAction(ACTION_USER_SENTENCES_CHANGED);

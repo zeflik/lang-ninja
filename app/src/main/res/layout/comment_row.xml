@@ -6,19 +6,6 @@
     android:layout_marginTop="8dp"
     android:layout_marginBottom="-8dp">
 
-    <TextView
-        android:id="@+id/commentsOptionsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginEnd="8dp"
-        android:text="&#8942;"
-        android:textAlignment="viewStart"
-        android:textAppearance="?android:textAppearanceLarge"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <View
         android:id="@+id/commentBackground"
         android:layout_width="0dp"
@@ -26,6 +13,16 @@
         android:background="@drawable/shape_comment_background"
         app:layout_constraintBottom_toBottomOf="@+id/commentBodyTextView"
         app:layout_constraintEnd_toEndOf="@+id/commentBodyTextView"
+        app:layout_constraintStart_toStartOf="@+id/commentAuthorTextView"
+        app:layout_constraintTop_toTopOf="@+id/commentAuthorTextView" />
+
+    <View
+        android:id="@+id/commentEditBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/shape_comment_background"
+        app:layout_constraintBottom_toBottomOf="@+id/commentBodyEditText"
+        app:layout_constraintEnd_toEndOf="@+id/commentBodyEditText"
         app:layout_constraintStart_toStartOf="@+id/commentAuthorTextView"
         app:layout_constraintTop_toTopOf="@+id/commentAuthorTextView" />
 
@@ -40,7 +37,7 @@
         android:paddingBottom="8dp"
         android:text="sdfsdf  sfews fsd fsd fsd fsd fsd fsd fsdf sdfwerts fsdf sdf sdfsd fsd fdfs sd ff"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/commentsOptionsTextView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/commentAuthorPhoto"
         app:layout_constraintTop_toBottomOf="@+id/commentAuthorTextView" />
 
@@ -96,11 +93,11 @@
         android:id="@+id/commentsThumbUpCommentIcon"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:scaleType="fitXY"
         android:layout_margin="-8dp"
-        android:padding="4dp"
-        android:src="@drawable/vote_up_image_button"
         android:background="@android:color/transparent"
+        android:padding="4dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/vote_up_image_button"
         app:layout_constraintStart_toEndOf="@+id/commentAuthorPhoto"
         app:layout_constraintTop_toBottomOf="@+id/commentBodyTextView" />
 
@@ -108,11 +105,11 @@
         android:id="@+id/commentsThumbDownCommentIcon"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:scaleType="fitXY"
         android:layout_margin="-8dp"
-        android:padding="4dp"
-        android:src="@drawable/vote_down_image_button"
         android:background="@android:color/transparent"
+        android:padding="4dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/vote_down_image_button"
         app:layout_constraintBottom_toBottomOf="@+id/commentLikesCountTextView"
         app:layout_constraintStart_toEndOf="@+id/commentLikesCountTextView"
         app:layout_constraintTop_toTopOf="@+id/commentLikesCountTextView" />
@@ -121,10 +118,10 @@
         android:id="@+id/commentsReplayButton"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:text="Odpowiedz"
-        android:textSize="12sp"
         android:background="@android:color/transparent"
+        android:text="Odpowiedz"
         android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="@+id/commentBackground"
         app:layout_constraintTop_toBottomOf="@+id/commentBodyTextView" />
 
@@ -134,8 +131,8 @@
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/commentBackground"
         app:layout_constraintStart_toStartOf="@+id/commentBackground"
         app:layout_constraintTop_toBottomOf="@+id/commentsReplayButton" />
@@ -161,5 +158,70 @@
         app:layout_constraintEnd_toEndOf="@+id/commentsThumbDownCommentIcon"
         app:layout_constraintStart_toStartOf="@+id/commentsThumbDownCommentIcon"
         app:layout_constraintTop_toTopOf="@+id/commentsThumbDownCommentIcon" />
+
+    <android.support.constraint.Group
+        android:id="@+id/commentViewGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="commentBodyTextView, commentBackground, commentCalendarTextView, commentLikesCountTextView, commentsThumbUpCommentIcon, commentsThumbDownCommentIcon, commentsReplayButton" />
+
+    <android.support.constraint.Group
+        android:id="@+id/commentEditGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:constraint_referenced_ids="commentBodyEditText, commentEditBackground, commentsEditCancelButton, commentsEditSaveButton" />
+
+    <EditText
+        android:id="@+id/commentBodyEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:focusableInTouchMode="false"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="8dp"
+        android:text="sdfsdf  sfews fsd fsd fsd fsd fsd fsd fsdf sdfwerts fsdf sdf sdfsd fsd fdfs sd ff"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/commentAuthorPhoto"
+        app:layout_constraintTop_toBottomOf="@+id/commentAuthorTextView" />
+
+    <Button
+        android:id="@+id/commentsEditCancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/transparent"
+        android:text="@string/button_cancel"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/commentsEditSaveButton"
+        app:layout_constraintEnd_toStartOf="@+id/commentsEditSaveButton"
+        app:layout_constraintTop_toTopOf="@+id/commentsEditSaveButton" />
+
+    <Button
+        android:id="@+id/commentsEditSaveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:background="@android:color/transparent"
+        android:text="@string/button_save"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@+id/commentEditBackground"
+        app:layout_constraintTop_toBottomOf="@+id/commentBodyEditText" />
+
+    <ProgressBar
+        android:id="@+id/commentsEditProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="@dimen/size_vote_up_progress_bar"
+        android:layout_height="@dimen/size_vote_up_progress_bar"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/commentsEditSaveButton"
+        app:layout_constraintEnd_toEndOf="@+id/commentsEditSaveButton"
+        app:layout_constraintStart_toStartOf="@+id/commentsEditSaveButton"
+        app:layout_constraintTop_toTopOf="@+id/commentsEditSaveButton" />
 
 </android.support.constraint.ConstraintLayout>

@@ -92,4 +92,8 @@ public class CommentsListAdapter extends RecyclerView.Adapter<CommentsViewHolder
     Comment getItemAtPosition(int position) {
         return comments.get(position);
     }
+
+    int getItemPosition(Comment comment) {
+        return comments.indexOf(comment);
+    }
 }

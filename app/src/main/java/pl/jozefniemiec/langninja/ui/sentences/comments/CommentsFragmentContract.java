@@ -9,46 +9,51 @@ public interface CommentsFragmentContract {
 
     interface View {
 
-        void close();
-
-        void showProgress();
-
-        void hideProgress();
-
-        void notifyDataChanged();
-
-        void showNeedInternetInfo();
-
-        void showErrorMessage(String message);
-
         void showData(List<Comment> comments);
 
-        void clearInputField();
-
-        void hideKeyboard();
-
-        void showNewItem(Comment comment);
+        void showLoggedUserPhoto(String photo);
 
         void showInputPanel();
 
         void hideInputPanel();
 
-        void showUserPhoto(String photo);
+        void clearInputField();
 
-        void showSentenceOptionsDialog(String[] menuOptions, Comment comment);
+        void addComment(Comment comment);
 
-        void showInappropriateContentDialog(String[] inappropriateContentOptions, Comment comment);
+        void replaceComment(Comment newComment, Comment comment);
 
-        void showRemoveCommentAlert(Comment comment);
+        void editComment(Comment comment);
+
+        void collapseCommentEdit(int position);
 
         void removeComment(Comment comment);
 
-        void replaceComment(Comment newComment, Comment comment);
-    }
+        void notifyDataChanged();
 
+        void showRemoveCommentAlert(Comment comment);
+
+        void showInappropriateContentDialog(String[] inappropriateContentOptions, Comment comment);
+
+        void showSentenceOptionsDialog(String[] menuOptions, Comment comment);
+
+        void showErrorMessage(String message);
+
+        void showNeedInternetInfo();
+
+        void hideKeyboard();
+
+        void showProgress();
+
+        void hideProgress();
+
+        void close();
+    }
     interface Presenter {
 
         void onViewCreated(String sentenceId);
+
+        void onItemViewLikesBind(CommentsItemView itemView, Likes likes);
 
         void onCreateCommentClicked(String sentenceId, String commentText);
 
@@ -56,16 +61,16 @@ public interface CommentsFragmentContract {
 
         void onVoteDownButtonClicked(CommentsItemView holder, Comment comment);
 
-        void onItemViewLikesBind(CommentsItemView itemView, Likes likes);
-
         void onItemViewReplayButtonPressed(CommentsItemView itemView);
 
-        void onItemLongButtonClicked(Comment comment);
+        void onCommentClicked(Comment comment);
 
         void onCommentOptionSelected(int item, Comment comment);
 
         void onInappropriateContentSelected(int item, Comment comment);
 
         void onRemoveButtonClicked(Comment comment);
+
+        void onCancelButtonClicked(int holder);
     }
 }

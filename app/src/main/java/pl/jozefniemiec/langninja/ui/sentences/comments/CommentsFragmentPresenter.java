@@ -47,7 +47,7 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                     .doOnSubscribe(disposable -> view.showProgress())
                     .doFinally(view::hideProgress)
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(view::showUserPhoto);
+                    .subscribe(view::showLoggedUserPhoto);
         } else {
             view.hideInputPanel();
         }
@@ -80,7 +80,7 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                             comment -> {
                                 view.clearInputField();
                                 view.hideKeyboard();
-                                view.showNewItem(comment);
+                                view.addComment(comment);
                             },
                             error -> view.showNeedInternetInfo()
                     );
@@ -133,7 +133,7 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
     }
 
     @Override
-    public void onItemLongButtonClicked(Comment comment) {
+    public void onCommentClicked(Comment comment) {
         String sentenceAuthorUid = comment.getAuthor().getUid();
         if (authService.isSignedIn() && authService.getCurrentUserUid().equals(sentenceAuthorUid)) {
             view.showSentenceOptionsDialog(menuOptions, comment);
@@ -146,10 +146,9 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
     public void onCommentOptionSelected(int optionIndex, Comment comment) {
         switch (optionIndex) {
             case 0:
-                //view.showSentenceDetails(userSentence);
+                view.editComment(comment);
                 break;
             case 1:
-                //view.showRemoveSentenceAlert(userSentence);
                 view.showRemoveCommentAlert(comment);
                 break;
         }
@@ -169,5 +168,10 @@ public class CommentsFragmentPresenter implements CommentsFragmentContract.Prese
                 .doFinally(view::hideProgress)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(() -> view.removeComment(comment));
+    }
+
+    @Override
+    public void onCancelButtonClicked(int position) {
+        view.collapseCommentEdit(position);
     }
 }
