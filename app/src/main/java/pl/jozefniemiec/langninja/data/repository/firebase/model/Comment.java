@@ -1,8 +1,13 @@
 package pl.jozefniemiec.langninja.data.repository.firebase.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.firebase.database.ServerValue;
 
-public class Comment {
+import java.util.Objects;
+
+public class Comment implements Parcelable {
 
     private String id;
     private String sentenceId;
@@ -16,6 +21,40 @@ public class Comment {
 
     public Comment() {
     }
+
+    private Comment(Parcel in) {
+        id = in.readString();
+        sentenceId = in.readString();
+        content = in.readString();
+        repliesCount = in.readInt();
+        likesCount = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(sentenceId);
+        dest.writeString(content);
+        dest.writeInt(repliesCount);
+        dest.writeInt(likesCount);
+    }
+
+    @Override
+    public int describeContents() {
+        return hashCode();
+    }
+
+    public static final Creator<Comment> CREATOR = new Creator<Comment>() {
+        @Override
+        public Comment createFromParcel(Parcel in) {
+            return new Comment(in);
+        }
+
+        @Override
+        public Comment[] newArray(int size) {
+            return new Comment[size];
+        }
+    };
 
     public Likes getLikes() {
         return likes;
@@ -107,5 +146,10 @@ public class Comment {
                 "\n repliesCount=" + repliesCount +
                 "\n likes=" + likes +
                 "\n}";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, sentenceId, content, dateEdited, dateCreated, author, repliesCount, likesCount, likes);
     }
 }

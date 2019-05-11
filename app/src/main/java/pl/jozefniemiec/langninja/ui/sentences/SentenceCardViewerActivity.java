@@ -55,6 +55,7 @@ public class SentenceCardViewerActivity extends BaseActivity
     private static final String SENTENCE_CARD_TAG = SentenceCardFragment.class.getSimpleName();
     public static final int EDIT_REQUEST_CODE = 1;
     public static final String COMMENTS_TAG = "comments tag";
+    public static final String FRAGMENT_COMMENTS_TAG = "fragment comments tag";
 
     private SentenceCardFragment sentenceCard;
     private ReaderFragment reader;
@@ -83,6 +84,7 @@ public class SentenceCardViewerActivity extends BaseActivity
 
     @Inject
     SentenceCardViewerContract.Presenter presenter;
+    private Fragment commentsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class SentenceCardViewerActivity extends BaseActivity
             languageCode = savedInstanceState.getString(LANGUAGE_CODE_KEY);
             sentence = savedInstanceState.getString(SENTENCE_KEY);
             findFragmentReferences();
+            commentsFragment = getSupportFragmentManager().getFragment(savedInstanceState, FRAGMENT_COMMENTS_TAG);
         } else {
             languageCode = Objects.requireNonNull(getIntent().getStringExtra(LANGUAGE_CODE_KEY));
             sentence = getIntent().getStringExtra(SENTENCE_KEY);
@@ -129,6 +132,18 @@ public class SentenceCardViewerActivity extends BaseActivity
                     .add(R.id.sentenceCommunityFragmentContainer, communityCardFragment)
                     .commit();
         }
+    }
+
+    @Override
+    public void showComments() {
+        if (commentsFragment == null) {
+            commentsFragment = CommentsFragment.newInstance(sentenceId);
+        }
+        getSupportFragmentManager()
+                .beginTransaction()
+                .addToBackStack(COMMENTS_TAG)
+                .add(R.id.commentsContainer, commentsFragment, COMMENTS_TAG)
+                .commit();
     }
 
     @Override
@@ -239,6 +254,9 @@ public class SentenceCardViewerActivity extends BaseActivity
         super.onSaveInstanceState(outState);
         outState.putString(LANGUAGE_CODE_KEY, languageCode);
         outState.putString(SENTENCE_KEY, sentence);
+        if (commentsFragment != null && commentsFragment.isVisible()) {
+            getSupportFragmentManager().putFragment(outState, FRAGMENT_COMMENTS_TAG, commentsFragment);
+        }
     }
 
     @Override
@@ -278,20 +296,6 @@ public class SentenceCardViewerActivity extends BaseActivity
     @Override
     public void onCommentsButtonPressed() {
         presenter.onCommentsButtonPressed();
-    }
-
-    @Override
-    public void showComments() {
-        FragmentManager supportFragmentManager = getSupportFragmentManager();
-        Fragment commentsFragment = supportFragmentManager.findFragmentByTag(COMMENTS_TAG);
-        if (commentsFragment == null) {
-            commentsFragment = CommentsFragment.newInstance(sentenceId);
-            supportFragmentManager
-                    .beginTransaction()
-                    .addToBackStack(COMMENTS_TAG)
-                    .add(R.id.commentsContainer, commentsFragment, COMMENTS_TAG)
-                    .commit();
-        }
     }
 
     @Override

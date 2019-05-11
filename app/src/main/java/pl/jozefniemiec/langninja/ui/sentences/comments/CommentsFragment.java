@@ -2,6 +2,7 @@ package pl.jozefniemiec.langninja.ui.sentences.comments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.Group;
@@ -21,6 +22,7 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,15 +34,15 @@ import butterknife.Unbinder;
 import dagger.android.support.DaggerDialogFragment;
 import pl.jozefniemiec.langninja.R;
 import pl.jozefniemiec.langninja.data.repository.firebase.model.Comment;
+import pl.jozefniemiec.langninja.ui.base.Constants;
 import pl.jozefniemiec.langninja.utils.Utility;
 import pl.jozefniemiec.langninja.utils.picasso.CircleTransform;
-
-import static pl.jozefniemiec.langninja.ui.base.Constants.SENTENCE_ID_KEY;
 
 
 public class CommentsFragment extends DaggerDialogFragment implements CommentsFragmentContract.View, CommentsViewHolder.ViewHolderClicks {
 
     public static final String TAG = CommentsFragment.class.getSimpleName();
+    public static final String KEY_SAVED_RECYCLER_VIEW_DATASET = "saved_recycler_view_dataset";
 
     @Inject
     CommentsFragmentContract.Presenter presenter;
@@ -70,7 +72,7 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     public static CommentsFragment newInstance(String sentenceId) {
         CommentsFragment fragment = new CommentsFragment();
         Bundle args = new Bundle();
-        args.putString(SENTENCE_ID_KEY, sentenceId);
+        args.putString(Constants.SENTENCE_ID_KEY, sentenceId);
         fragment.setArguments(args);
         fragment.setStyle(DialogFragment.STYLE_NO_FRAME, android.R.style.Theme_DeviceDefault_Dialog);
         return fragment;
@@ -85,10 +87,11 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            sentenceId = savedInstanceState.getString(SENTENCE_ID_KEY);
+            sentenceId = savedInstanceState.getString(Constants.SENTENCE_ID_KEY);
+            adapter.setComments(savedInstanceState.getParcelableArrayList(KEY_SAVED_RECYCLER_VIEW_DATASET));
         } else {
-            if (getArguments() != null && getArguments().containsKey(SENTENCE_ID_KEY)) {
-                sentenceId = getArguments().getString(SENTENCE_ID_KEY);
+            if (getArguments() != null && getArguments().containsKey(Constants.SENTENCE_ID_KEY)) {
+                sentenceId = getArguments().getString(Constants.SENTENCE_ID_KEY);
             } else {
                 throw new RuntimeException(requireActivity().toString()
                                                    + " must pass valid sentence Key");
@@ -311,5 +314,12 @@ public class CommentsFragment extends DaggerDialogFragment implements CommentsFr
     @Override
     public void hideKeyboard() {
         imm.hideSoftInputFromWindow(commentContentEditText.getWindowToken(), 0);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelableArrayList(KEY_SAVED_RECYCLER_VIEW_DATASET, (ArrayList<? extends Parcelable>) adapter.getComments());
+        outState.putString(Constants.SENTENCE_ID_KEY, sentenceId);
+        super.onSaveInstanceState(outState);
     }
 }
