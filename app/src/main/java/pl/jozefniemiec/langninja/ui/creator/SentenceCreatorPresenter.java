@@ -59,34 +59,20 @@ public class SentenceCreatorPresenter implements SentenceCreatorContract.Present
             userRepository
                     .getUser(authService.getCurrentUserUid())
                     .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
+                    .doOnSubscribe(disposable -> view.showProgress())
                     .map(user -> new Author(user.getUid(), user.getName(), user.getPhoto()))
                     .map(author -> new UserSentence(null, sentence, language.getCode(), author))
-                    .doOnSubscribe(disposable -> view.showProgress())
+                    .flatMap(userSentenceRepository::insert)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doFinally(view::hideProgress)
-                    .subscribe(
-                            userSentence -> {
-                                userSentenceRepository
-                                        .insert(userSentence)
-                                        .subscribeOn(Schedulers.io())
-                                        .observeOn(AndroidSchedulers.mainThread())
-                                        .doOnSubscribe(disposable -> view.showProgress())
-                                        .doFinally(view::hideProgress)
-                                        .subscribe(
-                                                id -> {
-                                                    view.notifyDataChanged();
-                                                    view.hideKeyboard();
-                                                    view.close();
-                                                },
-                                                error -> {
-                                                    view.showNeedInternetInfo();
-                                                }
-                                        );
-                            }//TODO - refactor
-                            , error -> {
-                                view.showNeedInternetInfo();
-                            }
-                    );
+                    .subscribe(id -> {
+                                   view.notifyDataChanged();
+                                   view.hideKeyboard();
+                                   view.close();
+                               },
+                               error -> {
+                                   view.showNeedInternetInfo();
+                               });
         } else {
             view.showErrorMessage("Wprowadź tekst!");
         }
