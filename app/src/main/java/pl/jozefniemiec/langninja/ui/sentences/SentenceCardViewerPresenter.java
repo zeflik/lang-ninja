@@ -63,7 +63,11 @@ public class SentenceCardViewerPresenter implements SentenceCardViewerContract.P
         view.hideSpokenText();
         view.stopReading();
         view.stopListening();
-        view.updateNumbering(position, pageCount);
+        if (pageCount > 1) {
+            view.updateNumbering(position, pageCount);
+        } else {
+            view.hideNumbering();
+        }
     }
 
     @Override

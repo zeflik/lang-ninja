@@ -35,6 +35,8 @@ public interface SentenceCardViewerContract {
         void showRemoveSentenceAlert();
 
         void showComments();
+
+        void hideNumbering();
     }
 
     interface Presenter {

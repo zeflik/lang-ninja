@@ -204,6 +204,11 @@ public class SentenceCardViewerActivity extends BaseActivity
     }
 
     @Override
+    public void hideNumbering() {
+        sentencePageCountTextView.setText("");
+    }
+
+    @Override
     public void editSentence(String sentenceId) {
         Intent intent = new Intent(this, SentenceEditor.class);
         intent.putExtra(SENTENCE_ID_KEY, sentenceId);
