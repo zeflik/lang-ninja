@@ -74,6 +74,7 @@ class UserSentenceListAdapter extends RecyclerView.Adapter<UserSentenceRowHolder
         holder.setFlag(Utility.getLanguageFlagUri(holder.flag.getContext(), userSentences.get(position).getLanguageCode()));
         holder.setAuthorPhoto(Uri.parse(userSentences.get(position).getAuthor().getPhoto()));
         holder.setLikesCountTextView(String.valueOf(userSentences.get(position).getLikesCount()));
+        holder.setCommentsCountTextViewCountTextView(String.valueOf(userSentences.get(position).getCommentsCount()));
         Long timestamp = (Long) userSentences.get(position).getDateEdited();
         String timeAgo = DateUtils.generateTimePeriodDescription(timestamp, context);
         holder.setDateText(timeAgo);

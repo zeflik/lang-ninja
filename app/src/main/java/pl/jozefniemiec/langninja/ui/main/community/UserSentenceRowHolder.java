@@ -37,6 +37,9 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
     @BindView(R.id.newSentenceRowThumbsTextView)
     TextView likesCountTextView;
 
+    @BindView(R.id.newSentenceRowCommentTextView)
+    TextView commentsCountTextView;
+
     @BindView(R.id.newSentenceRowCalendarTextView)
     TextView newSentenceRowCalendarTextView;
 
@@ -64,6 +67,10 @@ public class UserSentenceRowHolder extends RecyclerView.ViewHolder implements Us
     public void setLikesCountTextView(String value) {
         likesCountTextView.setText(value);
         changeTextViewColorIfNegativeNumber(likesCountTextView, Integer.valueOf(value));
+    }
+
+    public void setCommentsCountTextViewCountTextView(String value) {
+        commentsCountTextView.setText(value);
     }
 
     public void setDateText(String timeAgo) {
